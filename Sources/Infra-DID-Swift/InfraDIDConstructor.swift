@@ -11,7 +11,7 @@ import EosioSwift
 public class InfraDIDConstructor {
   
   
-  init() {
+  public init() {
     print(Data.init().toEosioK1PublicKey)
   }
 }
