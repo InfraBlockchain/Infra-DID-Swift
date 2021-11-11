@@ -5,6 +5,10 @@ import PackageDescription
 
 let package = Package(
     name: "Infra-DID-Swift",
+    platforms: [
+        .iOS(.v12),
+        .macOS(.v10_14)
+    ],
     products: [
         // Products define the executables and libraries a package produces, and make them visible to other packages.
         .library(
@@ -21,7 +25,7 @@ let package = Package(
         // Targets can depend on other targets in this package, and on products in packages this package depends on.
         .target(
             name: "Infra-DID-Swift",
-            dependencies: []),
+            dependencies: ["EosioSwift"]),
         .testTarget(
             name: "Infra-DID-SwiftTests",
             dependencies: ["Infra-DID-Swift"]),
