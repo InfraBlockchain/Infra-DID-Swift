@@ -13,11 +13,11 @@ import EosioSwiftEcc
 import PromiseKit
 import OHHTTPStubsSwift
 
+
 protocol InfraDIDConfApiDependency { // method Construction & Manipulation DID
   
-
-  func setAttributePubKeyDID(key: String, value: String)
-  
+  func setAttributePubKeyDID(action: TransactionAction, key: String,
+                             value: String, newKey: String)
 }
 
 
@@ -44,7 +44,6 @@ public class InfraDIDConstructor {
     
     self.idConfig.did = config.did
     
-    
     let didSplit = config.did.split(separator: ":")
     
     guard didSplit.count == 4 else { return }
@@ -62,8 +61,6 @@ public class InfraDIDConstructor {
     
     let rpc: EosioRpcProvider = EosioRpcProvider(endpoint: URL(string:config.rpcEndpoint)!)
     
-    
-    iPrint(URL(string:config.rpcEndpoint)!)
     self.jsonRpc = rpc
 
     let dataPvKey = try! Data(eosioPrivateKey: config.didOwnerPrivateKey)
@@ -82,6 +79,12 @@ public class InfraDIDConstructor {
     idConfig.pubKeyDidSignDataPrefix = config.pubKeyDidSignDataPrefix ?? defaultPubKeyDidSignDataPrefix
     
     //////////////////////// Setting Finish
+    if idConfig.jwtSigner == nil {
+      let signature = EcdsaSignature(der: dataPvKey, curve: .k1)
+      self.idConfig.jwtSigner = signature
+    } else {
+      self.idConfig.jwtSigner = config.jwtSigner
+    }
   }
   
   static func createPubKeyDID(networkID: String) -> [String: String] {
@@ -131,59 +134,170 @@ extension InfraDIDConstructor: InfraDIDConfApiDependency {
     }
   }
   
-  private func digestForPubKeyDIDSetAttributeSig(pubKey: String, key: String, value: String, nonce: Double) {
-    
-  }
-  
-  func setAttributePubKeyDID(key: String, value: String) {
-    let actionName: String = "pksetattr"
-    var bufArray: [UInt8] = []
-    
+  func setAttributePubKeyDID(action: TransactionAction, key: String = "",
+                             value: String = "", newKey: String = "") {
+    let actionName: String = action.rawValue
+    var bufArray: [UInt8] = [] //digest buffer initialize
     
     firstly {
-      getNonceForPubKeyDid()
+      getNonceForPubKeyDid() // Create Nonce
     }
     .done { nonce in
-      guard let prefix = self.defaultPubKeyDidSignDataPrefix.data(using: .utf8),
-            let actName = actionName.data(using: .utf8),
-            let key = key.data(using: .utf8),
-            let value = value.data(using: .utf8),
-            let pubKey = self.didPubKey?.data(using: .utf8)
-      else { return }
-      
-      
-      bufArray.append(contentsOf: prefix)
-      bufArray.append(contentsOf: actName)
-      bufArray.append(contentsOf: key)
-      bufArray.append(contentsOf: value)
-      bufArray.append(contentsOf: pubKey)
-      bufArray.append(UInt8.init(nonce))
-      
+      if let prefixData = self.defaultPubKeyDidSignDataPrefix.data(using: .utf8),
+            let actNameData = actionName.data(using: .utf8),
+            let pubKeyData = self.didPubKey?.data(using: .utf8),
+            let keyData = key.data(using: .utf8),
+            let valueData = value.data(using: .utf8),
+            let changeKeyData = newKey.data(using: .utf8)
+      {
+        
+        bufArray.append(contentsOf: prefixData)
+        bufArray.append(contentsOf: actNameData)
+        bufArray.append(contentsOf: keyData)
+        bufArray.append(contentsOf: valueData)
+        bufArray.append(contentsOf: pubKeyData)
+        bufArray.append(UInt8.init(nonce))
+        bufArray.append(contentsOf: changeKeyData)
+      }
+
       // bufArray hash And Digest
       let digest: SHA256Digest = SHA256.hash(data: bufArray)
       let signature = try! self.didOwnerPrivateKeyObjc?.signature(for: digest)
       
-      guard let sign = signature, let actor = self.idConfig.txfeePayerAccount else { return }
+      guard let sign = signature else { return }
       
-      let action: EosioTransaction.Action = try! EosioTransaction.Action.init(account: self.idConfig.registryContract, name: actionName, authorization: [EosioTransaction.Action.Authorization.init(actor: actor, permission: "active")],
-          data: ["pk": self.didPubKey, "key": key, "value": value, "sig": sign.rawRepresentation.toEosioK1Signature, "ram_payer": self.idConfig.txfeePayerAccount])
+      let transactionSet: TransactionDefaultSet = TransactionDefaultSet(actionName: action, signKey: sign.rawRepresentation.toEosioK1Signature)
       
-      let transaction = EosioTransaction.init()
-      
-      transaction.config.expireSeconds = 30
-      transaction.config.blocksBehind = 3
-      
-      transaction.add(action: action)
-      
-      transaction.signAndBroadcast { result in
-        switch result {
-        case .success(let isSuccess):
-          iPrint(isSuccess)
-        case .failure(let err):
-          iPrint(err.localizedDescription)
-        }
+      switch action {
+      case .set:
+        self.setAttributeTransaction(set: transactionSet, key: key, value: value)
+      case .changeOwner:
+        self.changeOwnerTransaction(set: transactionSet, newKey: newKey)
+      case .revoke:
+        self.revokeTransaction(set: transactionSet)
+      case .clear:
+        self.clearTransaction(set: transactionSet)
+      case .setAccount:
+        self.setAccountTransaction(set: transactionSet, key: key, value: value)
       }
     }
-    //transaction add
   }
+  
+  private func setAttributeTransaction(set: TransactionDefaultSet, key: String, value: String) {
+    guard let actor = self.idConfig.txfeePayerAccount, let pubKey = self.didPubKey else { return }
+    let action: EosioTransaction.Action = try! EosioTransaction.Action.init(account: self.idConfig.registryContract, name: set.actionName.rawValue, authorization: [EosioTransaction.Action.Authorization.init(actor: actor, permission: "active")],
+        data: ["pk": pubKey, "key": key, "value": value, "sig": set.signKey, "ram_payer": actor])
+
+    let transaction = EosioTransaction.init()
+
+    transaction.config.expireSeconds = 30
+    transaction.config.blocksBehind = 3
+
+    transaction.add(action: action)
+
+    transaction.signAndBroadcast { result in
+      switch result {
+      case .success(let isSuccess):
+        iPrint(isSuccess)
+      case .failure(let err):
+        iPrint(err.localizedDescription)
+      }
+    }
+  }
+  
+  private func clearTransaction(set: TransactionDefaultSet) {
+    guard let actor = self.idConfig.txfeePayerAccount, let pubKey = self.didPubKey else { return }
+    let action: EosioTransaction.Action = try! EosioTransaction.Action.init(account: self.idConfig.registryContract, name: set.actionName.rawValue, authorization: [EosioTransaction.Action.Authorization.init(actor: actor, permission: "active")],
+        data: ["pk": pubKey, "sig": set.signKey])
+
+    let transaction = EosioTransaction.init()
+
+    transaction.config.expireSeconds = 30
+    transaction.config.blocksBehind = 3
+
+    transaction.add(action: action)
+
+    transaction.signAndBroadcast { result in
+      switch result {
+      case .success(let isSuccess):
+        iPrint(isSuccess)
+      case .failure(let err):
+        iPrint(err.localizedDescription)
+      }
+    }
+  }
+  
+  private func revokeTransaction(set: TransactionDefaultSet) {
+    guard let actor = self.idConfig.txfeePayerAccount, let pubKey = self.didPubKey else { return }
+    let action: EosioTransaction.Action = try! EosioTransaction.Action.init(account: self.idConfig.registryContract, name: set.actionName.rawValue, authorization: [EosioTransaction.Action.Authorization.init(actor: actor, permission: "active")],
+        data: ["pk": pubKey, "sig": set.signKey, "ram_payer": actor])
+
+    let transaction = EosioTransaction.init()
+
+    transaction.config.expireSeconds = 30
+    transaction.config.blocksBehind = 3
+
+    transaction.add(action: action)
+
+    transaction.signAndBroadcast { result in
+      switch result {
+      case .success(let isSuccess):
+        iPrint(isSuccess)
+      case .failure(let err):
+        iPrint(err.localizedDescription)
+      }
+    }
+  }
+  
+  private func changeOwnerTransaction(set: TransactionDefaultSet, newKey: String) {
+    guard let actor = self.idConfig.txfeePayerAccount, let pubKey = self.didPubKey else { return }
+    let action: EosioTransaction.Action = try! EosioTransaction.Action.init(account: self.idConfig.registryContract, name: set.actionName.rawValue, authorization: [EosioTransaction.Action.Authorization.init(actor: actor, permission: "active")],
+        data: ["pk": pubKey, "new_owner_pk": newKey, "sig": set.signKey, "ram_payer": actor])
+
+    let transaction = EosioTransaction.init()
+
+    transaction.config.expireSeconds = 30
+    transaction.config.blocksBehind = 3
+
+    transaction.add(action: action)
+
+    transaction.signAndBroadcast { result in
+      switch result {
+      case .success(let isSuccess):
+        iPrint(isSuccess)
+      case .failure(let err):
+        iPrint(err.localizedDescription)
+      }
+    }
+  }
+  
+  private func setAccountTransaction(set: TransactionDefaultSet, key: String, value: String) {
+    guard let actor = self.idConfig.txfeePayerAccount, let account = self.didAccount else { return }
+    let action: EosioTransaction.Action = try! EosioTransaction.Action.init(account: self.idConfig.registryContract, name: set.actionName.rawValue, authorization: [EosioTransaction.Action.Authorization.init(actor: actor, permission: "active")],
+        data: ["account": account, "key": key, "value": value])
+
+    let transaction = EosioTransaction.init()
+
+    transaction.config.expireSeconds = 30
+    transaction.config.blocksBehind = 3
+
+    transaction.add(action: action)
+
+    transaction.signAndBroadcast { result in
+      switch result {
+      case .success(let isSuccess):
+        iPrint(isSuccess)
+      case .failure(let err):
+        iPrint(err.localizedDescription)
+      }
+    }
+  }
+  
+  private func getJWTIssuer() -> JwtVcIssuer {
+    guard let signer: EcdsaSignature = self.idConfig.jwtSigner else { return JwtVcIssuer() }
+    return JwtVcIssuer(did: self.idConfig.did, alg: "ES256K", signer: signer)
+  }
+  
+  
+  
 }

@@ -8,6 +8,21 @@
 import Foundation
 import secp256k1
 import secp256k1_implementation
+import EosioSwiftEcc
+
+
+public struct TransactionDefaultSet {
+  var actionName: TransactionAction
+  var signKey: String
+}
+
+public enum TransactionAction: String {
+  case set = "pksetattr"
+  case revoke = "pkdidrevoke"
+  case clear = "pkdidclear"
+  case changeOwner = "pkchowner"
+  case setAccount = "accsetattr"
+}
 
 public struct IdConfiguration{
   var did: String
@@ -15,7 +30,7 @@ public struct IdConfiguration{
   var networkId: String
   var registryContract: String
   var rpcEndpoint: String
-  var jwtSigner: AnyObject?
+  var jwtSigner: EcdsaSignature?
   var txfeePayerAccount: String?
   var txfeePayerPrivateKey: String?
   var pubKeyDidSignDataPrefix: String?
@@ -23,7 +38,7 @@ public struct IdConfiguration{
   
   
   init(did: String = "", didOwnerPrivateKey: String = "", networkId: String = "",
-       registryContract: String = "", rpcEndpoint: String = "", jwtSigner: AnyObject? = nil,
+       registryContract: String = "", rpcEndpoint: String = "", jwtSigner: EcdsaSignature? = nil,
        txfeePayAccount: String? = nil, txfeePayerPrivateKey: String? = nil,
        pubKeyDidSignDataPrefix: String? = nil) {
     self.did = did
@@ -41,11 +56,12 @@ public struct IdConfiguration{
 
 public struct JwtVcIssuer {
   var did: String
-  //var Signer: Signer //did jwt signer
+  var signer: EcdsaSignature //did jwt signer
   var alg: String?
   
-  init(did: String = "", alg: String? = nil) {
+  public init(did: String = "", alg: String? = nil, signer: EcdsaSignature = EcdsaSignature(der: nil)!) {
     self.did = did
+    self.signer = signer
     self.alg = alg
   }
 }

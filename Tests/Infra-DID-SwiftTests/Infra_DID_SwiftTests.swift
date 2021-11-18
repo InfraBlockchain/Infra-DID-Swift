@@ -19,7 +19,8 @@ final class Infra_DID_SwiftTests: XCTestCase {
       
       let didApi = InfraDIDConstructor(config: idConfig)
       
-      didApi.setAttributePubKeyDID(key: "", value: "")
+      didApi.setAttributePubKeyDID(action: .clear)
+      //didApi.setAttributePubKeyDID(key: "", value: "")
       //2. DID Api Configuration
       
       XCTAssertEqual(Infra_DID_Swift().text, "Hello, World!")
