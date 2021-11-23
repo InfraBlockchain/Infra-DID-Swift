@@ -7,9 +7,11 @@
 
 import Foundation
 import EosioSwift
+import PromiseKit
 
-//public typealias Codable = Decodable & Encodable
-//public typealias jsonRpc = EosioRpcProvider & EosioAbiProvider & EosioSoftkeySignatureProvider &                                       EosioAbieosSerializationProvider
+let emptyResult: Promise<DIDResolutionResult> = Promise<DIDResolutionResult>.value(DIDResolutionResult())
+let emptyDocument: Promise<DIDDocument> = Promise<DIDDocument>.value(DIDDocument())
+let emptyResolvedDocument: Promise<ResolvedDIDDocument> = Promise<ResolvedDIDDocument>.value(ResolvedDIDDocument())
 
 public func generateRandomBytes(bytes: Int) -> Data? {
 

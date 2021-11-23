@@ -74,6 +74,7 @@ public enum ErrorType: String, Codable {
   case notFound = "notFound"
   case representationNotSupported = "representationNotSupported"
   case unsupportedDidMethod = "unsupportedDidMethod"
+  case unKnownNetwork = "unKnownNetwork"
 }
 
 public struct DIDResolutionMetadata: Codable {

@@ -57,7 +57,6 @@ public class Resolver {
     }
   }
   
-  
 }
 
 func noCache(parsed: ParsedDID, resolve: wrappedResolverType) -> Promise<DIDResolutionResult> {

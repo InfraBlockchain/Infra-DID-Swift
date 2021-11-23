@@ -126,6 +126,7 @@ extension InfraDIDConstructor: InfraDIDConfApiDependency {
       firstly {
         jsonRPC.getTableRows(.promise, requestParameters: options)
       }.done {
+        
         if let row = $0.rows[0] as? [String: Any],
            let nonceValue = row["nonce"] as? Double
         {
