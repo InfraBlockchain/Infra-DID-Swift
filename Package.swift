@@ -14,7 +14,11 @@ let package = Package(
         .library(
             name: "Infra-DID-Swift",
             type: .dynamic,
-            targets: ["Infra-DID-Swift"]),
+            targets: ["Infra-DID-Swift"])
+//        .library(
+//            name: "Utils",
+//            type: .dynamic,
+//            targets: ["Infra-DID-Swift"]),
     ],
     dependencies: [
         // Dependencies declare other packages that this package depends on.
@@ -24,14 +28,22 @@ let package = Package(
               name: "secp256k1",
               url: "https://github.com/GigaBitcoin/secp256k1.swift.git",
               from: "0.3.0"
-          )
+          ),
+      .package(url: "https://github.com/AliSoftware/OHHTTPStubs", from: "9.0.0")
     ],
     targets: [
         // Targets are the basic building blocks of a package. A target can define a module or a test suite.
-        // Targets can depend on other targets in this package, and on products in packages this package depends on.
+        // Targets can depend on other targets in this package, and on products in packages which this package depends on.
         .target(
             name: "Infra-DID-Swift",
-            dependencies: ["EosioSwift", "secp256k1"]),
+            dependencies: [
+                .product(name: "EosioSwift", package: "EosioSwift"),
+                .product(name: "EosioSwiftAbieosSerializationProvider", package: "EosioSwift"),
+                .product(name: "EosioSwiftEcc", package: "EosioSwift"),
+                .product(name: "EosioSwiftSoftkeySignatureProvider", package: "EosioSwift"),
+                .product(name: "secp256k1", package: "secp256k1", condition: nil),
+                .product(name: "OHHTTPStubsSwift", package: "OHHTTPStubs", condition: nil)
+        ]),
         .testTarget(
             name: "Infra-DID-SwiftTests",
             dependencies: ["Infra-DID-Swift"]),
