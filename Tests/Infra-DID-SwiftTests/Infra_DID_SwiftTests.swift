@@ -23,6 +23,11 @@ final class Infra_DID_SwiftTests: XCTestCase {
       //didApi.setAttributePubKeyDID(key: "", value: "")
       //2. DID Api Configuration
       
+      //parse(didUrl: <#T##String#>)
+      parse(didUrl: "did:example:21tDAKCERh95uGgKbJNHYp;service=agent;foo:bar=high/some/path?foo=bar#key1")
+      
+      
+      
       XCTAssertEqual(Infra_DID_Swift().text, "Hello, World!")
     }
 }

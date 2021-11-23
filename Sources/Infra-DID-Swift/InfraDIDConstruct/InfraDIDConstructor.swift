@@ -79,8 +79,12 @@ public class InfraDIDConstructor {
     idConfig.pubKeyDidSignDataPrefix = config.pubKeyDidSignDataPrefix ?? defaultPubKeyDidSignDataPrefix
     
     //////////////////////// Setting Finish
+    let pvKeyArray = [UInt8](dataPvKey)
+    let sliceKey = pvKeyArray[1...pvKeyArray.count-1]
+    
+    
     if idConfig.jwtSigner == nil {
-      let signature = EcdsaSignature(der: dataPvKey, curve: .k1)
+      let signature = EcdsaSignature(der: Data(sliceKey), curve: .k1)
       self.idConfig.jwtSigner = signature
     } else {
       self.idConfig.jwtSigner = config.jwtSigner
@@ -297,7 +301,4 @@ extension InfraDIDConstructor: InfraDIDConfApiDependency {
     guard let signer: EcdsaSignature = self.idConfig.jwtSigner else { return JwtVcIssuer() }
     return JwtVcIssuer(did: self.idConfig.did, alg: "ES256K", signer: signer)
   }
-  
-  
-  
 }

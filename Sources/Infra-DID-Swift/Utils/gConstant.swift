@@ -8,10 +8,10 @@
 import Foundation
 import EosioSwift
 
-public typealias Codable = Decodable & Encodable
+//public typealias Codable = Decodable & Encodable
 //public typealias jsonRpc = EosioRpcProvider & EosioAbiProvider & EosioSoftkeySignatureProvider &                                       EosioAbieosSerializationProvider
 
-func generateRandomBytes(bytes: Int) -> Data? {
+public func generateRandomBytes(bytes: Int) -> Data? {
 
     var keyData = Data(count: bytes)
     let result = keyData.withUnsafeMutableBytes {
