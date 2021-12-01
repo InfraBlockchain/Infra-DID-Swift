@@ -8,22 +8,38 @@
 import Foundation
 import EosioSwift
 
-public protocol NetworkConfiguration {
-  var networkId: String {get set}
-  var registryContract: String {get set}
-  var rpcEndpoint: String {get set}
+public struct NetworkConfiguration {
+  var networkId: String //{get set}
+  var registryContract: String //{get set}
+  var rpcEndpoint: String //{get set}
+  
+  public init(networkId: String, registryContract: String, rpcEndpoint: String) {
+    self.networkId = networkId
+    self.registryContract = registryContract
+    self.rpcEndpoint = rpcEndpoint
+  }
 }
 
-public protocol MultiNetworkConfiguration {
-  var networks: [NetworkConfiguration]? {get set}
-  var noRevocationCheck: Bool {get set}
+public struct MultiNetworkConfiguration {
+  var networks: [NetworkConfiguration]? //{get set}
+  var noRevocationCheck: Bool //{get set}
+  
+  init(networks: [NetworkConfiguration]?, noRevocationCheck: Bool) {
+    self.networks = networks
+    self.noRevocationCheck = noRevocationCheck
+  }
 }
 
 public typealias ConfigurationOptions = MultiNetworkConfiguration
 
-public protocol ConfiguredNetwork {
-  var jsonRPC: EosioRpcProvider? {get set}
-  var regisrtyContract: String {get set}
+public struct ConfiguredNetwork {
+  var jsonRPC: EosioRpcProvider? //{get set}
+  var regisrtyContract: String //{get set}
+  
+  public init(jsonRpc: EosioRpcProvider?, registryContract: String) {
+    self.jsonRPC = jsonRpc
+    self.regisrtyContract = registryContract
+  }
 }
 
 public typealias ConfiguredNetworks = [String: ConfiguredNetwork]
@@ -32,7 +48,7 @@ public func configureNetwork(net: NetworkConfiguration) -> ConfiguredNetwork {
   let registryContract = net.registryContract
   let jsonRPC = EosioRpcProvider(endpoint: URL(string:net.rpcEndpoint)!)
   
-  return (jsonRPC, registryContract) as! ConfiguredNetwork
+  return ConfiguredNetwork(jsonRpc: jsonRPC, registryContract: registryContract)
 }
 
 public func configureNetworks(conf: MultiNetworkConfiguration) -> ConfiguredNetworks {

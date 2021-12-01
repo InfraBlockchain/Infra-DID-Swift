@@ -39,3 +39,20 @@ public func iPrint(_ objects:Any... , filename:String = #file,_ line:Int = #line
   print("\n")
   #endif
 }
+
+public func base64urlEncodedString(data: Data) -> String {
+    let result = data.base64EncodedString()
+    return result.replacingOccurrences(of: "+", with: "-")
+        .replacingOccurrences(of: "/", with: "_")
+        .replacingOccurrences(of: "=", with: "")
+}
+
+public func base64urlDecodedData(base64urlEncoded: String) -> Data? {
+    let paddingLength = 4 - base64urlEncoded.count % 4
+    let padding = (paddingLength < 4) ? String(repeating: "=", count: paddingLength) : ""
+    let base64EncodedString = base64urlEncoded
+        .replacingOccurrences(of: "-", with: "+")
+        .replacingOccurrences(of: "_", with: "/")
+        + padding
+    return Data(base64Encoded: base64EncodedString)
+}

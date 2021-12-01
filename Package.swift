@@ -29,7 +29,7 @@ let package = Package(
               url: "https://github.com/GigaBitcoin/secp256k1.swift.git",
               from: "0.3.0"
           ),
-      .package(url: "https://github.com/AliSoftware/OHHTTPStubs", from: "9.0.0")
+      .package(url: "https://github.com/Kitura/BlueECC.git", from: "1.1.0")
     ],
     targets: [
         // Targets are the basic building blocks of a package. A target can define a module or a test suite.
@@ -42,7 +42,7 @@ let package = Package(
                 .product(name: "EosioSwiftEcc", package: "EosioSwift"),
                 .product(name: "EosioSwiftSoftkeySignatureProvider", package: "EosioSwift"),
                 .product(name: "secp256k1", package: "secp256k1", condition: nil),
-                .product(name: "OHHTTPStubsSwift", package: "OHHTTPStubs", condition: nil)
+                .product(name: "CryptorECC", package: "BlueECC", condition: nil)
         ]),
         .testTarget(
             name: "Infra-DID-SwiftTests",

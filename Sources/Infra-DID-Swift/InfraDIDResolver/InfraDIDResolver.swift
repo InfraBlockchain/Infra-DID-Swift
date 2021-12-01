@@ -77,6 +77,7 @@ extension InfraDIDResolver: InfraDIDResolvable {
       var resolvedDIDDoc = ResolvedDIDDocument(didDocument: DIDDocument(), deactivated: true)
       
       if idInNetwork.starts(with: "PUB_K1") || idInNetwork.starts(with: "PUB_R1") || idInNetwork.starts(with: "EOS") {
+        iPrint(idInNetwork)
         guard let value = self.resolvePubKeyDID(did: did, pubKey: idInNetwork, network: network).value else { return emptyResult }
         resolvedDIDDoc = value
       } else {
@@ -92,9 +93,6 @@ extension InfraDIDResolver: InfraDIDResolvable {
                                                                     , didDocumentMetaData: DIDDocumentMetaData(created: nil, updated: nil, deactivated: status, versionId: nil, nextUpdate: nil, nextVersionId: nil, equivalentId: nil, canonicalId: nil)))
       
     }
-//    catch(let err) {
-//      return Promise<DIDResolutionResult>.value(DIDResolutionResult(didResolutionMetadata: DIDResolutionMetadata(contentType: nil, errorDescription: .notFound, message: err.localizedDescription), didDocument: nil, didDocumentMetaData: DIDDocumentMetaData()))
-//    }
   } //resolve
   
   public func build() -> [String:DIDResolverType] {
@@ -113,12 +111,6 @@ extension InfraDIDResolver: InfraDIDResolvable {
     let pubKeyIndex = sliceKeyData.hexEncodedString()
     guard let jsonRpc = network.jsonRPC else { return Promise<ResolvedDIDDocument>.value(ResolvedDIDDocument()) }
     
-    //initialized
-    //Todo Promise Chain Creation
-//
-//    let resPubKeyDID = jsonRpcFetchRows(rpc: jsonRpc, options: EosioRpcTableRowsRequest(scope: network.regisrtyContract, code: network.regisrtyContract, table: "pubkeydid", json: true, limit: 1, tableKey: nil, lowerBound: pubKeyIndex, upperBound: pubKeyIndex, indexPosition: "2", keyType: "sha256", encodeType: .hex, reverse: nil, showPayer: nil))
-    
-   // var pkDidAttr = [[:]]
     var deactivated: Bool = false
 //    guard let value = resPubKeyDID.value, let didAttr = value as? [String:Any] else { return emptyResolvedDocument }
     //pkDidAttr = resPubKeyDID["attr"]
@@ -137,7 +129,7 @@ extension InfraDIDResolver: InfraDIDResolvable {
         jsonRpcFetchRows(rpc: jsonRpc, options: EosioRpcTableRowsRequest(scope: network.regisrtyContract, code: network.regisrtyContract, table: "pubkeydid", json: true, limit: 1, tableKey: nil, lowerBound: pubKeyIndex, upperBound: pubKeyIndex, indexPosition: "2", keyType: "sha256", encodeType: .hex, reverse: nil, showPayer: nil))
       }.then({ attr -> Promise<[String:Any]> in
         var deactivated: Bool = false
-        //guard let didAttr = $0 else { return emptyResolvedDocument }
+        
         
         if self.noRevocationCheck == false && attr["nonce"] as? Double == 65535 {
           deactivated = true
@@ -151,32 +143,13 @@ extension InfraDIDResolver: InfraDIDResolvable {
       }
     }
     
-    
-//
-//
-//    return Promise { seal in
-//      firstly {
-//        self.wrapDidDocument(did: did, controllerPubKey: pubKey, pkdidAttr: didAttr, deactivated: deactivated)
-//      }.done { document in
-//        seal.fulfill(document)
-//      }
-//    }
+
   }
   
   private func resolveAccountDID(did: String, accountName: String, network: ConfiguredNetwork) -> Promise<ResolvedDIDDocument> {
     var activeKeyStr = ""
     guard let rpc = network.jsonRPC else { return emptyResolvedDocument }
-    //let res = rpc.getAccount(.promise, requestParameters: EosioRpcAccountRequest(accountName: accountName))
-//    guard let resValue = res.value else { return emptyResolvedDocument }
-//
-//    let eosioRpcAccountResponse = resValue
-//    let permissions = eosioRpcAccountResponse.permissions
-//    guard let activePermission = permissions.filter({$0.permName == "active"}).first,
-//          let keysAndWeight = activePermission.requiredAuth.keys.first  else { return emptyResolvedDocument }
-//    activeKeyStr = keysAndWeight.key
-//    let pubKey = try! Data(eosioPublicKey: activeKeyStr)
-//
-//    let resRows = self.jsonRpcFetchRows(rpc: rpc, options: EosioRpcTableRowsRequest(scope: network.regisrtyContract, code: network.regisrtyContract, table: "accdidattr", json: true, limit: 1, tableKey: nil, lowerBound: accountName, upperBound: accountName, indexPosition: "1", keyType: "name", encodeType: .hex, reverse: nil, showPayer: nil))
+
     
     return Promise { seal in
       firstly {

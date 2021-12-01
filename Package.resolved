@@ -11,6 +11,15 @@
         }
       },
       {
+        "package": "CryptorECC",
+        "repositoryURL": "https://github.com/Kitura/BlueECC.git",
+        "state": {
+          "branch": null,
+          "revision": "baf6ed3fc1a622675f0041b4aff7c02dd1a93818",
+          "version": "1.2.200"
+        }
+      },
+      {
         "package": "EosioSwift",
         "repositoryURL": "https://github.com/EOSIO/eosio-swift",
         "state": {
@@ -26,15 +35,6 @@
           "branch": null,
           "revision": "985f17fa69ee0e5b7eb3ff9be87ffc4e05fc0927",
           "version": "3.4.0"
-        }
-      },
-      {
-        "package": "OHHTTPStubs",
-        "repositoryURL": "https://github.com/AliSoftware/OHHTTPStubs",
-        "state": {
-          "branch": null,
-          "revision": "12f19662426d0434d6c330c6974d53e2eb10ecd9",
-          "version": "9.1.0"
         }
       },
       {
