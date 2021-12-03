@@ -6,7 +6,7 @@
 //
 
 import Foundation
-
+import PromiseKit
 
 // MARK: JWT
 
@@ -83,13 +83,20 @@ public struct JWT<T: Claims>: Codable {
     /// - Throws: An EncodingError if the JSONEncoder throws an error while encoding the JWT.
     /// - Throws: `JWTError.osVersionToLow` if not using macOS 10.12.0 (Sierra) or iOS 10.0 or higher.
     /// - Throws: A Signing error if the jwtSigner is unable to sign the JWT with the provided key.
-    public mutating func sign(using jwtSigner: JWTSigner) throws -> String {
+    public mutating func sign(using jwtSigner: JWTSigner) async throws -> String {
         var tempHeader = header
         tempHeader.alg = jwtSigner.name
         let headerString = try tempHeader.encode()
         let claimsString = try claims.encode()
         header.alg = tempHeader.alg
-        return try jwtSigner.sign(header: headerString, claims: claimsString).value ?? ""
+        return try await jwtSigner.sign(header: headerString, claims: claimsString)
+//      iPrint(jwtSigner)
+//        var tempHeader = header
+//        tempHeader.alg = jwtSigner.name
+//        let headerString = try tempHeader.encode()
+//        let claimsString = try claims.encode()
+//        header.alg = tempHeader.alg
+//        return try jwtSigner.sign(header: headerString, claims: claimsString).value ?? ""
     }
 
     /// Verify the signature of the encoded JWT using the given algorithm.

@@ -297,8 +297,9 @@ extension InfraDIDConstructor: InfraDIDConfApiDependency {
     }
   }
   
-  private func getJWTIssuer() -> JwtVcIssuer {
-    guard let signer: EcdsaSignature = self.idConfig.jwtSigner else { return JwtVcIssuer() }
+  func getJWTIssuer() -> JwtVcIssuer {
+    guard let pvKey: Data = try? Data(eosioPrivateKey: self.idConfig.didOwnerPrivateKey) else { return JwtVcIssuer() }
+    let signer: JWTSigner = JWTSigner.es256(privateKey: pvKey)
     return JwtVcIssuer(did: self.idConfig.did, alg: "ES256K", signer: signer)
   }
 }

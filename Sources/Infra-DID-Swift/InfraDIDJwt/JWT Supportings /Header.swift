@@ -47,10 +47,11 @@ public struct Header: Codable {
 //    public var crit: [String]?
     
     public init(
-        typ: String? = "JWT"
+        typ: String? = "JWT",
+        alg: String? = "ES256K"
     ) {
         self.typ = typ
-        self.alg = nil
+        self.alg = alg
     }
     
     func encode() throws -> String  {

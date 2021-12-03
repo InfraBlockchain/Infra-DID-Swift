@@ -28,14 +28,19 @@ class BlueECSigner: SignerAlgorithm {
     }
     
     // Sign the header and claims to produce a signed JWT String
-    func sign(header: String, claims: String) throws -> Promise<String> {
+  @available(macOS 12.0.0, *)
+  func sign(header: String, claims: String) async throws -> String {
         let unsignedJWT = header + "." + claims
         guard let unsignedData = unsignedJWT.data(using: .utf8) else {
           throw JWTError.invalidJWTString
         }
         let signature = try sign(unsignedData)
+      iPrint(signature)
         let signatureString = base64urlEncodedString(data: signature)
-      return Promise<String>.value(header + "." + claims + "." + signatureString)
+      iPrint(signatureString)
+      iPrint(header + "." + claims + "." + signatureString)
+      return header + "." + claims + "." + signatureString
+      //return Promise<String>.value(header + "." + claims + "." + signatureString)
 //      return Promise { seal in
 //        firstly {
 //          base64urlEncodedString(data: signature)
@@ -47,9 +52,10 @@ class BlueECSigner: SignerAlgorithm {
     
     // send utf8 encoded `header.claims` to BlueECC for signing
     private func sign(_ data: Data) throws -> Data {
-        guard let keyString = String(data: key, encoding: .utf8) else {
-          throw JWTError.invalidPrivateKey
-        }
+//        guard let keyString = String(data: key, encoding: .utf8) else {
+//          throw JWTError.invalidPrivateKey
+//        }
+      iPrint(key)
         let privateKey = try! secp256k1.Signing.PrivateKey.init(rawRepresentation: key)
     
         let signedData =  try! privateKey.signature(for: data)
@@ -122,8 +128,8 @@ public struct JWTSigner {
         self.signerAlgorithm = signerAlgorithm
     }
     
-    func sign(header: String, claims: String) throws -> Promise<String> {
-        return try signerAlgorithm.sign(header: header, claims: claims)
+    func sign(header: String, claims: String) async throws -> String {
+        return try await signerAlgorithm.sign(header: header, claims: claims)
     }
     
     /// Initialize a JWTSigner using the ECDSA SHA256 algorithm and the provided privateKey.
@@ -158,11 +164,12 @@ public struct JWTVerifier {
 }
 
 struct NoneAlgorithm: VerifierAlgorithm, SignerAlgorithm {
+  
     
     let name: String = "none"
     
-    func sign(header: String, claims: String) -> Promise<String> {
-      return Promise<String>.value("\(header).\(claims)")
+    func sign(header: String, claims: String) async -> String {
+      return "\(header).\(claims)"
     }
     
     func verify(jwt: String) -> Bool {

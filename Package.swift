@@ -7,7 +7,7 @@ let package = Package(
     name: "Infra-DID-Swift",
     platforms: [
         .iOS(.v12),
-        .macOS(.v10_14)
+        .macOS(.v12)
     ],
     products: [
         // Products define the executables and libraries a package produces, and make them visible to other packages.

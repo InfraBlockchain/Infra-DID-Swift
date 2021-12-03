@@ -31,6 +31,7 @@ func decodeJws(jws: String) -> JwsDecoded {
   //let part = jws.matchingStrings(regex: "^\(a)\.\(b)\.\(c)$")
   var decodeJws = JwsDecoded()
   //let part = parts[0]
+  iPrint(part)
   if !part.isEmpty {
     decodeJws = JwsDecoded(header: Header(), payload: part[2], signature: part[3], data: "\(part[1])\(part[2])")
   }
@@ -49,8 +50,9 @@ public func decodeJwt(jwt: String) -> JwtDecoded { //jwt값을 decode하고 그 
     guard let baseData = base64urlDecodedData(base64urlEncoded: jws.payload) else { return JwtDecoded() }
     //    let jwsDecod = [UInt8](baseData)
     //    iPrint(jwsDecoded.toJsonString())
+    iPrint(baseData)
     let data = try JSONDecoder().decode(JwtPayload.self, from: baseData)
-    
+    iPrint(data)
     decodeJwt = JwtDecoded(header: jws.header, payload: data, signature: jws.signature, data: jws.data)
   } catch (let err) {
     iPrint(err.localizedDescription)
@@ -63,44 +65,63 @@ public enum PayloadType {
   case jwtPayload(JwtPayload?)
 }
 
-public func createJws(payload: JwtPayload, signer: JWTSigner, header: Header?, options: JwsCreationOptions) -> Promise<String>{
-  guard let header = header else { return Promise<String>.value("")}
+public func createJws(payload: JwtPayload, signer: JWTSigner, header: Header?, options: JwsCreationOptions) async -> String {
+  guard let header = header else { return ""}
   
-  //  if header.alg == "" { header.alg = defaultAlg }
   //  let encodedPayload = type(of: payload) == String ? payload : encodeSection(data: payload, shouldCanonicalize: options.canonicalize)
   //  let signingInput: String = [encodeSection(data: header, shouldCanonicalize: options.canonicalize), encodedPayload].joined(separator: ".")
   
   let encodedHeader = try! header.encode()
   let encodedPayload = try! payload.encode()
-  
+  //JWT(header: <#T##Header#>, claims: <<error type>>)
   //let jwtSigner: SignerAlgorithm = SignerAlg(header.alg)
   
-  return Promise { seal in
-    firstly {
-      try! signer.sign(header: encodedHeader, claims: encodedPayload)
-    }.done ({ signature in
-      seal.fulfill(signature)
-    })
-  }
+  //payload를 Json Object로 만들어야한다.
+  let jsonClaims = try! payload.toJsonData(convertToSnakeCase: false, prettyPrinted: true)
+  iPrint(jsonClaims)
+  var jwt = JWT(header: header, claims: payload)
+  return try! await jwt.sign(using: signer)
+//  return Promise { seal in
+//    firstly {
+//      try! jwt.sign(using: signer)
+//    }.done({ signature in
+//      iPrint(signature)
+//      seal.fulfill(signature)
+//    })
+//  }
 }
 
 @available(macOS 12, *)
-public func createJwt(payload: JwtPayload, jwtOptions: JwtOptions, header: Header) throws -> Promise<String> {
+public func createJwt(payload: JwtPayload, jwtOptions: JwtOptions, header: Header) async throws -> String {
   var fullPayload: JwtPayload = payload
   fullPayload.iat = Date.now
   
+  
+  iPrint(payload)
   if jwtOptions.expiresIn != nil {
     //let nbf: Bool = (payload.nbf != nil) || (fullPayload.iat != nil)
     
     let timestamps: Date  = (payload.nbf != nil) ? payload.nbf! : Date.now
     
     fullPayload.exp = Date(timeIntervalSinceNow: (floor(Double(timestamps.timeIntervalSinceNow) / 1000) + floor(jwtOptions.expiresIn!)))
-  } else {
-    throw JWTError.invalidArgument
   }
-  guard let signer = jwtOptions.signer else { return Promise<String>.value("") }
+  
+  
+  guard let signer = jwtOptions.signer else { return ""}
   fullPayload.iss = jwtOptions.issuer
-  return createJws(payload: fullPayload, signer: signer, header: header, options: JwsCreationOptions(canonicalize: jwtOptions.canonicalize))
+  
+  var header = header
+  
+  if header.alg == "" { header.alg = defaultAlg }
+  return await createJws(payload: fullPayload, signer: signer, header: header, options: JwsCreationOptions(canonicalize: jwtOptions.canonicalize))
+//  return Promise { seal in
+//    firstly {
+//      createJws(payload: fullPayload, signer: signer, header: header, options: JwsCreationOptions(canonicalize: jwtOptions.canonicalize))
+//    }.done { signature in
+//      seal.fulfill(signature)
+//    }
+//  }
+  //createJws(payload: fullPayload, signer: signer, header: header, options: JwsCreationOptions(canonicalize: jwtOptions.canonicalize))
 }
 
 //public func verifyJwsDecoded(decode: JwsDecoded, pubKeys: [VerificationMethod]) -> VerificationMethod {
@@ -112,7 +133,7 @@ public func createJwt(payload: JwtPayload, jwtOptions: JwtOptions, header: Heade
 //}
 
 @available(macOS 12, *)
-public func verifyJwt(jwt: String, options: JwtVerifyOptions) throws -> Promise<JwtVerified> {
+public func verifyJwt(jwt: String, options: JwtVerifyOptions) async throws -> JwtVerified {
   let jwtDecoded = decodeJwt(jwt: jwt)
   
   guard let auth = options.auth, let resolver = options.resolver, let skewTime = options.skewTime,
@@ -215,7 +236,7 @@ public func verifyJwt(jwt: String, options: JwtVerifyOptions) throws -> Promise<
 }
 
 
-public func resolveAuthenticator(resolver: Resolvable, alg: String, issuer: String, proofPurpose: ProofPurposeTypes) throws -> Promise<DIDAuthenticator> {
+public func resolveAuthenticator(resolver: Resolvable, alg: String, issuer: String, proofPurpose: ProofPurposeTypes) async throws -> DIDAuthenticator {
   let verifyType = alg != "" ? "EcdsaSecp256k1VerificationKey2019" : ""
   
   guard verifyType != "" else { throw JWTError(localizedDescription: "not_supported: No supported signature types for algorithm")}
@@ -242,19 +263,6 @@ public func resolveAuthenticator(resolver: Resolvable, alg: String, issuer: Stri
         didResult.didDocument?.assertionMethod = publicKeysCheck.map {$0.id}
       }
       
-//      var method: VerificationMethod? = nil
-//      switch proofPurpose {
-//      case .assertionMethod:
-//        method = getPublicKeyById(verificationsMethods: publicKeysCheck, pubid: didResult.didDocument?.assertionMethod)
-//      case .capabilityDelegation:
-//        method = getPublicKeyById(verificationsMethods: publicKeysCheck, pubid: didResult.didDocument?.capabilityDelegation)
-//      case .capabilityInvocation:
-//        method = getPublicKeyById(verificationsMethods: publicKeysCheck, pubid: didResult.didDocument?.capabilityInvocation)
-//      case .authentication:
-//        method = getPublicKeyById(verificationsMethods: publicKeysCheck, pubid: didResult.didDocument?.authentication)
-//      case .none:
-//        break
-//      }
       
       publicKeysCheck.map { verify -> VerificationMethod in
         var method: VerificationMethod? = nil

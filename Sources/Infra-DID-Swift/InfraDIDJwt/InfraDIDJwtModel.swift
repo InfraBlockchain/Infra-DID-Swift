@@ -37,9 +37,12 @@ public struct JwtOptions {
   var expiresIn: Double?
   var canonicalize: Bool
   
-  public init(issuer: String = "", canonicalize: Bool = false) {
+  public init(issuer: String = "", canonicalize: Bool = false, signer: JWTSigner? = nil, alg: String? = nil, expiresIn: Double? = nil) {
     self.issuer = issuer
     self.canonicalize = canonicalize
+    self.signer = signer
+    self.alg = alg
+    self.expiresIn = expiresIn
     //self.signer = signer
   }
 }
@@ -90,24 +93,24 @@ public enum JwtPayloadAudienceType: Codable {
   case array([String])
   
   public init(from decoder: Decoder) throws {
-      let container = try decoder.singleValueContainer()
-      if let x = try? container.decode(String.self) {
-          self = .string(x)
-          return
-      }
-      if let x = try? container.decode([String].self) {
-          self = .array(x)
-          return
-      }
-      throw DecodingError.typeMismatch(JwtPayloadAudienceType.self, DecodingError.Context(codingPath: decoder.codingPath, debugDescription: "Wrong type for audience"))
+    let container = try decoder.singleValueContainer()
+    if let x = try? container.decode(String.self) {
+      self = .string(x)
+      return
+    }
+    if let x = try? container.decode([String].self) {
+      self = .array(x)
+      return
+    }
+    throw DecodingError.typeMismatch(JwtPayloadAudienceType.self, DecodingError.Context(codingPath: decoder.codingPath, debugDescription: "Wrong type for audience"))
   }
 }
 
-
+//VC Payload
 public struct JwtPayload: Claims {
   var iss: String?
   var sub: String?
-  var aud: JwtPayloadAudienceType?
+  var aud: [String]?
   public var iat: Date?
   public var nbf: Date?
   public var exp: Date?
@@ -115,16 +118,21 @@ public struct JwtPayload: Claims {
   var requested: [String]
   //var subJwk: [String:Any]?
   var did: String?
-  
+  //var claim: T
+  var jti: String?
+  var vc: VerifiableCredentialObject?
+  var vp: VerifiablePresentationObject?
+  var nonce: String?
   
   enum CodingKeys:  String, CodingKey {
-    case iss, sub, aud, iat, nbf, exp, rexp, requested, did
+    case iss, sub, aud, iat, nbf, exp, rexp, requested, did, vc, vp, nonce
     //case subJwk = "sub_jwk"
   }
   
   public init(iat: Date? = nil, iss: String? = "", sub: String? = "", nbf: Date? = nil,
               exp: Date? = nil, rexp: Double? = nil,
-              requested: [String] = [], aud: JwtPayloadAudienceType? = nil, did: String? = nil) {
+              requested: [String] = [], aud: [String]? = nil, did: String? = nil, vc: VerifiableCredentialObject? = nil, vp: VerifiablePresentationObject? = nil,
+              nonce: String? = nil) {
     self.requested = requested
     self.iat = iat
     self.iss = iss
@@ -135,41 +143,45 @@ public struct JwtPayload: Claims {
     self.aud = aud
     //self.subJwk = subJwk
     self.did = did
+    //self.claim = claim
+    self.vc = vc
+    self.vp = vp
+    self.nonce = nonce
   }
   
   public init(from decoder: Decoder) throws {
     let values = try decoder.container(keyedBy: CodingKeys.self)
+    iPrint(values)
     iss = (try? values.decode(String.self, forKey: .iss)) ?? nil
     sub = (try? values.decode(String.self, forKey: .sub)) ?? nil
     exp = (try? values.decode(Date.self, forKey: .exp)) ?? nil
-    aud = (try? values.decode(JwtPayloadAudienceType.self, forKey: .aud)) ?? nil
+    iPrint(exp)
+    aud = (try? values.decode([String].self, forKey: .aud)) ?? nil
     iat = (try? values.decode(Date.self, forKey: .iat)) ?? nil
     nbf = (try? values.decode(Date.self, forKey: .nbf)) ?? nil
     rexp = (try? values.decode(Double.self, forKey: .rexp)) ?? nil
     requested = (try? values.decode([String].self, forKey: .requested)) ?? []
     did = (try? values.decode(String.self, forKey: .did)) ?? nil
     //subJwk = (try? values.decode([String:Any].self, forKey: .subJwk)) ?? nil
+    vc = (try? values.decode(VerifiableCredentialObject.self, forKey: .vc)) ?? nil
+    vp = (try? values.decode(VerifiablePresentationObject.self, forKey: .vp)) ?? nil
+    nonce = (try? values.decode(String.self, forKey: .vp)) ?? nil
   }
   
   func encode(from encoder: Encoder) throws {
-      var container = encoder.container(keyedBy: CodingKeys.self)
-      try container.encode(self.iss, forKey: .iss)
-      try container.encode(self.iat, forKey: .iat)
-      try container.encode(self.sub, forKey: .sub)
-      try container.encode(self.exp, forKey: .exp)
-      try container.encode(self.rexp, forKey: .rexp)
-      try container.encode(self.requested, forKey: .requested)
-      try container.encode(self.aud, forKey: .aud)
-      try container.encode(self.nbf, forKey: .nbf)
+    var container = encoder.container(keyedBy: CodingKeys.self)
+    try container.encode(self.iss, forKey: .iss)
+    try container.encode(self.iat, forKey: .iat)
+    try container.encode(self.sub, forKey: .sub)
+    try container.encode(self.exp, forKey: .exp)
+    try container.encode(self.rexp, forKey: .rexp)
+    try container.encode(self.requested, forKey: .requested)
+    try container.encode(self.aud, forKey: .aud)
+    try container.encode(self.nbf, forKey: .nbf)
     try container.encode(self.did, forKey: .did)
-    //try container.encode(self.subJwk, forKey: .subJwk)
-//      if let data = self.data {
-//          let eventDataAsData = try! JSONSerialization.data(withJSONObject: data, options: [])
-//          let eventDataAsJSONString = String(data: eventDataAsData, encoding: .utf8)
-//          try container.encode(eventDataAsJSONString, forKey: .data)
-//      } else {
-//          try container.encodeNil(forKey: .data)
-//      }
+    try container.encode(self.vc, forKey: .vc)
+    try container.encode(self.vp, forKey: .vp)
+    try container.encode(self.nonce, forKey: .nonce)
   }
   //JSONEncoder()
 }
@@ -180,7 +192,7 @@ public struct JwtDecoded {
   var payload: JwtPayload
   var signature: String
   var data: String
-
+  
   public init(header: Header = Header(), payload: JwtPayload = JwtPayload(), signature: String = "", data: String = "") {
     self.header = header
     self.payload = payload
