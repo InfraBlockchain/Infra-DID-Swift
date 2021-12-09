@@ -21,7 +21,7 @@ public struct DIDResolutionResultSet: Decodable {
   }
 }
 
-public struct DIDResolutionResult: Decodable {
+public struct DIDResolutionResult: Codable {
   
   var didResolutionMetadata: DIDResolutionMetadata
   var didDocument: DIDDocument?
@@ -47,6 +47,13 @@ public struct DIDResolutionResult: Decodable {
     self.didResolutionMetadata = didResolutionMetadata
     self.didDocument = didDocument
     self.didDocumentMetadata = didDocumentMetaData
+  }
+  
+  func encode(from encoder: Encoder) throws {
+    var container = encoder.container(keyedBy: CodingKeys.self)
+    try container.encode(self.didResolutionMetadata, forKey: .didResolutionMetadata)
+    try container.encode(self.didDocumentMetadata, forKey: .didDocumentMetadata)
+    try container.encode(self.didDocument, forKey: .didDocument)
   }
   
 }
@@ -195,8 +202,8 @@ public enum controllerType: Codable {
   }
 }
 
-public struct DIDDocument {
-  var context: contextType? //string or [string]
+public struct DIDDocument: Encodable {
+  var context: [String] //string or [string]
   var id: String
   var alsoKnownAs: [String]?
   var controller: controllerType?
@@ -204,16 +211,23 @@ public struct DIDDocument {
   var service: [ServiceEndpoint]?
   var publicKey: [VerificationMethod]?
   var authentication: [String]
+  var capabilityInvocation: [String]
+  var assertionMethod: [String]
+  var capabilityDelegation: [String]
+  
+  
   
   enum CodingKeys: String, CodingKey {
     case context = "@context"
-    case id, alsoKnownAs, controller, verificationMethod, service, publicKey, authentication
+    case id, alsoKnownAs, controller, verificationMethod, service, publicKey, authentication, assertionMethod, capabilityInvocation,
+         capabilityDelegation
   }
   
-  public init(context: contextType? = nil, id: String = "", alsoKnownAs: [String]? = nil,
+  public init(context: [String] = [], id: String = "", alsoKnownAs: [String]? = nil,
               controller: controllerType? = nil,
               verificationMethod: [VerificationMethod]? = [], service: [ServiceEndpoint]? = [],
-              publicKey: [VerificationMethod]? = [], authentication: [String] = []) {
+              publicKey: [VerificationMethod]? = [], authentication: [String] = [], capabilityInvocation: [String] = [],
+              assertionMethod: [String] = [], capabilityDelegation: [String] = []) {
     self.context = context
     self.id = id
     self.alsoKnownAs = alsoKnownAs
@@ -222,12 +236,15 @@ public struct DIDDocument {
     self.service = service
     self.publicKey = publicKey
     self.authentication = authentication
+    self.assertionMethod = assertionMethod
+    self.capabilityDelegation = capabilityDelegation
+    self.capabilityInvocation = capabilityInvocation
   }
 }
 extension DIDDocument: Decodable {
   public init(from decoder: Decoder) throws {
     let values = try decoder.container(keyedBy: CodingKeys.self)
-    context = (try? values.decode(contextType?.self, forKey: .context)) ?? nil
+    context = (try? values.decode([String].self, forKey: .context)) ?? []
     id = (try? values.decode(String.self, forKey: .id)) ?? ""
     alsoKnownAs = (try? values.decode([String]?.self, forKey: .alsoKnownAs)) ?? nil
     controller = (try? values.decode(controllerType?.self, forKey: .controller)) ?? nil
@@ -235,6 +252,9 @@ extension DIDDocument: Decodable {
     service = (try? values.decode([ServiceEndpoint]?.self, forKey: .service)) ?? nil
     publicKey = (try? values.decode([VerificationMethod]?.self, forKey: .publicKey)) ?? nil
     authentication = (try? values.decode([String].self, forKey: .authentication)) ?? []
+    assertionMethod = (try? values.decode([String].self, forKey: .assertionMethod)) ?? []
+    capabilityInvocation = (try? values.decode([String].self, forKey: .capabilityInvocation)) ?? []
+    capabilityDelegation = (try? values.decode([String].self, forKey: .capabilityDelegation)) ?? []
   }
 }
 
@@ -333,7 +353,7 @@ public struct VerificationMethod: Codable {
   
   public init(id: String = "", type: String = "", controller: String = "", publicKeyBase58: String? = nil,
               publicKeyBase64: String? = nil, publicKeyJwk: JsonWebKey? = nil, publicKeyHex: String? = nil,
-              publicKeyMultibase: String? = nil, blockchainAccountId: String? = nil, ethereumAddress: String?) {
+              publicKeyMultibase: String? = nil, blockchainAccountId: String? = nil, ethereumAddress: String? = nil) {
     self.id = id
     self.type = type
     self.controller = controller
@@ -391,14 +411,14 @@ public func DIDResolve(did: String, parsed: ParsedDID, resolver: Resolver, optio
   return Promise<DIDResolutionResult>.value(DIDResolutionResult())
 }
 public var didResolver = WrappedResolve
-public typealias DIDResolverType = (String, ParsedDID, Resolver, DIDResolutionOptions) -> Promise<DIDResolutionResult>
+public typealias DIDResolverType = (String, ParsedDID, Resolver, DIDResolutionOptions) async -> Promise<DIDResolutionResult>
 //
 
 //
 public func WrappedResolve() -> Promise<DIDResolutionResult>
 { return Promise<DIDResolutionResult>.value(DIDResolutionResult()) }
 public var wrappedResolver: () -> Promise<DIDResolutionResult> = WrappedResolve
-public typealias wrappedResolverType = () -> Promise<DIDResolutionResult>
+public typealias wrappedResolverType = () async -> Promise<DIDResolutionResult>
 //
 
 
@@ -406,7 +426,7 @@ public typealias wrappedResolverType = () -> Promise<DIDResolutionResult>
 public func DIDCache(parsed: ParsedDID, resolve: @escaping wrappedResolverType) -> Promise<DIDResolutionResult>
 { return Promise<DIDResolutionResult>.value(DIDResolutionResult()) }
 public var didCache = DIDCache
-public typealias DidCacheType = (ParsedDID, @escaping wrappedResolverType) -> Promise<DIDResolutionResult>
+public typealias DidCacheType = (_ parsed: ParsedDID, _ resolve: @escaping wrappedResolverType) async -> Promise<DIDResolutionResult>
 //
 
 //
@@ -449,29 +469,30 @@ public var currentParsedDIDDocument: DIDResolutionResult? = nil
 
 public func inMemoryCache() -> DidCacheType {
   var cache: [String:DIDResolutionResult] = [:]
-  //var caches : DidCacheType
-  //guard let parsedDID = currentParsedDID else { return WrappedResolve() }
-  let caches : DidCacheType = { did, wrapped in
+
+  return {(did, wrapped) -> Promise<DIDResolutionResult> in
     if did.params != nil && did.params?.params["no-cache"] == "true" {
-      return wrapped()
+      return await wrapped()
     }
     
     let cached = cache[did.didUrl]
     if cached != nil { return Promise<DIDResolutionResult>.value(cached!) }
-    let result = wrapped()
+    let result = await wrapped()
     
     if result.value?.didResolutionMetadata.errorDescription != .notFound {
       cache[did.didUrl] = result.value!
     }
     return result
   }
-  return caches
+  
 }
 
 let pctEncoded = "(?:%[0-9a-fA-F]{2})"
-let idChar = "(?:[a-zA-Z0-9._-]|\(pctEncoded))"
-let method = "([a-z0-9]+)"
-let methodId = "(?:\(idChar)*:)*(\(idChar)+)"
+//let idChar = "(?:[a-zA-Z0-9._-]|\(pctEncoded))"
+let idChar = "[a-zA-Z0-9_.%-]"
+let method = "([a-zA-Z0-9_]+)"//"([a-z0-9]+)"
+
+let methodId = "(\(idChar)+(:\(idChar)+)*)"//"(?:\(idChar)*:)*(\(idChar)+)"
 let paramChar = "[a-zA-Z0-9_.:%-]"
 let param = ";\(paramChar)+=\(paramChar)*"
 let params = "((\(param))*)"
@@ -486,12 +507,17 @@ public func parse(didUrl: String) -> ParsedDID? {
   
   let sections = didUrl.matchingStrings(regex: "^did:\(method):\(methodId)\(params)\(path)\(query)\(fragment)$")[0]
   
+  iPrint(sections)
+  var param: [String:String] = [:]
   if sections.count != 0 {
-    let paramSplits = sections[3].split(separator: ";")
-    var param: [String:String] = [:]
-    let _ = paramSplits.reduce(into: [String:String]()) { (_, params) in
-      let p = params.split(separator: "=")
-      param[String(p[0])] = String(p[1])
+    let paramSplits = sections[4].split(separator: ";")
+    iPrint(paramSplits)
+    if paramSplits.count != 0 {
+      
+      let _ = paramSplits.reduce(into: [String:String]()) { (_, params) in
+        let p = params.split(separator: "=")
+        param[String(p[0])] = String(p[1])
+      }
     }
     
     let parts: ParsedDID = ParsedDID(did: "did:\(sections[1]):\(sections[2])", didUrl: didUrl, method: sections[1], id: sections[2], path: sections[5] == "" ? nil : sections[5], fragment: sections[7] == "" ? nil : sections[7], query: sections[6] == "" ? nil : sections[6], params: Params(object: param))

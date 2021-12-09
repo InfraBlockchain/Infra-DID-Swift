@@ -56,10 +56,10 @@ public struct IdConfiguration{
 
 public struct JwtVcIssuer {
   var did: String
-  var signer: EcdsaSignature //did jwt signer
+  var signer: JWTSigner //did jwt signer
   var alg: String?
   
-  public init(did: String = "", alg: String? = nil, signer: EcdsaSignature = EcdsaSignature(der: nil)!) {
+  public init(did: String = "", alg: String? = nil, signer: JWTSigner = JWTSigner.es256(privateKey: Data.init())) {
     self.did = did
     self.signer = signer
     self.alg = alg

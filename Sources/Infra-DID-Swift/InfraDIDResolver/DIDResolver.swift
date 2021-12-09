@@ -9,48 +9,46 @@ import Foundation
 import PromiseKit
 
 public protocol Resolvable {
-  func resolve(didUrl: String, options: DIDResolutionOptions?) -> Promise<DIDResolutionResult>
+  func resolve(didUrl: String, options: DIDResolutionOptions?) async -> Promise<DIDResolutionResult>
 }
 
 
-public class Resolver {
+public class Resolver: Resolvable {
   
-  private var resolverRegistry: ResolverRegistry = ResolverRegistry()
+  private var resolverRegistry: ResolverRegistry?
   private var cache: DidCacheType?
   
-  public func resolve(didUrl: String, options: DIDResolutionOptions?) -> Promise<DIDResolutionResult> {
+  public func resolve(didUrl: String, options: DIDResolutionOptions?) async -> Promise<DIDResolutionResult> {
     let parsed = parse(didUrl: didUrl)
     
-    var emptyResult = DIDResolutionResult()
+    iPrint(parsed)
+
     
-    return Promise { seal -> Void in
-      if (parsed == nil) {
-        emptyResult.didResolutionMetadata.errorDescription = .invalidDid
-        seal.fulfill(emptyResult)
-      }
-      //guard let registry = self.resolverRegistry
-      let resolver = self.resolverRegistry.methodName[parsed?.method ?? ""]
-      
-      
-      var _ : DidCacheType = { did, wrapped  in
-        var _ : wrappedResolverType = wrapped
-        return DIDResolve(did: did.did, parsed: did, resolver: self, options: options ?? DIDResolutionOptions())
-      }
-    }
+    guard let registry = self.resolverRegistry, let parsed = parsed, let cached = self.cache else { return emptyResult }
+    
+    guard let resolver = registry.methodName[parsed.method] else { return emptyResult }
+    
+    return await cached(parsed, {
+      let a = await resolver(parsed.did, parsed, self, options ?? DIDResolutionOptions())
+      return a
+    })
   }
   
-  init(regstry: ResolverRegistry, options: ResolverOptions = ResolverOptions(cache: nil, legacyResolver: nil)) {
-    self.resolverRegistry = regstry
+  init(registry: ResolverRegistry, options: ResolverOptions = ResolverOptions(cache: nil, legacyResolver: nil)) {
+    self.resolverRegistry = registry
     
     guard let optionCache = options.cache else { return }
+
+    iPrint(options.cache)
+    self.cache = options.cache != nil ? inMemoryCache() : noCache
     
-    self.cache = optionCache != nil ? inMemoryCache() : noCache
+    guard var registry = self.resolverRegistry else { return }
     
     if options.legacyResolver != nil {
       options.legacyResolver?.keys.forEach { methodName in
-        if let value = self.resolverRegistry.methodName[methodName] {
+        if registry.methodName[methodName] != nil {
           if let resolver = options.legacyResolver, let method = resolver[methodName] {
-            self.resolverRegistry.methodName[methodName] = wrapLegacyResolver(resolve: method)
+            registry.methodName[methodName] = wrapLegacyResolver(resolve: method)
           }
         }
       }
@@ -59,6 +57,6 @@ public class Resolver {
   
 }
 
-func noCache(parsed: ParsedDID, resolve: wrappedResolverType) -> Promise<DIDResolutionResult> {
-  return resolve()  //Promise<DIDResolutionResult>.value(currentParsedDIDDocument)
+func noCache(parsed: ParsedDID, resolve: wrappedResolverType) async -> Promise<DIDResolutionResult> {
+  return await resolve()  //Promise<DIDResolutionResult>.value(currentParsedDIDDocument)
 }
