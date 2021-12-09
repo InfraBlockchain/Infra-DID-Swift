@@ -10,13 +10,18 @@ import Foundation
 
 
 
-public struct CredentialStatus {
+public struct CredentialStatus: Codable {
   var id: String
   var type: String
+  
+  public init(id: String = "", type: String = "") {
+    self.id = id
+    self.type = type
+  }
 }
 
 
-public enum EvidenceType {
+public enum EvidenceType: Codable {
   case string(String)
   case dic([String:String])
   
@@ -80,18 +85,71 @@ public enum DateType {
 
 public typealias SubjectType = Dictionary<String, Any>
 
-public struct CredentialPayload { // organic struct add payload after verify Credential
+public struct CredentialPayload: Codable { // organic struct add payload after verify Credential
   var context: [String]
   var id: String?
   var type: [String]
   var issuer: [String:String]
-  var issuanceDate: DateType
-  var expirationDate: DateType?
-  var credentialSubject: SubjectType
+  var issuanceDate: String?
+  var expirationDate: String?
+  var credentialSubject: [String:String]
   var credentialStatus: CredentialStatus
   var evidence: EvidenceType?
   var termsOfUse: EvidenceType?
   var proof = [String:String]()
+  
+  public enum CodingKeys: String, CodingKey {
+    case context = "@context"
+    case id, type, issuer, issuanceDate, expirationDate, credentialSubject, credentialStatus, evidence, termsOfUse, proof
+  }
+ 
+  public init(context: [String] = [], id: String? = nil, type: [String] = [] ,
+              issuer: [String:String] = [:], issuanceDate: String? = nil, expirationDate: String? = nil,
+              credentialSubject: [String:String] = [:], credentialStatus: CredentialStatus = CredentialStatus(),
+              evidence: EvidenceType? = nil, termsOfUse: EvidenceType? = nil) {
+    self.context = context
+    self.id = id
+    self.type = type
+    self.issuer = issuer
+    self.issuanceDate = issuanceDate
+    self.evidence = evidence
+    self.expirationDate = expirationDate
+    self.credentialSubject = credentialSubject
+    self.credentialStatus = credentialStatus
+    self.termsOfUse = termsOfUse
+  }
+  
+  
+  public init(from decoder: Decoder) throws {
+    let values = try decoder.container(keyedBy: CodingKeys.self)
+    
+    context = (try? values.decode([String].self, forKey: .context)) ?? []
+    type = (try? values.decode([String].self, forKey: .type)) ?? []
+    id = (try? values.decode(String.self, forKey: .id)) ?? nil
+    issuer = (try? values.decode([String:String].self, forKey: .issuer)) ?? [:]
+    credentialStatus = (try? values.decode(CredentialStatus.self, forKey: .credentialStatus)) ?? CredentialStatus()
+    issuanceDate = (try? values.decode(String.self, forKey: .issuanceDate)) ?? nil
+    expirationDate = (try? values.decode(String.self, forKey: .expirationDate)) ?? nil
+    credentialSubject = (try? values.decode([String:String].self, forKey: .credentialSubject)) ?? [:]
+    proof = (try? values.decode([String:String].self, forKey: .proof)) ?? [:]
+    evidence = (try? values.decode(EvidenceType.self, forKey: .proof)) ?? EvidenceType.string("")
+    termsOfUse = (try? values.decode(EvidenceType.self, forKey: .proof)) ?? EvidenceType.string("")
+  }
+  
+  func encode(from encoder: Encoder) throws {
+    var container = encoder.container(keyedBy: CodingKeys.self)
+    try container.encode(self.context, forKey: .context)
+    try container.encode(self.type, forKey: .type)
+    try container.encode(self.id, forKey: .id)
+    try container.encode(self.issuer, forKey: .issuer)
+    try container.encode(self.credentialSubject, forKey: .credentialSubject)
+    try container.encode(self.credentialStatus, forKey: .credentialStatus)
+    try container.encode(self.issuanceDate, forKey: .issuanceDate)
+    try container.encode(self.expirationDate, forKey: .expirationDate)
+    try container.encode(self.proof, forKey: .proof)
+    try container.encode(self.evidence, forKey: .evidence)
+    try container.encode(self.termsOfUse, forKey: .termsOfUse)
+  }
 }
 
 public struct VerifiedCredential { //검증끝난 전체 데이터 구조
@@ -99,10 +157,37 @@ public struct VerifiedCredential { //검증끝난 전체 데이터 구조
   var verifiableCredential: CredentialPayload
 }
 
-public struct VerifiedPresentation {
+public struct VerifiedPresentation: Codable {
   var verifiedJwt: JwtVerified
-  var verifiableCredential: PresentationPayload
+  var verifiablePresentation: PresentationPayload
+  
+  public enum CodingKeys: CodingKey {
+    case verifiedJwt, verifiablePresentation
+  }
+  
+  public init(verifiedJwt: JwtVerified = JwtVerified(), verifiablePresentation: PresentationPayload = PresentationPayload()) {
+    self.verifiedJwt = verifiedJwt
+    self.verifiablePresentation = verifiablePresentation
+  }
+  
+  public init(from decoder: Decoder) throws {
+    let values = try decoder.container(keyedBy: CodingKeys.self)
+    
+    verifiedJwt = (try? values.decode(JwtVerified.self, forKey: .verifiedJwt)) ?? JwtVerified()
+    verifiablePresentation = (try? values.decode(PresentationPayload.self, forKey: .verifiablePresentation)) ?? PresentationPayload()
+
+
+  }
+  
+  func encode(from encoder: Encoder) throws {
+    var container = encoder.container(keyedBy: CodingKeys.self)
+    try container.encode(self.verifiablePresentation, forKey: .verifiablePresentation)
+    try container.encode(self.verifiedJwt, forKey: .verifiedJwt)
+
+  }
 }
+
+
 public struct VerifiablePresentationObject: Codable {
   var context: [String]
   var type: [String]
@@ -111,10 +196,43 @@ public struct VerifiablePresentationObject: Codable {
 }
 
 //
-//public enum VerifiableCredentialType {
-//  case string(String)
-//  case credential()
-//}
+public enum VerifiableCredentialType: Codable {
+  case string([String])
+  case credential(CredentialPayload)
+  
+  public init(from decoder: Decoder) throws {
+    let container = try decoder.singleValueContainer()
+    iPrint(container)
+    if let x = try? container.decode([String].self) {
+      self = .string(x)
+      return
+    }
+    if let x = try? container.decode(CredentialPayload.self) {
+      self = .credential(x)
+      return
+    }
+    throw DecodingError.typeMismatch(VerifiableCredentialType.self, DecodingError.Context(codingPath: decoder.codingPath, debugDescription: "Wrong type for vc Value"))
+  }
+  
+  public func encode(to encoder: Encoder) throws {
+          var container = encoder.singleValueContainer()
+          switch self {
+          case .string(let value):
+              try container.encode(value)
+          case .credential(let value):
+              try container.encode(value)
+          }
+  }
+//  
+  var credentialValue: Any {
+    switch self {
+    case .string(let s):
+      return s
+    case .credential(let payload):
+      return payload
+    }
+  }
+}
 
 public struct JwtPresentationPayload: Codable {
   var vp: VerifiablePresentationObject? //Extensible Object
@@ -131,13 +249,64 @@ public struct PresentationPayload: Codable {
   var context: [String]
   var type: [String]
   var id: String?
-  var verifiableCredential: [String]
+  var verifiableCredential: VerifiableCredentialType // [] or credentialPayload
   var holder: String
-  var verifier: String?
+  var verifier: [String]?
   var issuanceDate: String?
   var expirationDate: String?
+  var proof: [String:String]
+  
+  public init(context: [String] = [], type: [String] = [], verifiableCredential: VerifiableCredentialType = VerifiableCredentialType.string([]), holder: String = "", proof: [String:String] = [:], id: String? = nil,
+              verifier: [String]? = nil, issuanceDate: String? = nil, expirationDate: String? = nil) {
+    self.context = context
+    self.type = type
+    self.verifiableCredential = verifiableCredential
+    self.holder = holder
+    self.proof = proof
+    self.id = id
+    self.issuanceDate = issuanceDate
+    self.expirationDate = expirationDate
+    self.verifier = verifier
+  }
+  
+  public init(from decoder: Decoder) throws {
+    let values = try decoder.container(keyedBy: CodingKeys.self)
+    
+    context = (try? values.decode([String].self, forKey: .context)) ?? []
+    type = (try? values.decode([String].self, forKey: .type)) ?? []
+    id = (try? values.decode(String.self, forKey: .id)) ?? nil
+    verifiableCredential = (try? values.decode(VerifiableCredentialType.self, forKey: .verifiableCredential)) ?? VerifiableCredentialType.string([])
+    holder = (try? values.decode(String.self, forKey: .holder)) ?? ""
+    verifier = (try? values.decode([String].self, forKey: .verifier)) ?? []
+    issuanceDate = (try? values.decode(String.self, forKey: .issuanceDate)) ?? nil
+    expirationDate = (try? values.decode(String.self, forKey: .expirationDate)) ?? nil
+    proof = (try? values.decode([String:String].self, forKey: .proof)) ?? [:]
+
+  }
+  
+  func encode(from encoder: Encoder) throws {
+    var container = encoder.container(keyedBy: CodingKeys.self)
+    try container.encode(self.context, forKey: .context)
+    try container.encode(self.type, forKey: .type)
+    try container.encode(self.id, forKey: .id)
+    try container.encode(self.verifiableCredential, forKey: .verifiableCredential)
+    try container.encode(self.holder, forKey: .holder)
+    try container.encode(self.verifier, forKey: .verifier)
+    try container.encode(self.issuanceDate, forKey: .issuanceDate)
+    try container.encode(self.expirationDate, forKey: .expirationDate)
+    try container.encode(self.proof, forKey: .proof)
+  }
 }
 
+//public struct Proof: Codable {
+//  var type: String?
+//  var jwt: String?
+//
+//  public init(type: String? = nil, jwt: String? = nil) {
+//    self.type = type
+//    self.jwt = jwt
+//  }
+//}
 
 public struct Issuer {
   var did: String
@@ -155,8 +324,11 @@ public struct CreatePresentationOptions {
 public struct VerifyPresentationOptions {
   var domain: String?
   var challenge: String?
+  var audience: String?
   
-  public init() {}
+  public init(audience: String? = nil) {
+    self.audience = audience
+  }
 }
 
 
@@ -165,21 +337,34 @@ public func transformPresentationInput(input: PresentationPayload, removeOrigina
   //iPrint(input)
   guard let aud = input.verifier else { return JwtPresentationPayload()}
   let formatter = ISO8601DateFormatter.init()
-  var payload: JwtPresentationPayload = JwtPresentationPayload(vp: VerifiablePresentationObject(context: input.context, type: input.type, verifiableCredential: input.verifiableCredential), iss: input.holder, aud: [aud], nbf: nil, exp: nil, jti: nil, nonce: nil)
   
-  //formatter.date(from: <#T##String#>)
-  //iPrint(input.expirationDate)
+  if type(of: input.verifiableCredential) is String.Type {
+    iPrint(input)
+  }
+  
+  guard let vcData = try? input.verifiableCredential.toJsonData(),
+        let vcType = try? JSONDecoder().decode(VerifiableCredentialType.self, from: vcData),
+        let vc = vcType.credentialValue as? [String]
+        else { return JwtPresentationPayload() }
+  //test
+  iPrint(vc)
+  
+  var payload: JwtPresentationPayload = JwtPresentationPayload(vp: VerifiablePresentationObject(context: input.context, type: input.type, verifiableCredential: vc), iss: input.holder, aud: aud, nbf: nil, exp: nil, jti: nil, nonce: nil)
+
   iPrint(payload)
   if input.expirationDate != nil, let expDate = input.expirationDate {
-
-    //let exp = floor(Double(expDate.timeIntervalSinceNow) / 1000)
-    payload.exp = formatter.date(from: expDate)
+    let exp = floor(formatter.date(from: expDate)!.timeIntervalSinceNow / 1000)
+    iPrint(expDate)
+    payload.exp = formatter.date(from: Date(timeIntervalSinceNow: exp).ISO8601Format())
   }
   
   if input.issuanceDate != nil, let issDate = input.issuanceDate {
     //let nbf = floor(Double(issDate.timeIntervalSinceNow) / 1000)
-    payload.nbf = formatter.date(from: issDate)
+    iPrint(issDate)
+    let iss = floor(formatter.date(from: issDate)!.timeIntervalSinceNow / 1000)
+    payload.nbf = formatter.date(from: Date(timeIntervalSinceNow: iss).ISO8601Format())
   }
+  
   if input.id != nil, let id = input.id {
     payload.jti = id
   }

@@ -53,10 +53,13 @@ public struct JwtVerifyOptions {
   var callbackUrl: String?
   var resolver: Resolvable?
   var skewTime: Double?
-  var proofPurpose: ProofPurposeTypes
+  var proofPurpose: ProofPurposeTypes?
   
-  public init(proofPurpose: ProofPurposeTypes = ProofPurposeTypes.authentication) {
+  public init(proofPurpose: ProofPurposeTypes? = nil, audience: String? = nil,
+              resolver: Resolvable? = nil) {
     self.proofPurpose = proofPurpose
+    self.audience = audience
+    self.resolver = resolver
   }
 }
 
@@ -155,7 +158,6 @@ public struct JwtPayload: Claims {
     iss = (try? values.decode(String.self, forKey: .iss)) ?? nil
     sub = (try? values.decode(String.self, forKey: .sub)) ?? nil
     exp = (try? values.decode(Date.self, forKey: .exp)) ?? nil
-    iPrint(exp)
     aud = (try? values.decode([String].self, forKey: .aud)) ?? nil
     iat = (try? values.decode(Date.self, forKey: .iat)) ?? nil
     nbf = (try? values.decode(Date.self, forKey: .nbf)) ?? nil
@@ -216,18 +218,43 @@ public struct JwsDecoded {
   }
 }
 
-public struct JwtVerified {
+public struct JwtVerified: Codable {
   var payload: JwtPayload?
-  var didResolutionsResult: DIDResolutionResult
+  var didResolutionResult: DIDResolutionResult
   var issuer: String
   var signer: VerificationMethod
   var jwt: String
   
-  public init(didResolutionResult: DIDResolutionResult = DIDResolutionResult(), issuer: String = "", signer: VerificationMethod = VerificationMethod(), jwt: String = "") {
-    self.didResolutionsResult = didResolutionResult
+  public enum CodingKeys: CodingKey {
+    case payload, didResolutionResult, issuer, signer, jwt
+  }
+  public init(didResolutionResult: DIDResolutionResult = DIDResolutionResult(), issuer: String = "", signer: VerificationMethod = VerificationMethod(), jwt: String = "", payload: JwtPayload? = nil) {
+    self.didResolutionResult = didResolutionResult
     self.issuer = issuer
     self.signer = signer
     self.jwt = jwt
+    self.payload = payload
+  }
+  
+  public init(from decoder: Decoder) throws {
+    let values = try decoder.container(keyedBy: CodingKeys.self)
+
+    payload = (try? values.decode(JwtPayload.self, forKey: .payload)) ?? nil
+    didResolutionResult = (try? values.decode(DIDResolutionResult.self, forKey: .didResolutionResult)) ?? DIDResolutionResult()
+    issuer = (try? values.decode(String.self, forKey: .issuer)) ?? ""
+    signer = (try? values.decode(VerificationMethod.self, forKey: .signer)) ?? VerificationMethod()
+    jwt = (try? values.decode(String.self, forKey: .jwt)) ?? ""
+
+
+  }
+  
+  func encode(from encoder: Encoder) throws {
+    var container = encoder.container(keyedBy: CodingKeys.self)
+    try container.encode(self.payload, forKey: .payload)
+    try container.encode(self.didResolutionResult, forKey: .didResolutionResult)
+    try container.encode(self.issuer, forKey: .issuer)
+    try container.encode(self.signer, forKey: .signer)
+    try container.encode(self.jwt, forKey: .jwt)
   }
 }
 

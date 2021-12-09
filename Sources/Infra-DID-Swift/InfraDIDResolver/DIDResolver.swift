@@ -9,16 +9,16 @@ import Foundation
 import PromiseKit
 
 public protocol Resolvable {
-  func resolve(didUrl: String, options: DIDResolutionOptions?) -> Promise<DIDResolutionResult>
+  func resolve(didUrl: String, options: DIDResolutionOptions?) async -> Promise<DIDResolutionResult>
 }
 
 
-public class Resolver {
+public class Resolver: Resolvable {
   
   private var resolverRegistry: ResolverRegistry?
   private var cache: DidCacheType?
   
-  public func resolve(didUrl: String, options: DIDResolutionOptions?) -> Promise<DIDResolutionResult> {
+  public func resolve(didUrl: String, options: DIDResolutionOptions?) async -> Promise<DIDResolutionResult> {
     let parsed = parse(didUrl: didUrl)
     
     iPrint(parsed)
@@ -28,8 +28,9 @@ public class Resolver {
     
     guard let resolver = registry.methodName[parsed.method] else { return emptyResult }
     
-    return cached(parsed, {
-      resolver(parsed.did, parsed, self, options ?? DIDResolutionOptions())
+    return await cached(parsed, {
+      let a = await resolver(parsed.did, parsed, self, options ?? DIDResolutionOptions())
+      return a
     })
   }
   
@@ -56,6 +57,6 @@ public class Resolver {
   
 }
 
-func noCache(parsed: ParsedDID, resolve: wrappedResolverType) -> Promise<DIDResolutionResult> {
-  return resolve()  //Promise<DIDResolutionResult>.value(currentParsedDIDDocument)
+func noCache(parsed: ParsedDID, resolve: wrappedResolverType) async -> Promise<DIDResolutionResult> {
+  return await resolve()  //Promise<DIDResolutionResult>.value(currentParsedDIDDocument)
 }

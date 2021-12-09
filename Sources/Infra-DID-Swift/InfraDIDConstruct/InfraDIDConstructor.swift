@@ -11,6 +11,8 @@ import secp256k1
 import secp256k1_implementation
 import EosioSwiftEcc
 import PromiseKit
+import EosioSwiftSoftkeySignatureProvider
+import EosioSwiftAbieosSerializationProvider
 
 
 protocol InfraDIDConfApiDependency { // method Construction & Manipulation DID
@@ -34,7 +36,7 @@ public class InfraDIDConstructor {
   private var currentCurveType: EllipticCurveType = EllipticCurveType.k1
   
   private var didOwnerPrivateKeyObjc: secp256k1.Signing.PrivateKey?
-  
+  private var sigProviderPrivKeys: [String] = []
   
   
   public init(config: IdConfiguration) {
@@ -66,7 +68,7 @@ public class InfraDIDConstructor {
     let keyPair = try! secp256k1.Signing.PrivateKey.init(rawRepresentation: dataPvKey)
     self.didOwnerPrivateKeyObjc = keyPair
     
-    var sigProviderPrivKeys: [String] = []
+    
     sigProviderPrivKeys.append(config.didOwnerPrivateKey)
     if (config.txfeePayerAccount != nil) && (config.txfeePayerPrivateKey != nil) {
       guard let key: String = config.txfeePayerPrivateKey else {return}
@@ -119,23 +121,43 @@ extension InfraDIDConstructor: InfraDIDConfApiDependency {
     
     let sliceKeyData = Data(sliceKey)
     
-    let options: EosioRpcTableRowsRequest = EosioRpcTableRowsRequest(scope: self.idConfig.registryContract, code: self.idConfig.registryContract, table: "pubkeydid", json: true, limit: 1, tableKey: nil, lowerBound: sliceKeyData.hexEncodedString(), upperBound: sliceKeyData.hexEncodedString(), indexPosition: "2", keyType: "sha256", encodeType: .hex, reverse: false, showPayer: false)
+    let options: EosioRpcTableRowsRequest = EosioRpcTableRowsRequest(scope: self.idConfig.registryContract, code: self.idConfig.registryContract, table: "pubkeydid", json: true, limit: 1, tableKey: nil, lowerBound: sliceKeyData.hexEncodedString(), upperBound: sliceKeyData.hexEncodedString(), indexPosition: "1", keyType: "sha256", encodeType: .hex, reverse: false, showPayer: false)
     
-    return Promise { seal in
-      firstly {
-        jsonRPC.getTableRows(.promise, requestParameters: options)
-      }.done {
-        
-        if let row = $0.rows[0] as? [String: Any],
-           let nonceValue = row["nonce"] as? Double
-        {
-          seal.fulfill(nonceValue)
-        } else {
-          seal.fulfill(0.0)
-          print(NSError.init())
+    var nonce:Double = 0.0
+    jsonRPC.getTableRowsPublisher(requestParameters: options)
+      .sink { result in
+        switch result {
+        case .failure(let err):
+          iPrint(err.localizedDescription)
+        case .finished:
+          break
         }
+      } receiveValue: { res in
+        iPrint(res.rows)
       }
-    }
+      
+    
+//    let res = jsonRPC.getTableRows(.promise, requestParameters: options)
+//    if res.value == nil {
+//      nonce = 0.0
+//    }
+    
+//    return Promise { seal in
+//      firstly {
+//        jsonRPC.getTableRows(.promise, requestParameters: options)
+//      }.done {
+//
+//        if let row = $0.rows[0] as? [String: Any],
+//           let nonceValue = row["nonce"] as? Double
+//        {
+//          seal.fulfill(nonceValue)
+//        } else {
+//          seal.fulfill(0.0)
+//          print(NSError.init())
+//        }
+//      }
+//    }
+    return Promise<Double>.value(nonce)
   }
   
   func setAttributePubKeyDID(action: TransactionAction, key: String = "",
@@ -168,6 +190,7 @@ extension InfraDIDConstructor: InfraDIDConfApiDependency {
       let digest: SHA256Digest = SHA256.hash(data: bufArray)
       let signature = try! self.didOwnerPrivateKeyObjc?.signature(for: digest)
       
+      iPrint(signature)
       guard let sign = signature else { return }
       
       let transactionSet: TransactionDefaultSet = TransactionDefaultSet(actionName: action, signKey: sign.rawRepresentation.toEosioK1Signature)
@@ -189,14 +212,16 @@ extension InfraDIDConstructor: InfraDIDConfApiDependency {
   
   private func setAttributeTransaction(set: TransactionDefaultSet, key: String, value: String) {
     guard let actor = self.idConfig.txfeePayerAccount, let pubKey = self.didPubKey else { return }
-    let action: EosioTransaction.Action = try! EosioTransaction.Action.init(account: self.idConfig.registryContract, name: set.actionName.rawValue, authorization: [EosioTransaction.Action.Authorization.init(actor: actor, permission: "active")],
-        data: ["pk": pubKey, "key": key, "value": value, "sig": set.signKey, "ram_payer": actor])
+    let action: EosioTransaction.Action = try! EosioTransaction.Action.init(account: EosioName(self.idConfig.registryContract), name: EosioName(set.actionName.rawValue), authorization: [EosioTransaction.Action.Authorization.init(actor: EosioName(actor), permission: EosioName("active"))],
+                                                                            data: ["pk": pubKey, "key": key, "value": value, "sig": set.signKey, "ram_payer": actor])
 
     let transaction = EosioTransaction.init()
 
     transaction.config.expireSeconds = 30
     transaction.config.blocksBehind = 3
-
+    transaction.rpcProvider = self.jsonRpc
+    transaction.signatureProvider = try! EosioSoftkeySignatureProvider(privateKeys: sigProviderPrivKeys)
+    transaction.serializationProvider = EosioAbieosSerializationProvider()
     transaction.add(action: action)
 
     transaction.signAndBroadcast { result in
@@ -211,14 +236,16 @@ extension InfraDIDConstructor: InfraDIDConfApiDependency {
   
   private func clearTransaction(set: TransactionDefaultSet) {
     guard let actor = self.idConfig.txfeePayerAccount, let pubKey = self.didPubKey else { return }
-    let action: EosioTransaction.Action = try! EosioTransaction.Action.init(account: self.idConfig.registryContract, name: set.actionName.rawValue, authorization: [EosioTransaction.Action.Authorization.init(actor: actor, permission: "active")],
+    let action: EosioTransaction.Action = try! EosioTransaction.Action.init(account: EosioName(self.idConfig.registryContract), name: EosioName(set.actionName.rawValue), authorization: [EosioTransaction.Action.Authorization.init(actor: EosioName(actor), permission: EosioName("active"))],
         data: ["pk": pubKey, "sig": set.signKey])
 
     let transaction = EosioTransaction.init()
 
     transaction.config.expireSeconds = 30
     transaction.config.blocksBehind = 3
-
+    transaction.rpcProvider = self.jsonRpc
+    transaction.signatureProvider = try! EosioSoftkeySignatureProvider(privateKeys: sigProviderPrivKeys)
+    transaction.serializationProvider = EosioAbieosSerializationProvider()
     transaction.add(action: action)
 
     transaction.signAndBroadcast { result in

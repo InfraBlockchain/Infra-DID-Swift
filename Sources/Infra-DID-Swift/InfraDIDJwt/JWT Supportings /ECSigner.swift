@@ -98,9 +98,9 @@ class BlueECVerifier: VerifierAlgorithm {
     // Send the base64URLencoded signature and `header.claims` to BlueECC for verification.
     private func verify(signature: Data, for data: Data) -> Bool {
         do {
-            guard let keyString = String(data: key, encoding: .utf8) else {
-                return false
-            }
+//            guard let keyString = String(data: key, encoding: .utf8) else {
+//                return false
+//            }
             let r = signature.subdata(in: 0 ..< signature.count/2)
             let s = signature.subdata(in: signature.count/2 ..< signature.count)
           
@@ -136,7 +136,7 @@ public struct JWTSigner {
     /// - Parameter privateKey: The UTF8 encoded PEM private key, with either a "BEGIN EC PRIVATE KEY" or "BEGIN PRIVATE KEY" header.
     @available(OSX 10.13, iOS 11, tvOS 11.0, watchOS 4.0, *)
     public static func es256(privateKey: Data) -> JWTSigner {
-        return JWTSigner(name: "ES256", signerAlgorithm: BlueECSigner(key: privateKey, curve: .k1))
+        return JWTSigner(name: "ES256K", signerAlgorithm: BlueECSigner(key: privateKey, curve: .k1))
     }
 
 }

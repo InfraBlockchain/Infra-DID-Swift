@@ -21,7 +21,7 @@ public struct DIDResolutionResultSet: Decodable {
   }
 }
 
-public struct DIDResolutionResult: Decodable {
+public struct DIDResolutionResult: Codable {
   
   var didResolutionMetadata: DIDResolutionMetadata
   var didDocument: DIDDocument?
@@ -47,6 +47,13 @@ public struct DIDResolutionResult: Decodable {
     self.didResolutionMetadata = didResolutionMetadata
     self.didDocument = didDocument
     self.didDocumentMetadata = didDocumentMetaData
+  }
+  
+  func encode(from encoder: Encoder) throws {
+    var container = encoder.container(keyedBy: CodingKeys.self)
+    try container.encode(self.didResolutionMetadata, forKey: .didResolutionMetadata)
+    try container.encode(self.didDocumentMetadata, forKey: .didDocumentMetadata)
+    try container.encode(self.didDocument, forKey: .didDocument)
   }
   
 }
@@ -195,8 +202,8 @@ public enum controllerType: Codable {
   }
 }
 
-public struct DIDDocument {
-  var context: contextType? //string or [string]
+public struct DIDDocument: Encodable {
+  var context: [String] //string or [string]
   var id: String
   var alsoKnownAs: [String]?
   var controller: controllerType?
@@ -216,7 +223,7 @@ public struct DIDDocument {
          capabilityDelegation
   }
   
-  public init(context: contextType? = nil, id: String = "", alsoKnownAs: [String]? = nil,
+  public init(context: [String] = [], id: String = "", alsoKnownAs: [String]? = nil,
               controller: controllerType? = nil,
               verificationMethod: [VerificationMethod]? = [], service: [ServiceEndpoint]? = [],
               publicKey: [VerificationMethod]? = [], authentication: [String] = [], capabilityInvocation: [String] = [],
@@ -237,7 +244,7 @@ public struct DIDDocument {
 extension DIDDocument: Decodable {
   public init(from decoder: Decoder) throws {
     let values = try decoder.container(keyedBy: CodingKeys.self)
-    context = (try? values.decode(contextType?.self, forKey: .context)) ?? nil
+    context = (try? values.decode([String].self, forKey: .context)) ?? []
     id = (try? values.decode(String.self, forKey: .id)) ?? ""
     alsoKnownAs = (try? values.decode([String]?.self, forKey: .alsoKnownAs)) ?? nil
     controller = (try? values.decode(controllerType?.self, forKey: .controller)) ?? nil
@@ -404,14 +411,14 @@ public func DIDResolve(did: String, parsed: ParsedDID, resolver: Resolver, optio
   return Promise<DIDResolutionResult>.value(DIDResolutionResult())
 }
 public var didResolver = WrappedResolve
-public typealias DIDResolverType = (String, ParsedDID, Resolver, DIDResolutionOptions) -> Promise<DIDResolutionResult>
+public typealias DIDResolverType = (String, ParsedDID, Resolver, DIDResolutionOptions) async -> Promise<DIDResolutionResult>
 //
 
 //
 public func WrappedResolve() -> Promise<DIDResolutionResult>
 { return Promise<DIDResolutionResult>.value(DIDResolutionResult()) }
 public var wrappedResolver: () -> Promise<DIDResolutionResult> = WrappedResolve
-public typealias wrappedResolverType = () -> Promise<DIDResolutionResult>
+public typealias wrappedResolverType = () async -> Promise<DIDResolutionResult>
 //
 
 
@@ -419,7 +426,7 @@ public typealias wrappedResolverType = () -> Promise<DIDResolutionResult>
 public func DIDCache(parsed: ParsedDID, resolve: @escaping wrappedResolverType) -> Promise<DIDResolutionResult>
 { return Promise<DIDResolutionResult>.value(DIDResolutionResult()) }
 public var didCache = DIDCache
-public typealias DidCacheType = (_ parsed: ParsedDID, _ resolve: @escaping wrappedResolverType) -> Promise<DIDResolutionResult>
+public typealias DidCacheType = (_ parsed: ParsedDID, _ resolve: @escaping wrappedResolverType) async -> Promise<DIDResolutionResult>
 //
 
 //
@@ -465,12 +472,12 @@ public func inMemoryCache() -> DidCacheType {
 
   return {(did, wrapped) -> Promise<DIDResolutionResult> in
     if did.params != nil && did.params?.params["no-cache"] == "true" {
-      return wrapped()
+      return await wrapped()
     }
     
     let cached = cache[did.didUrl]
     if cached != nil { return Promise<DIDResolutionResult>.value(cached!) }
-    let result = wrapped()
+    let result = await wrapped()
     
     if result.value?.didResolutionMetadata.errorDescription != .notFound {
       cache[did.didUrl] = result.value!

@@ -67,7 +67,7 @@ public struct JWT<T: Claims>: Codable {
             throw JWTError.failedVerification
         }
         let jsonDecoder = JSONDecoder()
-        jsonDecoder.dateDecodingStrategy = .secondsSince1970
+        jsonDecoder.dateDecodingStrategy = .iso8601
         let header = try jsonDecoder.decode(Header.self, from: headerData)
         let claims = try jsonDecoder.decode(T.self, from: claimsData)
         self.header = header
