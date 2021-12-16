@@ -33,7 +33,7 @@ public class InfraDIDConstructor {
   private var did: String = ""
   private var jsonRpc: EosioRpcProvider?
   
-  private var currentCurveType: EllipticCurveType = EllipticCurveType.k1
+  //private var currentCurveType: EllipticCurveType = EllipticCurveType.k1
   
   private var didOwnerPrivateKeyObjc: secp256k1.Signing.PrivateKey?
   private var sigProviderPrivKeys: [String] = []
@@ -48,7 +48,7 @@ public class InfraDIDConstructor {
     let didSplit = config.did.split(separator: ":")
     
     guard didSplit.count == 4 else { return }
-    guard currentCurveType == .k1 else { return }
+    //guard currentCurveType == .k1 else { return }
     
     let idNetwork = String(didSplit[3])
     
@@ -79,14 +79,15 @@ public class InfraDIDConstructor {
     
     idConfig.pubKeyDidSignDataPrefix = config.pubKeyDidSignDataPrefix ?? defaultPubKeyDidSignDataPrefix
     
-    //////////////////////// Setting Finish
-    let pvKeyArray = [UInt8](dataPvKey)
-    let sliceKey = pvKeyArray[1...pvKeyArray.count-1]
+//    //////////////////////// Setting Finish
+//    let pvKeyArray = [UInt8](dataPvKey)
+//    let sliceKey = pvKeyArray[1...pvKeyArray.count-1]
     
     
     if idConfig.jwtSigner == nil {
-      let signature = EcdsaSignature(der: Data(sliceKey), curve: .k1)
-      self.idConfig.jwtSigner = signature
+      let signer = JWTSigner.es256(privateKey: dataPvKey)
+     // let signature = EcdsaSignature(der: Data(sliceKey), curve: .k1)
+      self.idConfig.jwtSigner = signer
     } else {
       self.idConfig.jwtSigner = config.jwtSigner
     }
@@ -104,7 +105,6 @@ public class InfraDIDConstructor {
     
     return ["did": did, "publicKey": publicKey, "privateKey": privateKey]
   }
-  
 }
 
 
@@ -165,6 +165,8 @@ extension InfraDIDConstructor: InfraDIDConfApiDependency {
     let actionName: String = action.rawValue
     var bufArray: [UInt8] = [] //digest buffer initialize
     
+    guard let keyPair = self.didOwnerPrivateKeyObjc else { return }
+    
     firstly {
       getNonceForPubKeyDid() // Create Nonce
     }
@@ -187,13 +189,17 @@ extension InfraDIDConstructor: InfraDIDConfApiDependency {
       }
 
       // bufArray hash And Digest
-      let digest: SHA256Digest = SHA256.hash(data: bufArray)
-      let signature = try! self.didOwnerPrivateKeyObjc?.signature(for: digest)
+//      let digest: SHA256Digest = SHA256.hash(data: bufArray)
+//      self.idConfig.
+//      try! EosioEccSign.signWithK1(publicKey: self.didOwnerPrivateKeyObjc?.publicKey.rawRepresentation, privateKey: self.didOwnerPrivateKeyObjc?.rawRepresentation, data: bufArray)
+      
+      let signature = try? EosioEccSign.signWithK1(publicKey: keyPair.publicKey.rawRepresentation, privateKey: keyPair.rawRepresentation, data: Data(bufArray))//try! self.didOwnerPrivateKeyObjc?.signature(for: digest)
       
       iPrint(signature)
-      guard let sign = signature else { return }
       
-      let transactionSet: TransactionDefaultSet = TransactionDefaultSet(actionName: action, signKey: sign.rawRepresentation.toEosioK1Signature)
+      guard let sign = signature else { return }
+      iPrint(sign.toEosioK1Signature)
+      let transactionSet: TransactionDefaultSet = TransactionDefaultSet(actionName: action, signKey: sign.toEosioK1Signature)
       
       switch action {
       case .set:

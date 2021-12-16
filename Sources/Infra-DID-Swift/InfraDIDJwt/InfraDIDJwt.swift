@@ -17,14 +17,6 @@ fileprivate let didJson = "application/did+json"
 public let nbfSkew: Double = 300
 
 
-public func encodeSection(data: Any, shouldCanonicalize: Bool = false) -> String { // data to encodeBase64URL
-  if shouldCanonicalize {
-    return ""
-  } else {
-    return ""
-  }
-}
-
 func decodeJws(jws: String) -> JwsDecoded {
   let a = "([a-zA-Z0-9_-]+)"
   let part = jws.matchingStrings(regex: "^\(a).\(a).\(a)$")[0]
@@ -118,14 +110,6 @@ public func createJwt(payload: JwtPayload, jwtOptions: JwtOptions, header: Heade
   
   if header.alg == "" { header.alg = defaultAlg }
   return await createJws(payload: fullPayload, signer: signer, header: header, options: JwsCreationOptions(canonicalize: jwtOptions.canonicalize))
-//  return Promise { seal in
-//    firstly {
-//      createJws(payload: fullPayload, signer: signer, header: header, options: JwsCreationOptions(canonicalize: jwtOptions.canonicalize))
-//    }.done { signature in
-//      seal.fulfill(signature)
-//    }
-//  }
-  //createJws(payload: fullPayload, signer: signer, header: header, options: JwsCreationOptions(canonicalize: jwtOptions.canonicalize))
 }
 
 //public func verifyJwsDecoded(decode: JwsDecoded, pubKeys: [VerificationMethod]) -> VerificationMethod {
@@ -139,6 +123,8 @@ public func createJwt(payload: JwtPayload, jwtOptions: JwtOptions, header: Heade
 @available(macOS 12, *)
 public func verifyJwt(jwt: String, options: JwtVerifyOptions) async throws -> JwtVerified {
   let jwtDecoded = decodeJwt(jwt: jwt)
+  
+  iPrint(jwtDecoded)
   var proofPurpose: ProofPurposeTypes? = options.proofPurpose ?? nil
   var resultVerified = JwtVerified()
   //guard let auth = options.auth, let resolver = options.resolver, let skewTime = options.skewTime,
@@ -177,7 +163,8 @@ public func verifyJwt(jwt: String, options: JwtVerifyOptions) async throws -> Jw
   }
   
   let authenticator = try! await resolveAuthenticator(resolver: resolver, alg: jwtDecoded.header.alg!, issuer: did, proofPurpose: proofPurpose ?? .authentication)
-  
+  iPrint(authenticator)
+
   let verified = try! await resolveVerified(authenticator: authenticator, jwt: jwt, jwtDecoded: jwtDecoded, options: options)
   
   return verified
@@ -252,8 +239,9 @@ public func resolveVerified(authenticator: DIDAuthenticator, jwt: String, jwtDec
   } else if authenticator.authenticators.count != 0 {
     guard let keyHex = authenticator.authenticators[0].publicKeyHex else { throw JWTError(localizedDescription: "not Found Key")}
     let pubKey = try! Data(hex: keyHex)
+    iPrint(pubKey.toEosioK1PublicKey)
     let verifier = JWTVerifier.es256(publicKey: pubKey)
-    
+    iPrint(authenticator.issuer)
     let isVerified = verifier.verify(jwt: jwt)
     
     guard isVerified else { throw JWTError(localizedDescription: "not Verified Jwt")}
@@ -313,10 +301,6 @@ public func resolveAuthenticator(resolver: Resolvable, alg: String, issuer: Stri
   var authenticator = DIDAuthenticator()
   
   let res = await resolver.resolve(didUrl: issuer, options: DIDResolutionOptions(accept: didJson))
-  iPrint(res.isFulfilled)
-  iPrint(res.isPending)
-  
-  iPrint(res.value)
   
   if res.isFulfilled && res.value != nil {
     guard let result = res.value else { return DIDAuthenticator() }
@@ -326,7 +310,6 @@ public func resolveAuthenticator(resolver: Resolvable, alg: String, issuer: Stri
       didResult = result
     }
     
-    iPrint(result)
     if didResult.didResolutionMetadata.errorDescription != nil || didResult.didDocument == nil {
       throw JWTError(localizedDescription: "resolver_error: Unable to resolve DID document for \(issuer)")
     }
