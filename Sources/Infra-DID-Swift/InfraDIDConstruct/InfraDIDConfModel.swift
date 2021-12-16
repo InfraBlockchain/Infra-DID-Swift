@@ -30,7 +30,7 @@ public struct IdConfiguration{
   var networkId: String
   var registryContract: String
   var rpcEndpoint: String
-  var jwtSigner: EcdsaSignature?
+  var jwtSigner: JWTSigner?
   var txfeePayerAccount: String?
   var txfeePayerPrivateKey: String?
   var pubKeyDidSignDataPrefix: String?
@@ -38,7 +38,7 @@ public struct IdConfiguration{
   
   
   init(did: String = "", didOwnerPrivateKey: String = "", networkId: String = "",
-       registryContract: String = "", rpcEndpoint: String = "", jwtSigner: EcdsaSignature? = nil,
+       registryContract: String = "", rpcEndpoint: String = "", jwtSigner: JWTSigner? = nil,
        txfeePayAccount: String? = nil, txfeePayerPrivateKey: String? = nil,
        pubKeyDidSignDataPrefix: String? = nil) {
     self.did = did

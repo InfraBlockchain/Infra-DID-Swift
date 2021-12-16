@@ -118,7 +118,7 @@ public struct JwtPayload: Claims {
   public var nbf: Date?
   public var exp: Date?
   var rexp: Double?
-  var requested: [String]
+  //var requested: [String]
   //var subJwk: [String:Any]?
   var did: String?
   //var claim: T
@@ -128,15 +128,15 @@ public struct JwtPayload: Claims {
   var nonce: String?
   
   enum CodingKeys:  String, CodingKey {
-    case iss, sub, aud, iat, nbf, exp, rexp, requested, did, vc, vp, nonce
+    case iss, sub, aud, iat, nbf, exp, rexp, did, vc, vp, nonce
     //case subJwk = "sub_jwk"
   }
   
   public init(iat: Date? = nil, iss: String? = "", sub: String? = "", nbf: Date? = nil,
               exp: Date? = nil, rexp: Double? = nil,
-              requested: [String] = [], aud: [String]? = nil, did: String? = nil, vc: VerifiableCredentialObject? = nil, vp: VerifiablePresentationObject? = nil,
+              aud: [String]? = nil, did: String? = nil, vc: VerifiableCredentialObject? = nil, vp: VerifiablePresentationObject? = nil,
               nonce: String? = nil) {
-    self.requested = requested
+    //self.requested = requested
     self.iat = iat
     self.iss = iss
     self.sub = sub
@@ -162,7 +162,7 @@ public struct JwtPayload: Claims {
     iat = (try? values.decode(Date.self, forKey: .iat)) ?? nil
     nbf = (try? values.decode(Date.self, forKey: .nbf)) ?? nil
     rexp = (try? values.decode(Double.self, forKey: .rexp)) ?? nil
-    requested = (try? values.decode([String].self, forKey: .requested)) ?? []
+   // requested = (try? values.decode([String].self, forKey: .requested)) ?? []
     did = (try? values.decode(String.self, forKey: .did)) ?? nil
     //subJwk = (try? values.decode([String:Any].self, forKey: .subJwk)) ?? nil
     vc = (try? values.decode(VerifiableCredentialObject.self, forKey: .vc)) ?? nil
@@ -177,7 +177,7 @@ public struct JwtPayload: Claims {
     try container.encode(self.sub, forKey: .sub)
     try container.encode(self.exp, forKey: .exp)
     try container.encode(self.rexp, forKey: .rexp)
-    try container.encode(self.requested, forKey: .requested)
+    //try container.encode(self.requested, forKey: .requested)
     try container.encode(self.aud, forKey: .aud)
     try container.encode(self.nbf, forKey: .nbf)
     try container.encode(self.did, forKey: .did)

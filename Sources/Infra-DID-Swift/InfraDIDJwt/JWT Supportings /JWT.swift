@@ -114,26 +114,6 @@ public struct JWT<T: Claims>: Codable {
     ///
     /// - Parameter leeway: The time in seconds that the JWT can be invalid but still accepted to account for clock differences.
     /// - Returns: A value of `ValidateClaimsResult`.
-//    public func validateClaims(leeway: TimeInterval = 0) -> ValidateClaimsResult {
-//        if let expirationDate = claims.exp {
-//            if expirationDate + leeway < Date() {
-//                return .expired
-//            }
-//        }
-//
-//        if let notBeforeDate = claims.nbf {
-//            if notBeforeDate > Date() + leeway {
-//                return .notBefore
-//            }
-//        }
-//
-//        if let issuedAtDate = claims.iat {
-//            if issuedAtDate > Date() + leeway {
-//                return .issuedAt
-//            }
-//        }
-//
-//        return .success
-//    }
+
 }
 

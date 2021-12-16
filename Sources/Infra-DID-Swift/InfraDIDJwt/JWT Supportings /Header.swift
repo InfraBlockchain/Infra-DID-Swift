@@ -57,7 +57,9 @@ public struct Header: Codable {
     func encode() throws -> String  {
         let jsonEncoder = JSONEncoder()
         jsonEncoder.dateEncodingStrategy = .secondsSince1970
+      let data1 = try! self.toJsonString().data(using: .utf8)
+      iPrint(data1)
         let data = try jsonEncoder.encode(self)
-        return base64urlEncodedString(data: data)
+        return base64urlEncodedString(data: data1!)
     }
 }
