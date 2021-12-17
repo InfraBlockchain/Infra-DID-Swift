@@ -100,7 +100,7 @@ extension InfraDIDResolver: InfraDIDResolvable {
   private func resolvePubKeyDID(did: String, pubKey: String, network: ConfiguredNetwork) async -> ResolvedDIDDocument {
     guard let pubKeyData = try? Data(eosioPublicKey: pubKey) else { return ResolvedDIDDocument() }
     let pubKeyArray = [UInt8](pubKeyData)
-    let sliceKey = pubKeyArray[1...pubKeyArray.count]
+    let sliceKey = pubKeyArray[1...pubKeyArray.count-1]
     
     
     let sliceKeyData = Data(sliceKey)
