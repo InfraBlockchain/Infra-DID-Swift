@@ -17,7 +17,7 @@ fileprivate let didJson = "application/did+json"
 public let nbfSkew: Double = 300
 
 
-func decodeJws(jws: String) -> JwsDecoded {
+private func decodeJws(jws: String) -> JwsDecoded {
   let a = "([a-zA-Z0-9_-]+)"
   let part = jws.matchingStrings(regex: "^\(a).\(a).\(a)$")[0]
   //let part = jws.matchingStrings(regex: "^\(a)\.\(b)\.\(c)$")
@@ -61,7 +61,7 @@ public enum PayloadType {
   case jwtPayload(JwtPayload?)
 }
 
-public func createJws(payload: JwtPayload, signer: JWTSigner, header: Header?, options: JwsCreationOptions) async -> String {
+private func createJws(payload: JwtPayload, signer: JWTSigner, header: Header?, options: JwsCreationOptions) async -> String {
   guard let header = header else { return ""}
   
   //  let encodedPayload = type(of: payload) == String ? payload : encodeSection(data: payload, shouldCanonicalize: options.canonicalize)
@@ -232,7 +232,7 @@ public func verifyJwt(jwt: String, options: JwtVerifyOptions) async throws -> Jw
 
 }
 
-public func resolveVerified(authenticator: DIDAuthenticator, jwt: String, jwtDecoded: JwtDecoded, options: JwtVerifyOptions) async throws -> JwtVerified {
+private func resolveVerified(authenticator: DIDAuthenticator, jwt: String, jwtDecoded: JwtDecoded, options: JwtVerifyOptions) async throws -> JwtVerified {
   iPrint(jwtDecoded.payload)
   if authenticator.authenticators.count > 1 {
     iPrint(authenticator.authenticators)
@@ -292,7 +292,7 @@ public func resolveVerified(authenticator: DIDAuthenticator, jwt: String, jwtDec
 }
 
 
-public func resolveAuthenticator(resolver: Resolvable, alg: String, issuer: String, proofPurpose: ProofPurposeTypes) async throws -> DIDAuthenticator {
+private func resolveAuthenticator(resolver: Resolvable, alg: String, issuer: String, proofPurpose: ProofPurposeTypes) async throws -> DIDAuthenticator {
   let verifyType = alg != "" ? "EcdsaSecp256k1VerificationKey2019" : ""
   
   guard verifyType != "" else { throw JWTError(localizedDescription: "not_supported: No supported signature types for algorithm")}

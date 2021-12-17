@@ -34,7 +34,7 @@ public class Resolver: Resolvable {
     })
   }
   
-  init(registry: ResolverRegistry, options: ResolverOptions = ResolverOptions(cache: nil, legacyResolver: nil)) {
+  public init(registry: ResolverRegistry, options: ResolverOptions = ResolverOptions(cache: nil, legacyResolver: nil)) {
     self.resolverRegistry = registry
     
     guard let optionCache = options.cache else { return }
@@ -57,6 +57,6 @@ public class Resolver: Resolvable {
   
 }
 
-func noCache(parsed: ParsedDID, resolve: wrappedResolverType) async -> Promise<DIDResolutionResult> {
+private func noCache(parsed: ParsedDID, resolve: wrappedResolverType) async -> Promise<DIDResolutionResult> {
   return await resolve()  //Promise<DIDResolutionResult>.value(currentParsedDIDDocument)
 }

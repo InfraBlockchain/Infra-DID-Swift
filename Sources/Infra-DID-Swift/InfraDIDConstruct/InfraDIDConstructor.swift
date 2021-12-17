@@ -93,7 +93,7 @@ public class InfraDIDConstructor {
     }
   }
   
-  static func createPubKeyDID(networkID: String) -> [String: String] {
+  static public func createPubKeyDID(networkID: String) -> [String: String] {
     
     guard let pvData: Data = generateRandomBytes(bytes: 32) else { return [:] }
     let keyPair = try! secp256k1.Signing.PrivateKey.init(rawRepresentation: pvData)
@@ -160,7 +160,7 @@ extension InfraDIDConstructor: InfraDIDConfApiDependency {
     return Promise<Double>.value(nonce)
   }
   
-  func setAttributePubKeyDID(action: TransactionAction, key: String = "",
+  public func setAttributePubKeyDID(action: TransactionAction, key: String = "",
                              value: String = "", newKey: String = "") {
     let actionName: String = action.rawValue
     var bufArray: [UInt8] = [] //digest buffer initialize
@@ -330,7 +330,7 @@ extension InfraDIDConstructor: InfraDIDConfApiDependency {
     }
   }
   
-  func getJWTIssuer() -> JwtVcIssuer {
+  public func getJWTIssuer() -> JwtVcIssuer {
     guard let pvKey: Data = try? Data(eosioPrivateKey: self.idConfig.didOwnerPrivateKey) else { return JwtVcIssuer() }
     let signer: JWTSigner = JWTSigner.es256(privateKey: pvKey)
     return JwtVcIssuer(did: self.idConfig.did, alg: "ES256K", signer: signer)
