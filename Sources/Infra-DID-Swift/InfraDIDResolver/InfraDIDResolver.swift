@@ -114,7 +114,7 @@ extension InfraDIDResolver: InfraDIDResolvable {
     var resultRow: [String:Any] = [:]
     
 
-    jsonRpcFetchRows(rpc: jsonRpc, options: EosioRpcTableRowsRequest(scope: network.regisrtyContract, code: network.regisrtyContract, table: "pubkeydid", json: true, limit: 1, tableKey: nil, lowerBound: pubKeyIndex, upperBound: pubKeyIndex, indexPosition: "2", keyType: "sha256", encodeType: .hex, reverse: nil, showPayer: nil)) { res in
+    await jsonRpcFetchRows(rpc: jsonRpc, options: EosioRpcTableRowsRequest(scope: network.regisrtyContract, code: network.regisrtyContract, table: "pubkeydid", json: true, limit: 1, tableKey: nil, lowerBound: pubKeyIndex, upperBound: pubKeyIndex, indexPosition: "2", keyType: "sha256", encodeType: .hex, reverse: nil, showPayer: nil)) { res in
       
       resultRow = res
     }
@@ -124,7 +124,7 @@ extension InfraDIDResolver: InfraDIDResolvable {
         deactivated = true
       }
       
-      jsonRpcFetchRows(rpc: jsonRpc, options: EosioRpcTableRowsRequest(scope: network.regisrtyContract, code: network.regisrtyContract, table: "pkdidowner", json: true, limit: 1, tableKey: nil, lowerBound: resultRow["pkid"] as? String , upperBound: nil, indexPosition: "1", keyType: "i64", encodeType: .hex, reverse: nil, showPayer: nil)) { res in
+      await jsonRpcFetchRows(rpc: jsonRpc, options: EosioRpcTableRowsRequest(scope: network.regisrtyContract, code: network.regisrtyContract, table: "pkdidowner", json: true, limit: 1, tableKey: nil, lowerBound: resultRow["pkid"] as? String , upperBound: nil, indexPosition: "1", keyType: "i64", encodeType: .hex, reverse: nil, showPayer: nil)) { res in
         resultRow = res
       }
       
@@ -146,7 +146,7 @@ extension InfraDIDResolver: InfraDIDResolvable {
     var resultRow: [String:Any] = [:]
     activeKeyStr = jsonRpcFetchAccountInfo(jsonRpc: rpc, accountName: accountName)
     
-    jsonRpcFetchRows(rpc: rpc, options: EosioRpcTableRowsRequest(scope: network.regisrtyContract, code: network.regisrtyContract, table: "accdidattr", json: true, limit: 1, tableKey: nil, lowerBound: accountName, upperBound: accountName, indexPosition: "1", keyType: "name", encodeType: .hex, reverse: nil, showPayer: nil)) { res in
+    await jsonRpcFetchRows(rpc: rpc, options: EosioRpcTableRowsRequest(scope: network.regisrtyContract, code: network.regisrtyContract, table: "accdidattr", json: true, limit: 1, tableKey: nil, lowerBound: accountName, upperBound: accountName, indexPosition: "1", keyType: "name", encodeType: .hex, reverse: nil, showPayer: nil)) { res in
       resultRow = res
     }
     
@@ -176,7 +176,7 @@ extension InfraDIDResolver: InfraDIDResolvable {
     
   }
   
-  private func jsonRpcFetchRows(rpc: EosioRpcProvider, options: EosioRpcTableRowsRequest, completion: @escaping (([String:Any]) -> Void)) {
+  private func jsonRpcFetchRows(rpc: EosioRpcProvider, options: EosioRpcTableRowsRequest, completion: @escaping (([String:Any]) -> Void)) async {
     
     var mergedOptions = options
     mergedOptions.limit = 9999
