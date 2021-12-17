@@ -446,7 +446,7 @@ public struct ResolverOptions {
   var cache: ResolverOptionsType?
   var legacyResolver: [String:LegacyDIDResolverType]?
   
-  init(cache: ResolverOptionsType? = nil, legacyResolver: [String:LegacyDIDResolverType]? = nil) {
+  public init(cache: ResolverOptionsType? = nil, legacyResolver: [String:LegacyDIDResolverType]? = nil) {
     self.cache = cache
     self.legacyResolver = legacyResolver
   }
@@ -455,7 +455,7 @@ public struct ResolverOptions {
 public struct ResolverRegistry {
   var methodName: [String: DIDResolverType]
   
-  init(methodName: [String: DIDResolverType] = [:]) {
+  public init(methodName: [String: DIDResolverType] = [:]) {
     self.methodName = methodName
   }
 }

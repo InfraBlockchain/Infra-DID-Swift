@@ -34,8 +34,7 @@ public protocol InfraDIDResolvable {
   func resolve(did: String, parsed: ParsedDID, unUsed: Resolver, options: DIDResolutionOptions) async -> Promise<DIDResolutionResult>
 }
 
-
-static public func getResolver(options: ConfigurationOptions) -> [String:DIDResolverType] {
+public func getResolver(options: ConfigurationOptions) -> [String:DIDResolverType] {
   return InfraDIDResolver(options: options).build()
 }
 
