@@ -18,34 +18,29 @@ public let nbfSkew: Double = 300
 
 
 private func decodeJws(jws: String) -> JwsDecoded {
-  let a = "([a-zA-Z0-9_-]+)"
-  let part = jws.matchingStrings(regex: "^\(a).\(a).\(a)$")[0]
-  //let part = jws.matchingStrings(regex: "^\(a)\.\(b)\.\(c)$")
+  let pattern = "([a-zA-Z0-9_-]+)"
+  let part = jws.matchingStrings(regex: "^\(pattern).\(pattern).\(pattern)$")[0]
+  
   var decodeJws = JwsDecoded()
-  //let part = parts[0]
-  iPrint(part)
+  
   if !part.isEmpty {
     decodeJws = JwsDecoded(header: Header(), payload: part[2], signature: part[3], data: "\(part[1])\(part[2])")
   }
-  //let parts = try! jws.matchingStrings(regex: "^([a-zA-Z0-9_-]+)\.([a-zA-Z0-9_-]+)\.([a-zA-Z0-9_-]+)$")[0]
-  //Header()
+  
   return decodeJws
 }
 
 public func decodeJwt(jwt: String) -> JwtDecoded { //jwt값을 decode하고 그 안의 payload를 디코딩해서 json 형태로 파싱하고 객체에 복사한다.
   if jwt == "" { NSError.init().localizedDescription }
+  
   var decodeJwt = JwtDecoded()
+  
   do {
     let jws = decodeJws(jws: jwt)
-    iPrint(jws.payload)
-    
-    
     
     let jsonEncoder = JSONEncoder()
     jsonEncoder.dataEncodingStrategy = .base64
     let baseData = base64urlDecodedData(base64urlEncoded: jws.payload)
-    //iPrint(try! JSONSerialization.jsonObject(with: jws.payload.data(using: .utf8)!, options: []))
-    //iPrint(jws.payload.data(using: .utf8)!)
     let jsonDecoder = JSONDecoder()
     jsonDecoder.dateDecodingStrategy = .secondsSince1970
     let data = try jsonDecoder.decode(JwtPayload.self, from: baseData ?? Data.init())
@@ -64,27 +59,9 @@ public enum PayloadType {
 private func createJws(payload: JwtPayload, signer: JWTSigner, header: Header?, options: JwsCreationOptions) async -> String {
   guard let header = header else { return ""}
   
-  //  let encodedPayload = type(of: payload) == String ? payload : encodeSection(data: payload, shouldCanonicalize: options.canonicalize)
-  //  let signingInput: String = [encodeSection(data: header, shouldCanonicalize: options.canonicalize), encodedPayload].joined(separator: ".")
-  
-  let encodedHeader = try! header.encode()
-  let encodedPayload = try! payload.encode()
-  //JWT(header: <#T##Header#>, claims: <<error type>>)
-  //let jwtSigner: SignerAlgorithm = SignerAlg(header.alg)
-  
-  //payload를 Json Object로 만들어야한다.
-  let jsonClaims = try! payload.toJsonData(convertToSnakeCase: false, prettyPrinted: true)
-  iPrint(jsonClaims)
   var jwt = JWT(header: header, claims: payload)
-  return try! await jwt.sign(using: signer)
-//  return Promise { seal in
-//    firstly {
-//      try! jwt.sign(using: signer)
-//    }.done({ signature in
-//      iPrint(signature)
-//      seal.fulfill(signature)
-//    })
-//  }
+  guard let signedJwt: String = try? await jwt.sign(using: signer) else { return "" }
+  return signedJwt
 }
 
 
@@ -92,16 +69,12 @@ public func createJwt(payload: JwtPayload, jwtOptions: JwtOptions, header: Heade
   var fullPayload: JwtPayload = payload
   fullPayload.iat = Date.now
   
-  
-  iPrint(payload)
   if jwtOptions.expiresIn != nil {
-    //let nbf: Bool = (payload.nbf != nil) || (fullPayload.iat != nil)
     
     let timestamps: Date  = (payload.nbf != nil) ? payload.nbf! : Date.now
     
     fullPayload.exp = Date(timeIntervalSince1970: (floor(Double(timestamps.timeIntervalSinceNow) / 1000) + floor(jwtOptions.expiresIn!)))
   }
-  
   
   guard let signer = jwtOptions.signer else { return ""}
   fullPayload.iss = jwtOptions.issuer
@@ -112,29 +85,17 @@ public func createJwt(payload: JwtPayload, jwtOptions: JwtOptions, header: Heade
   return await createJws(payload: fullPayload, signer: signer, header: header, options: JwsCreationOptions(canonicalize: jwtOptions.canonicalize))
 }
 
-//public func verifyJwsDecoded(decode: JwsDecoded, pubKeys: [VerificationMethod]) -> VerificationMethod {
-//  
-//}
-//
-//public func verifyJws() {
-//  
-//}
-
-
 public func verifyJwt(jwt: String, options: JwtVerifyOptions) async throws -> JwtVerified {
   let jwtDecoded = decodeJwt(jwt: jwt)
   
-  iPrint(jwtDecoded)
   var proofPurpose: ProofPurposeTypes? = options.proofPurpose ?? nil
   var resultVerified = JwtVerified()
-  //guard let auth = options.auth, let resolver = options.resolver, let skewTime = options.skewTime,
-        //let alg = jwtDecoded.header.alg else { throw JWTError(localizedDescription: "auth error")}
+
   guard let resolver = options.resolver else { throw JWTError(localizedDescription: "resolver error") }
   
   if options.auth != nil {
     proofPurpose = options.auth! ? ProofPurposeTypes.authentication : options.proofPurpose
   }
-  
   
   if jwtDecoded.payload.iss == nil {
     throw JWTError(localizedDescription: "invalid_jwt: JWT iss is required")
@@ -162,73 +123,12 @@ public func verifyJwt(jwt: String, options: JwtVerifyOptions) async throws -> Jw
     throw JWTError(localizedDescription: "invalid_jwt: No DID has been found in the JWT")
   }
   
-  let authenticator = try! await resolveAuthenticator(resolver: resolver, alg: jwtDecoded.header.alg!, issuer: did, proofPurpose: proofPurpose ?? .authentication)
+  guard let authenticator = try? await resolveAuthenticator(resolver: resolver, alg: jwtDecoded.header.alg!, issuer: did, proofPurpose: proofPurpose ?? .authentication) else { return JwtVerified() }
   iPrint(authenticator)
 
-  let verified = try! await resolveVerified(authenticator: authenticator, jwt: jwt, jwtDecoded: jwtDecoded, options: options)
+  guard let verified = try? await resolveVerified(authenticator: authenticator, jwt: jwt, jwtDecoded: jwtDecoded, options: options) else { return JwtVerified() }
   
   return verified
-//  promise.done { authenticator in
-//    // let verifier = JWTVerifier(verifierAlgorithm: authenticator.authenticators)
-//
-//     if authenticator.authenticators.count > 1 {
-//       iPrint(authenticator.authenticators)
-//     } else if authenticator.authenticators.count != 0 {
-//       guard let keyHex = authenticator.authenticators[0].publicKeyHex else { throw JWTError(localizedDescription: "not Found Key")}
-//       let pubKey = try! Data(hex: keyHex)
-//       let verifier = JWTVerifier.es256(publicKey: pubKey)
-//
-//       let isVerified = verifier.verify(jwt: jwt)
-//
-//       guard isVerified else { throw JWTError(localizedDescription: "not Verified Jwt")}
-//     }
-//
-//     let auth = authenticator.authenticators[0]
-////      let signer = verifyJwsDecoded(decode: JwsDecoded(header: jwtDecoded.header, payload: "", signature: jwtDecoded.signature, data: jwtDecoded.data), pubKeys: authenticator.authenticators.)
-////      signer.publicKeyHex
-//
-//     let now = floor(Double(Date.now.timeIntervalSinceNow) / 1000)
-//     let skewTimes = options.skewTime != nil && options.skewTime! > 0 ? options.skewTime! : nbfSkew
-//
-//     if auth.id != "" {
-//       let nowSkewed = now + skewTimes
-//       //1
-//       if jwtDecoded.payload.nbf != nil {
-//         guard let nbf = jwtDecoded.payload.nbf else { throw JWTError(localizedDescription: "Nil Error")}
-//         if floor(Double(nbf.timeIntervalSinceNow)) > nowSkewed {
-//           throw JWTError(localizedDescription: "invalid_jwt: JWT not valid before nbf: \(nbf)")
-//         }
-//       }
-//       //2
-//       else if jwtDecoded.payload.iat != nil {
-//         guard let iat = jwtDecoded.payload.iat else { throw JWTError(localizedDescription: "Nil Error")}
-//         if floor(Double(iat.timeIntervalSinceNow)) > nowSkewed {
-//           throw JWTError(localizedDescription: "invalid_jwt: JWT not valid before iat: \(iat)")
-//         }
-//       }
-//
-//
-//       if jwtDecoded.payload.exp != nil {
-//         guard let exp = jwtDecoded.payload.exp else { throw JWTError(localizedDescription: "Nil Error")}
-//         let expDouble = floor((Double(exp.timeIntervalSinceNow) / 1000))
-//         if expDouble <= now - skewTimes {
-//           throw JWTError(localizedDescription: "invalid_jwt: JWT not valid before exp: \(exp)")
-//         }
-//       }
-//
-//       if jwtDecoded.payload.aud != nil {
-//         guard let aud = jwtDecoded.payload.aud else { throw JWTError(localizedDescription: "Nil Error")}
-//
-//         if options.audience == nil && options.callbackUrl == nil {
-//           throw JWTError(localizedDescription: "invalid_config: JWT audience is required but your app address has not been configured")
-//         }
-//       }
-//
-//       resultVerified = JwtVerified(didResolutionResult: authenticator.didResolutionResult, issuer: authenticator.issuer, signer: auth, jwt: jwt)
-//
-////       seal.fulfill(JwtVerified(didResolutionResult: authenticator.didResolutionResult, issuer: authenticator.issuer, signer: auth, jwt: jwt))
-//     }
-//  }
 
 }
 
@@ -237,8 +137,8 @@ private func resolveVerified(authenticator: DIDAuthenticator, jwt: String, jwtDe
   if authenticator.authenticators.count > 1 {
     iPrint(authenticator.authenticators)
   } else if authenticator.authenticators.count != 0 {
-    guard let keyHex = authenticator.authenticators[0].publicKeyHex else { throw JWTError(localizedDescription: "not Found Key")}
-    let pubKey = try! Data(hex: keyHex)
+    guard let keyHex = authenticator.authenticators[0].publicKeyHex, let pubKey = try? Data(hex: keyHex) else { throw JWTError(localizedDescription: "not Found Key") }
+
     iPrint(pubKey.toEosioK1PublicKey)
     let verifier = JWTVerifier.es256(publicKey: pubKey)
     iPrint(authenticator.issuer)
@@ -248,8 +148,6 @@ private func resolveVerified(authenticator: DIDAuthenticator, jwt: String, jwtDe
   }
   
   let auth = authenticator.authenticators[0]
-//      let signer = verifyJwsDecoded(decode: JwsDecoded(header: jwtDecoded.header, payload: "", signature: jwtDecoded.signature, data: jwtDecoded.data), pubKeys: authenticator.authenticators.)
-//      signer.publicKeyHex
   
   let now = floor(Double(Date.now.timeIntervalSinceNow) / 1000)
   let skewTimes = options.skewTime != nil && options.skewTime! > 0 ? options.skewTime! : nbfSkew
@@ -332,8 +230,6 @@ private func resolveAuthenticator(resolver: Resolvable, alg: String, issuer: Str
         method = getPublicKeyById(verificationsMethods: publicKeysCheck, pubid: didResult.didDocument?.capabilityInvocation.first ?? nil)
       case .authentication:
         method = getPublicKeyById(verificationsMethods: publicKeysCheck, pubid: didResult.didDocument?.authentication.first ?? nil)
-//        case .none:
-//          break
       }
       return method!
     }
@@ -347,64 +243,8 @@ private func resolveAuthenticator(resolver: Resolvable, alg: String, issuer: Str
     }
     
     authenticator =  DIDAuthenticator(authenticators: authenticators, issuer: issuer, didResolutionResult: didResult)
-    
+
   }
-//  res.done { result in
-//    <#code#>
-//  }.catch { err in
-//    iPrint(err.localizedDescription)
-//  }
-//  return Promise { seal in
-//    res.done ({ result in
-//
-//      iPrint(result)
-//      if result.didDocument == nil {
-//        didResult.didDocument = result.didDocument
-//      } else {
-//        didResult = result
-//      }
-//
-//      iPrint(result)
-//      if didResult.didResolutionMetadata.errorDescription == nil || didResult.didDocument == nil {
-//        throw JWTError(localizedDescription: "resolver_error: Unable to resolve DID document for \(issuer)")
-//      }
-//
-//      var publicKeysCheck: [VerificationMethod] = didResult.didDocument?.verificationMethod?.count != 0 ? (didResult.didDocument?.verificationMethod)! : (didResult.didDocument?.publicKey)!
-//
-//      if proofPurpose == .assertionMethod && didResult.didDocument?.assertionMethod.count == 0{
-//        didResult.didDocument?.assertionMethod = publicKeysCheck.map {$0.id}
-//      }
-//
-//
-//      publicKeysCheck.map { verify -> VerificationMethod in
-//        var method: VerificationMethod? = nil
-//        switch proofPurpose {
-//        case .assertionMethod:
-//          method = getPublicKeyById(verificationsMethods: publicKeysCheck, pubid: didResult.didDocument?.assertionMethod.first ?? nil)
-//        case .capabilityDelegation:
-//          method = getPublicKeyById(verificationsMethods: publicKeysCheck, pubid: didResult.didDocument?.capabilityDelegation.first ?? nil)
-//        case .capabilityInvocation:
-//          method = getPublicKeyById(verificationsMethods: publicKeysCheck, pubid: didResult.didDocument?.capabilityInvocation.first ?? nil)
-//        case .authentication:
-//          method = getPublicKeyById(verificationsMethods: publicKeysCheck, pubid: didResult.didDocument?.authentication.first ?? nil)
-////        case .none:
-////          break
-//        }
-//        return method!
-//      }
-//
-//      publicKeysCheck = publicKeysCheck.filter { $0.id != "" }
-//
-//      let authenticators: [VerificationMethod] = publicKeysCheck.filter { $0.type == "EcdsaSecp256k1VerificationKey2019" }
-//
-//      if authenticators.count == 0 {
-//        throw JWTError(localizedDescription: "no_suitable_keys: DID document for \(issuer) does not have public keys suitable for \(alg) with \(proofPurpose.rawValue) purpose")
-//      }
-//      seal.fulfill(DIDAuthenticator(authenticators: authenticators, issuer: issuer, didResolutionResult: didResult))
-//    }).catch { err in
-//      iPrint(err.localizedDescription)
-//    }
-  //}
   return authenticator
 }
 

@@ -460,12 +460,9 @@ public struct ResolverRegistry {
   }
 }
 
-
 //global Constant
 public var currentParsedDID: ParsedDID? = nil
 public var currentParsedDIDDocument: DIDResolutionResult? = nil
-
-
 
 public func inMemoryCache() -> DidCacheType {
   var cache: [String:DIDResolutionResult] = [:]
@@ -507,13 +504,10 @@ public func parse(didUrl: String) -> ParsedDID? {
   
   let sections = didUrl.matchingStrings(regex: "^did:\(method):\(methodId)\(params)\(path)\(query)\(fragment)$")[0]
   
-  iPrint(sections)
   var param: [String:String] = [:]
   if sections.count != 0 {
     let paramSplits = sections[4].split(separator: ";")
-    iPrint(paramSplits)
     if paramSplits.count != 0 {
-      
       let _ = paramSplits.reduce(into: [String:String]()) { (_, params) in
         let p = params.split(separator: "=")
         param[String(p[0])] = String(p[1])
@@ -529,8 +523,7 @@ public func parse(didUrl: String) -> ParsedDID? {
 }
 
 public func wrapLegacyResolver(resolve: LegacyDIDResolverType) -> DIDResolverType {
-  //var didResolver: DIDResolverType = DIDResolverType()
-  
+
   let didResolver: DIDResolverType = {  _, _, _, _ in
     var doc = Promise<DIDDocument>.value(DIDDocument())
     do {
@@ -554,18 +547,3 @@ public func wrapLegacyResolver(resolve: LegacyDIDResolverType) -> DIDResolverTyp
 }
 
 
-
-extension String{
-  func matchingStrings(regex: String) -> [[String]] {
-    guard let regex = try? NSRegularExpression(pattern: regex, options: []) else { return [] }
-    let nsString = self as NSString
-    let results  = regex.matches(in: self, options: [], range: NSMakeRange(0, nsString.length))
-    return results.map { result in
-      (0..<result.numberOfRanges).map {
-        result.range(at: $0).location != NSNotFound
-        ? nsString.substring(with: result.range(at: $0))
-        : ""
-      }
-    }
-  }
-}

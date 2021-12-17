@@ -27,7 +27,7 @@ final class Infra_DID_SwiftTests: XCTestCase {
     
     
     let didApi = InfraDIDConstructor(config: idConfig)
-    didApi.setAttributePubKeyDID(action: .set, key: "svc/MessagingService", value: "https://infradid.com/pk/1/mysvcr9", newKey: "")
+    didApi.actionPubKeyDID(action: .set, key: "svc/MessagingService", value: "https://infradid.com/pk/1/mysvcr9", newKey: "")
     //didApi.setAttributePubKeyDID(action: .clear)
     
     //"did:infra:sentinel:PUB_K1_7pM9qiBuHWF6WqRSjPTMfVYKV5ZFRavK4PkUq4oFhqi9Z46mWc"
@@ -68,7 +68,7 @@ final class Infra_DID_SwiftTests: XCTestCase {
     
     
     let didApi = InfraDIDConstructor(config: idConfig)
-    didApi.setAttributePubKeyDID(action: .set, key: "svc/MessagingService", value: "https://infradid.com/pk/1/mysvcr9", newKey: "")
+    didApi.actionPubKeyDID(action: .set, key: "svc/MessagingService", value: "https://infradid.com/pk/1/mysvcr9", newKey: "")
     XCTAssertEqual(Infra_DID_Swift().text, "Hello, World!")
   }
   

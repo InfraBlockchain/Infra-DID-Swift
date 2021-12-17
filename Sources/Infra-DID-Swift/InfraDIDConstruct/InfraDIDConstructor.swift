@@ -17,7 +17,7 @@ import EosioSwiftAbieosSerializationProvider
 
 protocol InfraDIDConfApiDependency { // method Construction & Manipulation DID
   
-  func setAttributePubKeyDID(action: TransactionAction, key: String,
+  func actionPubKeyDID(action: TransactionAction, key: String,
                              value: String, newKey: String)
 }
 
@@ -79,14 +79,8 @@ public class InfraDIDConstructor {
     
     idConfig.pubKeyDidSignDataPrefix = config.pubKeyDidSignDataPrefix ?? defaultPubKeyDidSignDataPrefix
     
-//    //////////////////////// Setting Finish
-//    let pvKeyArray = [UInt8](dataPvKey)
-//    let sliceKey = pvKeyArray[1...pvKeyArray.count-1]
-    
-    
     if idConfig.jwtSigner == nil {
       let signer = JWTSigner.es256(privateKey: dataPvKey)
-     // let signature = EcdsaSignature(der: Data(sliceKey), curve: .k1)
       self.idConfig.jwtSigner = signer
     } else {
       self.idConfig.jwtSigner = config.jwtSigner
@@ -95,10 +89,9 @@ public class InfraDIDConstructor {
   
   static public func createPubKeyDID(networkID: String) -> [String: String] {
     
-    guard let pvData: Data = generateRandomBytes(bytes: 32) else { return [:] }
-    let keyPair = try! secp256k1.Signing.PrivateKey.init(rawRepresentation: pvData)
-    
-    
+    guard let pvData: Data = generateRandomBytes(bytes: 32),
+            let keyPair = try? secp256k1.Signing.PrivateKey.init(rawRepresentation: pvData) else { return [:] }
+
     let privateKey: String = keyPair.rawRepresentation.toEosioK1PrivateKey
     let publicKey: String = keyPair.publicKey.rawRepresentation.toEosioK1PublicKey
     let did = "did:infra:\(networkID):\(publicKey)"
@@ -121,7 +114,7 @@ extension InfraDIDConstructor: InfraDIDConfApiDependency {
     
     let sliceKeyData = Data(sliceKey)
     
-    let options: EosioRpcTableRowsRequest = EosioRpcTableRowsRequest(scope: self.idConfig.registryContract, code: self.idConfig.registryContract, table: "pubkeydid", json: true, limit: 1, tableKey: nil, lowerBound: sliceKeyData.hexEncodedString(), upperBound: sliceKeyData.hexEncodedString(), indexPosition: "1", keyType: "sha256", encodeType: .hex, reverse: false, showPayer: false)
+    let options: EosioRpcTableRowsRequest = EosioRpcTableRowsRequest(scope: self.idConfig.registryContract, code: self.idConfig.registryContract, table: "pubkeydid", json: true, limit: 1, tableKey: nil, lowerBound: sliceKeyData.hexEncodedString(), upperBound: sliceKeyData.hexEncodedString(), indexPosition: "2", keyType: "sha256", encodeType: .hex, reverse: false, showPayer: false)
     
     var nonce:Double = 0.0
     jsonRPC.getTableRowsPublisher(requestParameters: options)
@@ -130,37 +123,23 @@ extension InfraDIDConstructor: InfraDIDConfApiDependency {
         case .failure(let err):
           iPrint(err.localizedDescription)
         case .finished:
+          iPrint("Finished")
           break
         }
       } receiveValue: { res in
-        iPrint(res.rows)
+        if !(res.rows.isEmpty) {
+          if let row = res.rows[0] as? [String:Any] {
+            if let rowNonce = row["nonce"] as? Double {
+              nonce = rowNonce
+            }
+          }
+        }
       }
-      
-    
-//    let res = jsonRPC.getTableRows(.promise, requestParameters: options)
-//    if res.value == nil {
-//      nonce = 0.0
-//    }
-    
-//    return Promise { seal in
-//      firstly {
-//        jsonRPC.getTableRows(.promise, requestParameters: options)
-//      }.done {
-//
-//        if let row = $0.rows[0] as? [String: Any],
-//           let nonceValue = row["nonce"] as? Double
-//        {
-//          seal.fulfill(nonceValue)
-//        } else {
-//          seal.fulfill(0.0)
-//          print(NSError.init())
-//        }
-//      }
-//    }
+
     return Promise<Double>.value(nonce)
   }
   
-  public func setAttributePubKeyDID(action: TransactionAction, key: String = "",
+  public func actionPubKeyDID(action: TransactionAction, key: String = "",
                              value: String = "", newKey: String = "") {
     let actionName: String = action.rawValue
     var bufArray: [UInt8] = [] //digest buffer initialize
@@ -187,18 +166,13 @@ extension InfraDIDConstructor: InfraDIDConfApiDependency {
         bufArray.append(UInt8.init(nonce))
         bufArray.append(contentsOf: changeKeyData)
       }
-
-      // bufArray hash And Digest
-//      let digest: SHA256Digest = SHA256.hash(data: bufArray)
-//      self.idConfig.
-//      try! EosioEccSign.signWithK1(publicKey: self.didOwnerPrivateKeyObjc?.publicKey.rawRepresentation, privateKey: self.didOwnerPrivateKeyObjc?.rawRepresentation, data: bufArray)
       
       let signature = try? EosioEccSign.signWithK1(publicKey: keyPair.publicKey.rawRepresentation, privateKey: keyPair.rawRepresentation, data: Data(bufArray))//try! self.didOwnerPrivateKeyObjc?.signature(for: digest)
-      
+
       iPrint(signature)
       
       guard let sign = signature else { return }
-      iPrint(sign.toEosioK1Signature)
+      
       let transactionSet: TransactionDefaultSet = TransactionDefaultSet(actionName: action, signKey: sign.toEosioK1Signature)
       
       switch action {

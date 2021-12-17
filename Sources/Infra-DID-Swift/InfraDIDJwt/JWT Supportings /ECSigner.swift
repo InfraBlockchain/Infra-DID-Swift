@@ -32,8 +32,6 @@ class BlueECSigner: SignerAlgorithm {
     self.curve = curve
   }
   
-  // Sign the header and claims to produce a signed JWT String
-  
   func sign(header: String, claims: String) async throws -> String {
     
     let unsignedJWT = header + "." + claims
@@ -108,7 +106,6 @@ class BlueECVerifier: VerifierAlgorithm {
       
       var key = ecc_key()
       
-      
       let hash = data.sha256
       
       try self.key.withUnsafeBytes({ rawBufferPointer in
@@ -133,7 +130,9 @@ class BlueECVerifier: VerifierAlgorithm {
         }
         
         var status = Int32(0)
+        
         iPrint("status is \(status)")
+        
         try signature.withUnsafeBytes({ sigRawBufferPointer in
           let bufferPointer = sigRawBufferPointer.bindMemory(to: UInt8.self)
           guard let signatureBytes = bufferPointer.baseAddress else {
@@ -145,7 +144,6 @@ class BlueECVerifier: VerifierAlgorithm {
             let bufferPointer = hashRawBufferPointer.bindMemory(to: UInt8.self)
             guard let hashBytes = bufferPointer.baseAddress else {
               throw JWTError(localizedDescription: "Base address of digest is nil.")
-              
             }
             
             
@@ -235,80 +233,3 @@ struct NoneAlgorithm: VerifierAlgorithm, SignerAlgorithm {
     return true
   }
 }
-
-
-public func signK1(publicKey: Data, privateKey: Data, data: Data) throws -> Data {
-  register_all_ciphers()
-  register_all_hashes()
-  register_all_prngs()
-  
-  // This is important or we will fault trying to invoke the math libraries!
-  crypt_mp_init("ltm")
-  
-  var yarrowState = prng_state()
-  guard rng_make_prng(128, find_prng("yarrow"), &yarrowState, nil) == CRYPT_OK else {
-    throw EosioError(.keySigningError, reason: "Error initializing signing.")
-  }
-  
-  var key: ecc_key = ecc_key()
-  
-  let digest = data.sha256
-  var recid = Int32(0)
-  var signature: Data?
-  var attemptsRequired = 0
-  
-  try privateKey.withUnsafeBytes { rawBufferPointer in
-    let bufferPointer = rawBufferPointer.bindMemory(to: UInt8.self)
-    guard let pkbytes = bufferPointer.baseAddress else {
-      throw EosioError(.keySigningError, reason: "Base address of privateKey is nil.")
-    }
-    
-    var keyCurve: UnsafePointer<ltc_ecc_curve>?
-    guard ecc_find_curve("SECP256K1", &keyCurve) == CRYPT_OK else {
-      throw EosioError(.keySigningError, reason: "Curve not found.")
-    }
-    guard ecc_set_curve(keyCurve, &key) == CRYPT_OK else {
-      throw EosioError(.keySigningError, reason: "Cannot set curve on key.")
-    }
-    
-    guard ecc_set_key(pkbytes, UInt(privateKey.count), Int32(PK_PRIVATE.rawValue), &key) == CRYPT_OK else {
-      throw EosioError(.keySigningError, reason: "Cannot load private key and create public key.")
-    }
-    
-    try digest.withUnsafeBytes { rawBufferPointer in
-      let bufferPointer = rawBufferPointer.bindMemory(to: UInt8.self)
-      guard let digestBytes = bufferPointer.baseAddress else {
-        throw EosioError(.keySigningError, reason: "Base address of digest is nil.")
-      }
-      
-      let bufSize = Int(1000)
-      let outbuf = UnsafeMutablePointer<UInt8>.allocate(capacity: bufSize)
-      var outbufLen = UInt(bufSize)
-      defer {
-        outbuf.deinitialize(count: bufSize)
-        outbuf.deallocate()
-      }
-      outbuf.initialize(repeating: 0, count: bufSize)
-      let sigResult = ecc_sign_hash_ex(digestBytes,
-                                       UInt(digest.count),
-                                       outbuf,
-                                       &outbufLen,
-                                       &yarrowState,
-                                       find_prng("yarrow"),
-                                       LTC_ECCSIG_RFC7518,
-                                       &recid,
-                                       &key)
-      guard sigResult == CRYPT_OK else {
-        throw EosioError(.keySigningError, reason: "Error in keysigning attemp.")
-      }
-      let sig = Data(bytes: outbuf, count: Int(outbufLen))
-      signature = sig
-    }
-  }
-  if let signature = signature {
-    return signature
-  } else {
-    throw EosioError(.keySigningError, reason: "Unable to create canonical signature after attempts")
-  }
-}
-

@@ -13,9 +13,8 @@ import PromiseKit
 public func createVerifiableCredentialJwt(payload: CredentialPayload, issuer: JwtVcIssuer) async -> String {
   var jwtPayload: JwtCredentialPayload = transformCredentialInput(input: payload)
   
-  let bool = try! await validateJwtCredentialPayload(payload: jwtPayload)
+  guard let bool = try? await validateJwtCredentialPayload(payload: jwtPayload), bool else { return "" }
   
-  guard bool else { return "" }
   
   let jsonData = try! JSONEncoder().encode(jwtPayload)
   guard let json = try? JSONDecoder().decode(JwtPayload.self, from: jsonData) else {
@@ -46,11 +45,7 @@ public func createVerifiablePresentationJwt(payload: PresentationPayload, holder
     jwtPayload.aud = aud
   }
   
-  iPrint(jwtPayload)
-  
-  let bool = try! await validateJwtPresentationPayload(payload: jwtPayload)
-  
-  guard bool else { return "" }
+  guard let bool = try? await validateJwtPresentationPayload(payload: jwtPayload), bool else { return "" }
   
   let jsonData = try! JSONEncoder().encode(jwtPayload)
   guard let json = try? JSONDecoder().decode(JwtPayload.self, from: jsonData) else {
@@ -63,7 +58,6 @@ public func createVerifiablePresentationJwt(payload: PresentationPayload, holder
 
 
 public func validateJwtPresentationPayload(payload: JwtPresentationPayload) async throws -> Bool  {
-  iPrint(payload)
   guard let vp = payload.vp, vp.type.count != 0, vp.context.count != 0, vp.verifiableCredential.count != 0 else { throw JWTError(localizedDescription: "@context is missing default context")}
   
   let credential = vp.verifiableCredential.filter {(type(of: $0) is String.Type)}
@@ -177,26 +171,19 @@ public func normalizeJwtPresentationPayload(input: JwtPayload) -> PresentationPa
   payload.type = vp.type
   payload.context = vp.context
   
-  //  if vcJwt.payload.iat != nil {
-  //    //Date(timeIntervalSinceNow: vcJwt.payload.iat!.timeIntervalSinceNow * 1000)
-  //    let dateString = formatter.string(from: Date(timeIntervalSinceNow: vcJwt.payload.iat!.timeIntervalSinceNow * 1000))
-  //    payload.issuanceDate = dateString
-  //  } else {
-  //
-  //  }
-  
-  payload.issuanceDate = input.nbf != nil ? formatter.string(from: input.nbf!) : formatter.string(from: input.iat!)
+  if let issDate = input.nbf {
+    payload.issuanceDate = formatter.string(from: issDate)
+  } else if let issDate = input.iat {
+    payload.issuanceDate = formatter.string(from: issDate)
+  }
   
   payload.expirationDate = formatter.string(from: input.exp!)
-  
   
   return payload
 }
 
 public func normalizeCredential(input: JwtPayload, jwt: String) -> CredentialPayload {
-  // Type Casting
   
-  //if let
   var credentialPayload = CredentialPayload()
   
   guard let vc = input.vc, let did = input.sub,
@@ -219,6 +206,7 @@ public func normalizeCredential(input: JwtPayload, jwt: String) -> CredentialPay
   
   return credentialPayload
 }
+
 //exp check
 private func validatePresentationPayload(payload: PresentationPayload) -> Bool {
   let formatter = ISO8601DateFormatter()
@@ -234,29 +222,25 @@ private func validatePresentationPayload(payload: PresentationPayload) -> Bool {
 public func verifyPresentation(presentation: String, resolver: Resolvable, options: PresentationOptions = PresentationOptions()) async -> VerifiedPresentation {
   
   guard let verified = try? await verifyJwt(jwt: presentation, options: JwtVerifyOptions(proofPurpose: nil, audience: options.audience ?? nil, resolver: resolver)) else { return VerifiedPresentation()} // VerifyVpJwt
-  
-  //Verify VC after Verify
-  
-  iPrint(verified)
-  //
+
   var verifiedPresentation = VerifiedPresentation(verifiedJwt: verified, verifiablePresentation: PresentationPayload())
   //
   //
-  try! await verifyPresentationPayloadOptions(payload: verified.payload!, options: options)
-  verifiedPresentation.verifiablePresentation = try! await normalizedPresentation(jwt: verified.jwt)
+  try? await verifyPresentationPayloadOptions(payload: verified.payload!, options: options)
   
-  //verifyCredential
+  guard let presentationPayload = try? await normalizedPresentation(jwt: verified.jwt) else { return VerifiedPresentation() }
   
-  if options.vcValidateFlag { // vc Credential
+  verifiedPresentation.verifiablePresentation = presentationPayload
+  
+  if options.vcValidateFlag { // Verify VC JWT in VP
     if let value = verifiedPresentation.verifiablePresentation.verifiableCredential.credentialValue as? [CredentialPayload]{
       for i in 0..<value.count {
         let verifiedCredential = await verifyCredential(credential: value[i].proof["jwt"] ?? "", resolver: resolver)
         verifiedPresentation.verifiableCredentials.append(verifiedCredential)
       }
-      //verifiedPresentation.verifiableCredentials = value.map { await verifyCredential(credential: $0.proof["jwt"] ?? "", resolver: resolver)}
     }
-    //verifiedPresentation.verifiableCredentials = verifiedPresentation.verifiablePresentation.verifiableCredential.credentialValue
   }
+  
   return verifiedPresentation
 }
 
@@ -268,15 +252,9 @@ public func verifyPresentation(presentation: String, resolver: Resolvable, optio
 public func verifyCredential(credential: String, resolver: Resolvable, options: CredentialOptions = CredentialOptions()) async -> VerifiedCredential {
   guard let verified = try? await verifyJwt(jwt: credential, options: JwtVerifyOptions(proofPurpose: nil, audience: options.audience ?? nil, resolver: resolver)) else { return VerifiedCredential() }
   
-  iPrint(verified)
-  
   var verifiedCredential = VerifiedCredential(verifiedJwt: verified, verifiableCredential: CredentialPayload())
   
   verifiedCredential.verifiableCredential = normalizeCredential(input: verified.payload!, jwt: verified.jwt)
   
-  iPrint(verifiedCredential)
-  
-  //try! await
-  
-  return verifiedCredential//VerifiedCredential()
+  return verifiedCredential
 }
