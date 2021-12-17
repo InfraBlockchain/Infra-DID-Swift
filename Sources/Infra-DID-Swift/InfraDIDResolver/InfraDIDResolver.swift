@@ -113,11 +113,13 @@ extension InfraDIDResolver: InfraDIDResolvable {
     
     var resultRow: [String:Any] = [:]
     
-
+    
     await jsonRpcFetchRows(rpc: jsonRpc, options: EosioRpcTableRowsRequest(scope: network.regisrtyContract, code: network.regisrtyContract, table: "pubkeydid", json: true, limit: 1, tableKey: nil, lowerBound: pubKeyIndex, upperBound: pubKeyIndex, indexPosition: "2", keyType: "sha256", encodeType: .hex, reverse: nil, showPayer: nil)) { res in
       
       resultRow = res
+      iPrint("response Completed")
     }
+    
     iPrint("await 1")
     if !(resultRow.isEmpty) { // not Empty
       if self.noRevocationCheck == false && resultRow["nonce"] as? Double == 65535 {
@@ -208,6 +210,7 @@ extension InfraDIDResolver: InfraDIDResolvable {
         if !(res.rows.isEmpty) {
           if let row = res.rows[0] as? [String:Any] {
             rowDic = row
+            iPrint("in Progressing")
             completion(row)
           }
         }
