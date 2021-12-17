@@ -169,13 +169,13 @@ extension InfraDIDResolver: InfraDIDResolvable {
 
   }
   
-  private func jsonRpcFetchRows(rpc: EosioRpcProvider, options: EosioRpcTableRowsRequest) async -> [String:Any] {
+  private func jsonRpcFetchRows(rpc: EosioRpcProvider, options: EosioRpcTableRowsRequest) -> [String:Any] {
     var mergedOptions = options
     mergedOptions.limit = 9999
     
     var rowDic: [String:Any] = [:]
   
-    //DispatchQueue.main.sync {
+    DispatchQueue.main.sync {
       rpc.getTableRows(requestParameters: mergedOptions) { result in
         switch result {
         case .success(let res):
@@ -189,7 +189,7 @@ extension InfraDIDResolver: InfraDIDResolvable {
           iPrint(err.localizedDescription)
         }
       }
-    //}
+    }
     iPrint(rowDic)
     return rowDic
   }
