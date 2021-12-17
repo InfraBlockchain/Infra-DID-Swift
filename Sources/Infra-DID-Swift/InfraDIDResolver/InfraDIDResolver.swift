@@ -115,6 +115,8 @@ extension InfraDIDResolver: InfraDIDResolvable {
 //    }
 //    return resolvedDoc
     
+    iPrint(res)
+    
     if !(res.isEmpty) { // not Empty
       if self.noRevocationCheck == false && res["nonce"] as? Double == 65535 {
         deactivated = true
@@ -122,10 +124,11 @@ extension InfraDIDResolver: InfraDIDResolvable {
       let resPk = await jsonRpcFetchRows(rpc: jsonRpc, options: EosioRpcTableRowsRequest(scope: network.regisrtyContract, code: network.regisrtyContract, table: "pkdidowner", json: true, limit: 1, tableKey: nil, lowerBound: res["pkid"] as? String , upperBound: nil, indexPosition: "1", keyType: "i64", encodeType: .hex, reverse: nil, showPayer: nil))
       
       guard let pubKey = try? Data(eosioPublicKey: resPk["pk"] as? String ?? "") else { return resolvedDoc }
-      
+      iPrint(pubKey)
       resolvedDoc = self.wrapDidDocument(did: did, controllerPubKey: pubKey, pkdidAttr: resPk, deactivated: deactivated)
       
     } else {
+      iPrint("res is Empty")
       resolvedDoc = self.wrapDidDocument(did: did, controllerPubKey: pubKeyData, pkdidAttr: [:], deactivated: deactivated)
     }
     
