@@ -35,7 +35,7 @@ public protocol InfraDIDResolvable {
 }
 
 
-public func getResolver(options: ConfigurationOptions) -> [String:DIDResolverType] {
+static public func getResolver(options: ConfigurationOptions) -> [String:DIDResolverType] {
   return InfraDIDResolver(options: options).build()
 }
 

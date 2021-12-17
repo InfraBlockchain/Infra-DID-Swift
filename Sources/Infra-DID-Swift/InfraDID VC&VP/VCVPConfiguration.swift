@@ -57,7 +57,7 @@ public struct VerifiableCredentialObject: Codable { //first jwt decoded vc
     
   }
   
-  func encode(from encoder: Encoder) throws {
+  public func encode(from encoder: Encoder) throws {
     var container = encoder.container(keyedBy: CodingKeys.self)
     try container.encode(self.context, forKey: .context)
     try container.encode(self.type, forKey: .type)
@@ -136,7 +136,7 @@ public struct CredentialPayload: Codable { // organic struct add payload after v
     termsOfUse = (try? values.decode(EvidenceType.self, forKey: .proof)) ?? EvidenceType.string("")
   }
   
-  func encode(from encoder: Encoder) throws {
+  public func encode(from encoder: Encoder) throws {
     var container = encoder.container(keyedBy: CodingKeys.self)
     try container.encode(self.context, forKey: .context)
     try container.encode(self.type, forKey: .type)
@@ -187,7 +187,7 @@ public struct VerifiedPresentation: Codable {
     
   }
   
-  func encode(from encoder: Encoder) throws {
+  public func encode(from encoder: Encoder) throws {
     var container = encoder.container(keyedBy: CodingKeys.self)
     try container.encode(self.verifiablePresentation, forKey: .verifiablePresentation)
     try container.encode(self.verifiedJwt, forKey: .verifiedJwt)
@@ -319,7 +319,7 @@ public struct PresentationPayload: Codable {
     
   }
   
-  func encode(from encoder: Encoder) throws {
+  public func encode(from encoder: Encoder) throws {
     var container = encoder.container(keyedBy: CodingKeys.self)
     try container.encode(self.context, forKey: .context)
     try container.encode(self.type, forKey: .type)
