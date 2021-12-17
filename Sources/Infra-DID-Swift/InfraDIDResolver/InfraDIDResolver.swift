@@ -179,6 +179,7 @@ extension InfraDIDResolver: InfraDIDResolvable {
       rpc.getTableRows(requestParameters: mergedOptions) { result in
         switch result {
         case .success(let res):
+          iPrint(res)
           if !(res.rows.isEmpty) {
             if let row = res.rows[0] as? [String:Any] {
               rowDic = row
@@ -189,6 +190,7 @@ extension InfraDIDResolver: InfraDIDResolvable {
         }
       }
     //}
+    iPrint(rowDic)
     return rowDic
   }
   
