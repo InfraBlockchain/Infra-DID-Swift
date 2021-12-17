@@ -118,7 +118,7 @@ extension InfraDIDResolver: InfraDIDResolvable {
       
       resultRow = res
     }
-
+    iPrint("await 1")
     if !(resultRow.isEmpty) { // not Empty
       if self.noRevocationCheck == false && resultRow["nonce"] as? Double == 65535 {
         deactivated = true
@@ -128,11 +128,13 @@ extension InfraDIDResolver: InfraDIDResolvable {
         resultRow = res
       }
       
+      iPrint("await 2")
       guard let pubKey = try? Data(eosioPublicKey: resultRow["pk"] as? String ?? "") else { return resolvedDoc }
       iPrint(pubKey)
       resolvedDoc = self.wrapDidDocument(did: did, controllerPubKey: pubKey, pkdidAttr: resultRow, deactivated: deactivated)
       
     } else {
+      iPrint("await 3")
       iPrint("res is Empty")
       resolvedDoc = self.wrapDidDocument(did: did, controllerPubKey: pubKeyData, pkdidAttr: [:], deactivated: deactivated)
     }
