@@ -5,7 +5,7 @@ import Foundation
 import CryptoKit
 import secp256k1
 
-@available(macOS 12, *)
+
 final class Infra_DID_SwiftTests: XCTestCase {
   
 
@@ -17,7 +17,7 @@ final class Infra_DID_SwiftTests: XCTestCase {
     
     //1. DID 생성한다
     let a = InfraDIDConstructor.createPubKeyDID(networkID: "01")
-//    guard let did = a["did"], let pvKey = a["privateKey"], let netId = a["did"]?.split(separator: ":")[2]
+//    guard let did = a["did"], let pvKey = a["privateKey"], let netId = a["did"]?.split(separator: ":")[2]0
 //    else { return }
 //
 //    iPrint(pvKey)

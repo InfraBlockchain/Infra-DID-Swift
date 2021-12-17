@@ -9,7 +9,7 @@ import Foundation
 import PromiseKit
 
 //Method: Create VC Based JWT
-@available(macOS 12, *)
+
 public func createVerifiableCredentialJwt(payload: CredentialPayload, issuer: JwtVcIssuer) async -> String {
   var jwtPayload: JwtCredentialPayload = transformCredentialInput(input: payload)
   
@@ -27,7 +27,7 @@ public func createVerifiableCredentialJwt(payload: CredentialPayload, issuer: Jw
 }
 
 //Method: Create VP Based JWT
-@available(macOS 12, *)
+
 public func createVerifiablePresentationJwt(payload: PresentationPayload, holder: JwtVcIssuer, options: PresentationOptions = PresentationOptions()) async -> String {
   //iPrint(payload)
   
@@ -60,6 +60,7 @@ public func createVerifiablePresentationJwt(payload: PresentationPayload, holder
   
   return try! await createJwt(payload: json, jwtOptions: JwtOptions(issuer: holder.did != "" ? holder.did : jwtPayload.iss ?? "", canonicalize: false, signer: holder.signer, alg: nil, expiresIn: nil), header: Header())
 }
+
 
 public func validateJwtPresentationPayload(payload: JwtPresentationPayload) async throws -> Bool  {
   iPrint(payload)
@@ -110,6 +111,7 @@ public func verifyPresentationPayloadOptions(payload: JwtPayload, options: Prese
   
 }
 
+
 public func normalizedPresentation(jwt: String, removeOriginalFields: Bool = true) async throws -> PresentationPayload {
   if jwt != "" {
     let a = "[a-zA-Z0-9_-]+"
@@ -124,6 +126,7 @@ public func normalizedPresentation(jwt: String, removeOriginalFields: Bool = tru
 }
 
 // DecodeJWT -> JwtPayload 로 변환하는 작업
+
 public func normalizeJwtPresentation(input: String) async throws -> PresentationPayload {
   let decoded = decodeJwt(jwt: input)
   iPrint(decoded)
@@ -261,7 +264,7 @@ public func verifyPresentation(presentation: String, resolver: Resolvable, optio
 // credential: VcJwt String
 // resolver: Did Resolver
 // options:
-@available(macOS 12, *)
+
 public func verifyCredential(credential: String, resolver: Resolvable, options: CredentialOptions = CredentialOptions()) async -> VerifiedCredential {
   guard let verified = try? await verifyJwt(jwt: credential, options: JwtVerifyOptions(proofPurpose: nil, audience: options.audience ?? nil, resolver: resolver)) else { return VerifiedCredential() }
   

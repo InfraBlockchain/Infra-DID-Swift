@@ -87,7 +87,7 @@ private func createJws(payload: JwtPayload, signer: JWTSigner, header: Header?, 
 //  }
 }
 
-@available(macOS 12, *)
+
 public func createJwt(payload: JwtPayload, jwtOptions: JwtOptions, header: Header) async throws -> String {
   var fullPayload: JwtPayload = payload
   fullPayload.iat = Date.now
@@ -120,7 +120,7 @@ public func createJwt(payload: JwtPayload, jwtOptions: JwtOptions, header: Heade
 //  
 //}
 
-@available(macOS 12, *)
+
 public func verifyJwt(jwt: String, options: JwtVerifyOptions) async throws -> JwtVerified {
   let jwtDecoded = decodeJwt(jwt: jwt)
   

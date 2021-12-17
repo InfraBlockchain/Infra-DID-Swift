@@ -33,7 +33,7 @@ class BlueECSigner: SignerAlgorithm {
   }
   
   // Sign the header and claims to produce a signed JWT String
-  @available(macOS 12.0.0, *)
+  
   func sign(header: String, claims: String) async throws -> String {
     
     let unsignedJWT = header + "." + claims
