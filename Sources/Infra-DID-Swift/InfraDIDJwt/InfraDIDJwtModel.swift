@@ -170,7 +170,7 @@ public struct JwtPayload: Claims {
     nonce = (try? values.decode(String.self, forKey: .vp)) ?? nil
   }
   
-  func encode(from encoder: Encoder) throws {
+  public func encode(from encoder: Encoder) throws {
     var container = encoder.container(keyedBy: CodingKeys.self)
     try container.encode(self.iss, forKey: .iss)
     try container.encode(self.iat, forKey: .iat)
@@ -248,7 +248,7 @@ public struct JwtVerified: Codable {
 
   }
   
-  func encode(from encoder: Encoder) throws {
+  public func encode(from encoder: Encoder) throws {
     var container = encoder.container(keyedBy: CodingKeys.self)
     try container.encode(self.payload, forKey: .payload)
     try container.encode(self.didResolutionResult, forKey: .didResolutionResult)

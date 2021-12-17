@@ -24,7 +24,7 @@ public struct MultiNetworkConfiguration {
   var networks: [NetworkConfiguration]? //{get set}
   var noRevocationCheck: Bool //{get set}
   
-  init(networks: [NetworkConfiguration]?, noRevocationCheck: Bool) {
+  public init(networks: [NetworkConfiguration]?, noRevocationCheck: Bool) {
     self.networks = networks
     self.noRevocationCheck = noRevocationCheck
   }

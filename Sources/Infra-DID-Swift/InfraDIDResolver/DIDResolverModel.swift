@@ -49,7 +49,7 @@ public struct DIDResolutionResult: Codable {
     self.didDocumentMetadata = didDocumentMetaData
   }
   
-  func encode(from encoder: Encoder) throws {
+  public func encode(from encoder: Encoder) throws {
     var container = encoder.container(keyedBy: CodingKeys.self)
     try container.encode(self.didResolutionMetadata, forKey: .didResolutionMetadata)
     try container.encode(self.didDocumentMetadata, forKey: .didDocumentMetadata)
@@ -276,7 +276,7 @@ public struct ServiceEndpoint: Codable {
   //        description = (try? values.decode(String.self, forKey: .description)) ?? nil
   //      }
   
-  init(id: String = "", type: String = "", serviceEndpoint: String = "", description: String? = nil) {
+  public init(id: String = "", type: String = "", serviceEndpoint: String = "", description: String? = nil) {
     self.id = id
     self.type = type
     self.serviceEndpoint = serviceEndpoint

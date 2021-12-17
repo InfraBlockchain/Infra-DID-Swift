@@ -37,7 +37,7 @@ public struct IdConfiguration{
   //var keyPair: secp256k1.Signing.PrivateKey?
   
   
-  init(did: String = "", didOwnerPrivateKey: String = "", networkId: String = "",
+  public init(did: String = "", didOwnerPrivateKey: String = "", networkId: String = "",
        registryContract: String = "", rpcEndpoint: String = "", jwtSigner: JWTSigner? = nil,
        txfeePayAccount: String? = nil, txfeePayerPrivateKey: String? = nil,
        pubKeyDidSignDataPrefix: String? = nil) {
