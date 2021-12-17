@@ -104,32 +104,33 @@ extension InfraDIDResolver: InfraDIDResolvable {
     
     
     let sliceKeyData = Data(sliceKey)
-    let pubKeyIndex = sliceKeyData.hexEncodedString()
+    let pubKeyIndex = pubKeyData.hexEncodedString()
     var resolvedDoc = ResolvedDIDDocument()
     
     guard let jsonRpc = network.jsonRPC else { return resolvedDoc }
     
     var deactivated: Bool = false
     
-    let res = jsonRpcFetchRows(rpc: jsonRpc, options: EosioRpcTableRowsRequest(scope: network.regisrtyContract, code: network.regisrtyContract, table: "pubkeydid", json: true, limit: 1, tableKey: nil, lowerBound: pubKeyIndex, upperBound: pubKeyIndex, indexPosition: "2", keyType: "sha256", encodeType: .hex, reverse: nil, showPayer: nil))
-    //    if res.isFulfilled && res.value != nil {
-    //
-    //    } else {
-    //      resolvedDoc = self.wrapDidDocument(did: did, controllerPubKey: pubKeyData, pkdidAttr: [:], deactivated: deactivated)
-    //    }
-    //    return resolvedDoc
+    var resultRow: [String:Any] = [:]
     
-    iPrint(res)
-    
-    if !(res.isEmpty) { // not Empty
-      if self.noRevocationCheck == false && res["nonce"] as? Double == 65535 {
+
+    jsonRpcFetchRows(rpc: jsonRpc, options: EosioRpcTableRowsRequest(scope: network.regisrtyContract, code: network.regisrtyContract, table: "pubkeydid", json: true, limit: 1, tableKey: nil, lowerBound: pubKeyIndex, upperBound: pubKeyIndex, indexPosition: "2", keyType: "sha256", encodeType: .hex, reverse: nil, showPayer: nil)) { res in
+      
+      resultRow = res
+    }
+
+    if !(resultRow.isEmpty) { // not Empty
+      if self.noRevocationCheck == false && resultRow["nonce"] as? Double == 65535 {
         deactivated = true
       }
-      let resPk = jsonRpcFetchRows(rpc: jsonRpc, options: EosioRpcTableRowsRequest(scope: network.regisrtyContract, code: network.regisrtyContract, table: "pkdidowner", json: true, limit: 1, tableKey: nil, lowerBound: res["pkid"] as? String , upperBound: nil, indexPosition: "1", keyType: "i64", encodeType: .hex, reverse: nil, showPayer: nil))
       
-      guard let pubKey = try? Data(eosioPublicKey: resPk["pk"] as? String ?? "") else { return resolvedDoc }
+      jsonRpcFetchRows(rpc: jsonRpc, options: EosioRpcTableRowsRequest(scope: network.regisrtyContract, code: network.regisrtyContract, table: "pkdidowner", json: true, limit: 1, tableKey: nil, lowerBound: resultRow["pkid"] as? String , upperBound: nil, indexPosition: "1", keyType: "i64", encodeType: .hex, reverse: nil, showPayer: nil)) { res in
+        resultRow = res
+      }
+      
+      guard let pubKey = try? Data(eosioPublicKey: resultRow["pk"] as? String ?? "") else { return resolvedDoc }
       iPrint(pubKey)
-      resolvedDoc = self.wrapDidDocument(did: did, controllerPubKey: pubKey, pkdidAttr: resPk, deactivated: deactivated)
+      resolvedDoc = self.wrapDidDocument(did: did, controllerPubKey: pubKey, pkdidAttr: resultRow, deactivated: deactivated)
       
     } else {
       iPrint("res is Empty")
@@ -142,13 +143,15 @@ extension InfraDIDResolver: InfraDIDResolvable {
   private func resolveAccountDID(did: String, accountName: String, network: ConfiguredNetwork) async -> ResolvedDIDDocument {
     var activeKeyStr = ""
     guard let rpc = network.jsonRPC else { return ResolvedDIDDocument() }
-    
+    var resultRow: [String:Any] = [:]
     activeKeyStr = jsonRpcFetchAccountInfo(jsonRpc: rpc, accountName: accountName)
     
-    let attr = jsonRpcFetchRows(rpc: rpc, options: EosioRpcTableRowsRequest(scope: network.regisrtyContract, code: network.regisrtyContract, table: "accdidattr", json: true, limit: 1, tableKey: nil, lowerBound: accountName, upperBound: accountName, indexPosition: "1", keyType: "name", encodeType: .hex, reverse: nil, showPayer: nil))
+    jsonRpcFetchRows(rpc: rpc, options: EosioRpcTableRowsRequest(scope: network.regisrtyContract, code: network.regisrtyContract, table: "accdidattr", json: true, limit: 1, tableKey: nil, lowerBound: accountName, upperBound: accountName, indexPosition: "1", keyType: "name", encodeType: .hex, reverse: nil, showPayer: nil)) { res in
+      resultRow = res
+    }
     
     guard let pubKey = try? Data(eosioPublicKey: activeKeyStr) else { return ResolvedDIDDocument() }
-    return wrapDidDocument(did: did, controllerPubKey: pubKey, pkdidAttr: attr, deactivated: false)
+    return wrapDidDocument(did: did, controllerPubKey: pubKey, pkdidAttr: resultRow, deactivated: false)
   }
   
   
@@ -173,7 +176,8 @@ extension InfraDIDResolver: InfraDIDResolvable {
     
   }
   
-  private func jsonRpcFetchRows(rpc: EosioRpcProvider, options: EosioRpcTableRowsRequest) -> [String:Any] {
+  private func jsonRpcFetchRows(rpc: EosioRpcProvider, options: EosioRpcTableRowsRequest, completion: @escaping (([String:Any]) -> Void)) {
+    
     var mergedOptions = options
     mergedOptions.limit = 9999
     
@@ -202,15 +206,13 @@ extension InfraDIDResolver: InfraDIDResolvable {
         if !(res.rows.isEmpty) {
           if let row = res.rows[0] as? [String:Any] {
             rowDic = row
+            completion(row)
           }
         }
       case .failure(let err):
         iPrint(err.localizedDescription)
       }
-    }
-  
-  iPrint(rowDic)
-  return rowDic
+  }
 }
 
 private func wrapDidDocument(did: String, controllerPubKey: Data?, pkdidAttr: [String:Any], deactivated: Bool) -> ResolvedDIDDocument {
