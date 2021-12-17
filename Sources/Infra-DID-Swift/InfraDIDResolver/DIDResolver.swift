@@ -21,16 +21,13 @@ public class Resolver: Resolvable {
   public func resolve(didUrl: String, options: DIDResolutionOptions?) async -> Promise<DIDResolutionResult> {
     let parsed = parse(didUrl: didUrl)
     
-    iPrint(parsed)
-
-    
     guard let registry = self.resolverRegistry, let parsed = parsed, let cached = self.cache else { return emptyResult }
     
     guard let resolver = registry.methodName[parsed.method] else { return emptyResult }
     
     return await cached(parsed, {
-      let a = await resolver(parsed.did, parsed, self, options ?? DIDResolutionOptions())
-      return a
+      let result = await resolver(parsed.did, parsed, self, options ?? DIDResolutionOptions())
+      return result
     })
   }
   
@@ -39,7 +36,6 @@ public class Resolver: Resolvable {
     
     guard let optionCache = options.cache else { return }
 
-    iPrint(options.cache)
     self.cache = options.cache != nil ? inMemoryCache() : noCache
     
     guard var registry = self.resolverRegistry else { return }

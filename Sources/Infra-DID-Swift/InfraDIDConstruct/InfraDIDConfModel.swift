@@ -34,8 +34,6 @@ public struct IdConfiguration{
   var txfeePayerAccount: String?
   var txfeePayerPrivateKey: String?
   var pubKeyDidSignDataPrefix: String?
-  //var keyPair: secp256k1.Signing.PrivateKey?
-  
   
   public init(did: String = "", didOwnerPrivateKey: String = "", networkId: String = "",
        registryContract: String = "", rpcEndpoint: String = "", jwtSigner: JWTSigner? = nil,
@@ -50,7 +48,6 @@ public struct IdConfiguration{
     self.txfeePayerAccount = txfeePayAccount
     self.txfeePayerPrivateKey = txfeePayerPrivateKey
     self.pubKeyDidSignDataPrefix = pubKeyDidSignDataPrefix
-    //self.keyPair = keyPair
   }
 }
 

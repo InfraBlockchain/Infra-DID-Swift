@@ -10,8 +10,6 @@ import PromiseKit
 import EosioSwift
 import secp256k1
 
-
-
 public enum verificationMethodTypes: String {
   case EcdsaSecp256k1VerificationKey2019 = "EcdsaSecp256k1VerificationKey2019"
   case EcdsaSecp256k1RecoveryMethod2020 = "EcdsaSecp256k1RecoveryMethod2020"
@@ -58,8 +56,6 @@ extension InfraDIDResolver: InfraDIDResolvable {
     
     let idSplit = parsed.id.split(separator: ":")
     
-    iPrint(idSplit)
-    
     if (idSplit.count != 2) {
       return Promise<DIDResolutionResult>.value(DIDResolutionResult(
         didResolutionMetadata: DIDResolutionMetadata(contentType: nil, errorDescription: .invalidDid,
@@ -69,7 +65,7 @@ extension InfraDIDResolver: InfraDIDResolvable {
     }
     
     guard let network: ConfiguredNetwork = self.networks[String(idSplit[0])] else { return Promise<DIDResolutionResult>.value(DIDResolutionResult(didResolutionMetadata: DIDResolutionMetadata(contentType: nil, errorDescription: .unKnownNetwork, message: "no chain network configured for network identifier \(idSplit[0])"), didDocument: nil, didDocumentMetaData: DIDDocumentMetaData())) }
-
+    
     do {
       let idInNetwork: String = String(idSplit[1])
       var resolvedDIDDoc = ResolvedDIDDocument(didDocument: DIDDocument(), deactivated: true)
@@ -77,11 +73,9 @@ extension InfraDIDResolver: InfraDIDResolvable {
       if idInNetwork.starts(with: "PUB_K1") || idInNetwork.starts(with: "PUB_R1") || idInNetwork.starts(with: "EOS") {
         iPrint(idInNetwork)
         iPrint(network)
-        //guard let value = self.resolvePubKeyDID(did: did, pubKey: idInNetwork, network: network).value else { return emptyResult }
         resolvedDIDDoc = await self.resolvePubKeyDID(did: did, pubKey: idInNetwork, network: network)
       } else {
-       // guard let value = self.resolveAccountDID(did: did, accountName: idInNetwork, network: network).value else { return emptyResult }
-        //resolvedDIDDoc = self.resolveAccountDID(did: did, accountName: idInNetwork, network: network)
+        resolvedDIDDoc = await self.resolveAccountDID(did: did, accountName: idInNetwork, network: network)
       }
       
       let status = resolvedDIDDoc.deactivated
@@ -92,7 +86,7 @@ extension InfraDIDResolver: InfraDIDResolvable {
                                                                     , didDocumentMetaData: DIDDocumentMetaData(created: nil, updated: nil, deactivated: status, versionId: nil, nextUpdate: nil, nextVersionId: nil, equivalentId: nil, canonicalId: nil)))
       
     }
-  } //resolve
+  }
   
   public func build() -> [String:DIDResolverType] {
     return ["infra": self.resolve]
@@ -100,7 +94,7 @@ extension InfraDIDResolver: InfraDIDResolvable {
   
   
   private func resolvePubKeyDID(did: String, pubKey: String, network: ConfiguredNetwork) async -> ResolvedDIDDocument {
-    let pubKeyData = try! Data(eosioPublicKey: pubKey)
+    guard let pubKeyData = try? Data(eosioPublicKey: pubKey) else { return ResolvedDIDDocument() }
     let pubKeyArray = [UInt8](pubKeyData)
     let sliceKey = pubKeyArray[1...pubKeyArray.count-1]
     
@@ -114,6 +108,12 @@ extension InfraDIDResolver: InfraDIDResolvable {
     var deactivated: Bool = false
     
     let res = await jsonRpcFetchRows(rpc: jsonRpc, options: EosioRpcTableRowsRequest(scope: network.regisrtyContract, code: network.regisrtyContract, table: "pubkeydid", json: true, limit: 1, tableKey: nil, lowerBound: pubKeyIndex, upperBound: pubKeyIndex, indexPosition: "2", keyType: "sha256", encodeType: .hex, reverse: nil, showPayer: nil))
+//    if res.isFulfilled && res.value != nil {
+//
+//    } else {
+//      resolvedDoc = self.wrapDidDocument(did: did, controllerPubKey: pubKeyData, pkdidAttr: [:], deactivated: deactivated)
+//    }
+//    return resolvedDoc
     
     if !(res.isEmpty) { // not Empty
       if self.noRevocationCheck == false && res["nonce"] as? Double == 65535 {
@@ -121,115 +121,71 @@ extension InfraDIDResolver: InfraDIDResolvable {
       }
       let resPk = await jsonRpcFetchRows(rpc: jsonRpc, options: EosioRpcTableRowsRequest(scope: network.regisrtyContract, code: network.regisrtyContract, table: "pkdidowner", json: true, limit: 1, tableKey: nil, lowerBound: res["pkid"] as? String , upperBound: nil, indexPosition: "1", keyType: "i64", encodeType: .hex, reverse: nil, showPayer: nil))
       
-      let pubKey = try! Data(eosioPublicKey: resPk["pk"] as! String )
+      guard let pubKey = try? Data(eosioPublicKey: resPk["pk"] as? String ?? "") else { return resolvedDoc }
+      
       resolvedDoc = self.wrapDidDocument(did: did, controllerPubKey: pubKey, pkdidAttr: resPk, deactivated: deactivated)
       
     } else {
       resolvedDoc = self.wrapDidDocument(did: did, controllerPubKey: pubKeyData, pkdidAttr: [:], deactivated: deactivated)
     }
     
-//    return Promise { seal in
-//      firstly {
-//        jsonRpcFetchRows(rpc: jsonRpc, options: EosioRpcTableRowsRequest(scope: network.regisrtyContract, code: network.regisrtyContract, table: "pubkeydid", json: true, limit: 1, tableKey: nil, lowerBound: pubKeyIndex, upperBound: pubKeyIndex, indexPosition: "2", keyType: "sha256", encodeType: .hex, reverse: nil, showPayer: nil))
-//      }.then({ attr -> Promise<[String:Any]> in
-//        if !(attr.isEmpty) {
-//          seal.reject(NSError.init())
-//        }
-//
-//        iPrint(attr)
-//      })
-
-
-      return resolvedDoc
-    }
-
-//    let resPubKeyDIDOwner = jsonRpcFetchRows(rpc: jsonRpc, options: EosioRpcTableRowsRequest(scope: network.regisrtyContract, code: network.regisrtyContract, table: "pubkeydid", json: true, limit: 1, tableKey: nil, lowerBound: pubKeyIndex, upperBound: pubKeyIndex, indexPosition: "2", keyType: "sha256", encodeType: .hex, reverse: nil, showPayer: nil))
-//
-//    if resPubKeyDIDOwner.value != nil {
-//      resPubKeyDIDOwner.then { attr -> Promise<[String:Any]> in
-//        if !(attr.isEmpty) {
-//          if self.noRevocationCheck == false && attr["nonce"] as? Double == 65535 {
-//            deactivated = true
-//          }
-//
-//          let res = self.jsonRpcFetchRows(rpc: jsonRpc, options: EosioRpcTableRowsRequest(scope: network.regisrtyContract, code: network.regisrtyContract, table: "pkdidowner", json: true, limit: 1, tableKey: nil, lowerBound: attr["pkid"] as? String , upperBound: nil, indexPosition: "1", keyType: "i64", encodeType: .hex, reverse: nil, showPayer: nil))
-//
-//          return self.jsonRpcFetchRows(rpc: jsonRpc, options: EosioRpcTableRowsRequest(scope: network.regisrtyContract, code: network.regisrtyContract, table: "pkdidowner", json: true, limit: 1, tableKey: nil, lowerBound: attr["pkid"] as? String , upperBound: nil, indexPosition: "1", keyType: "i64", encodeType: .hex, reverse: nil, showPayer: nil))
-//        }
-//      }.done { attr in
-//        let pubKey = try! Data(eosioPublicKey: attr["pk"] as! String )
-//        resolvedDoc = self.wrapDidDocument(did: did, controllerPubKey: pubKey, pkdidAttr: attr, deactivated: deactivated)
-//        return
-//      }
-//    } else { //value is nil
-//      resolvedDoc = self.wrapDidDocument(did: did, controllerPubKey: pubKeyData, pkdidAttr: [:], deactivated: deactivated)
-//    }
-//
-
+    return resolvedDoc
+  }
   
-//  private func resolveAccountDID(did: String, accountName: String, network: ConfiguredNetwork) -> ResolvedDIDDocument {
-//    var activeKeyStr = ""
-//    guard let rpc = network.jsonRPC else { return emptyResolvedDocument }
-//
-//
-//    return Promise { seal in
-//      firstly {
-//        rpc.getAccount(.promise, requestParameters: EosioRpcAccountRequest(accountName: accountName))
-//      }.then({ resValue -> Promise<[String:Any]> in
-//        let eosioRpcAccountResponse = resValue
-//        let permissions = eosioRpcAccountResponse.permissions
-//        guard let activePermission = permissions.filter({$0.permName == "active"}).first,
-//              let keysAndWeight = activePermission.requiredAuth.keys.first  else { return Promise<[String:Any]>.value([:]) }
-//        activeKeyStr = keysAndWeight.key
-//
-//        return self.jsonRpcFetchRows(rpc: rpc, options: EosioRpcTableRowsRequest(scope: network.regisrtyContract, code: network.regisrtyContract, table: "accdidattr", json: true, limit: 1, tableKey: nil, lowerBound: accountName, upperBound: accountName, indexPosition: "1", keyType: "name", encodeType: .hex, reverse: nil, showPayer: nil))
-//      })
-//      .done { attr in
-//        let pubKey = try! Data(eosioPublicKey: activeKeyStr)
-//        seal.fulfill(self.wrapDidDocument(did: did, controllerPubKey: pubKey, pkdidAttr: attr, deactivated: false))
-//      }
-//      .catch {
-//        iPrint($0.localizedDescription)
-//      }
-//    }
-//  }
+  private func resolveAccountDID(did: String, accountName: String, network: ConfiguredNetwork) async -> ResolvedDIDDocument {
+    var activeKeyStr = ""
+    guard let rpc = network.jsonRPC else { return ResolvedDIDDocument() }
+    
+    activeKeyStr = await jsonRpcFetchAccountInfo(jsonRpc: rpc, accountName: accountName)
+    
+    let attr = await jsonRpcFetchRows(rpc: rpc, options: EosioRpcTableRowsRequest(scope: network.regisrtyContract, code: network.regisrtyContract, table: "accdidattr", json: true, limit: 1, tableKey: nil, lowerBound: accountName, upperBound: accountName, indexPosition: "1", keyType: "name", encodeType: .hex, reverse: nil, showPayer: nil))
+    
+    guard let pubKey = try? Data(eosioPublicKey: activeKeyStr) else { return ResolvedDIDDocument() }
+    return wrapDidDocument(did: did, controllerPubKey: pubKey, pkdidAttr: attr, deactivated: false)
+  }
+  
+  
+  private func jsonRpcFetchAccountInfo(jsonRpc: EosioRpcProvider, accountName: String) async -> String {
+    var pubKey = ""
+    
+    jsonRpc.getAccount(requestParameters: EosioRpcAccountRequest(accountName: accountName)) { result in
+      switch result {
+        
+      case .success(let res):
+        let permission = res.permissions
+        guard let activePermission = permission.filter({$0.permName == "active"}).first,
+              let keysAndWeight = activePermission.requiredAuth.keys.first  else { return }
+        pubKey = keysAndWeight.key
+        
+      case .failure(let err):
+        iPrint(err.localizedDescription)
+      }
+    }
+    return pubKey
+
+
+  }
   
   private func jsonRpcFetchRows(rpc: EosioRpcProvider, options: EosioRpcTableRowsRequest) async -> [String:Any] {
     var mergedOptions = options
     mergedOptions.limit = 9999
     
     var rowDic: [String:Any] = [:]
-    
-    rpc.getTableRows(requestParameters: mergedOptions) { result in
-      switch result {
-      case .success(let res):
-        if !(res.rows.isEmpty) {
-          if let row = res.rows[0] as? [String:Any] {
-            rowDic = row
+  
+    //DispatchQueue.main.sync {
+      rpc.getTableRows(requestParameters: mergedOptions) { result in
+        switch result {
+        case .success(let res):
+          if !(res.rows.isEmpty) {
+            if let row = res.rows[0] as? [String:Any] {
+              rowDic = row
+            }
           }
+        case .failure(let err):
+          iPrint(err.localizedDescription)
         }
-
-      case .failure(let err):
-        iPrint(err.localizedDescription)
       }
-    }
-//    return Promise { seal in
-//      rpc.getTableRows(requestParameters: <#T##EosioRpcTableRowsRequest#>, completion: <#T##(EosioResult<EosioRpcTableRowsResponse, EosioError>) -> Void#>)
-//      seal.resolve(Result<[String : Any]>)
-//      seal.resolve(rpc.getTableRows(.promise, requestParameters: mergedOptions))
-////      firstly {
-////
-////        seal.resolve(rpc.getTableRows(.promise, requestParameters: mergedOptions))
-////        //rpc.getTableRows(.promise, requestParameters: mergedOptions)
-////      }.done({
-////        iPrint($0)
-////        if let row = $0.rows[0] as? [String:Any] {
-////          iPrint(row)
-////          seal.fulfill(row)
-////        }
-////      })
-//    }
-    //return [:]
+    //}
     return rowDic
   }
   
@@ -252,17 +208,18 @@ extension InfraDIDResolver: InfraDIDResolvable {
           case "svc":
             serviceCount += 1
             serviceEndpoints.append(ServiceEndpoint(id: "\(did)#service-\(serviceCount)",
-                                                                type: split.count > 1 ? String(split[1]) : "AgentService"
-                                                                , serviceEndpoint: value, description: nil))
+                                                    type: split.count > 1 ? String(split[1]) : "AgentService"
+                                                    , serviceEndpoint: value, description: nil))
             break
+            
           default:
             break
           }
         }
       }
     }
-
-
+    
+    
     baseDidDocument.verificationMethod = publicKeys
     baseDidDocument.authentication = authentication
     
@@ -272,9 +229,8 @@ extension InfraDIDResolver: InfraDIDResolvable {
     return ResolvedDIDDocument(didDocument: baseDidDocument, deactivated: deactivated)
   }
   
-  
-//} //class indent
-
+}
+//GetTableRows Result
 //                                          rows: [
 //                                            {
 //                                              pkid: 3,
@@ -283,4 +239,3 @@ extension InfraDIDResolver: InfraDIDResolvable {
 //                                              attr: []
 //                                            }
 //                                          ],
-}

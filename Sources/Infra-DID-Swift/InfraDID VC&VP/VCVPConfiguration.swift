@@ -66,18 +66,6 @@ public struct VerifiableCredentialObject: Codable { //first jwt decoded vc
   
 }
 
-
-//public struct JwtCredentialPayload {
-//  var iss: String?
-//  var sub: String?
-//  var vc: VerifiableCredentialObject
-//  var nbf: Double?
-//  var aud: contextType?
-//  var exp: Double?
-//  var jtl: String?
-//  //extensible Object
-//}
-
 public enum DateType {
   case string(String)
   case date(Date)
@@ -118,7 +106,6 @@ public struct CredentialPayload: Codable { // organic struct add payload after v
     self.credentialStatus = credentialStatus
     self.termsOfUse = termsOfUse
   }
-  
   
   public init(from decoder: Decoder) throws {
     let values = try decoder.container(keyedBy: CodingKeys.self)
@@ -208,12 +195,10 @@ public struct VerifiablePresentationObject: Codable {
   }
 }
 
-//
 public enum VerifiableCredentialType: Codable {
   case string([String])
   case credential(CredentialPayload) //Only VerifyCredential
   case credentialArray([CredentialPayload]) //VerifyPresentation
-  
   
   public init(from decoder: Decoder) throws {
     let container = try decoder.singleValueContainer()
@@ -244,7 +229,7 @@ public enum VerifiableCredentialType: Codable {
       try container.encode(value)
     }
   }
-  //
+  
   var credentialValue: Any {
     switch self {
     case .string(let s):
@@ -363,8 +348,6 @@ public struct PresentationOptions {
 
 
 public func transformPresentationInput(input: PresentationPayload, removeOriginalFields: Bool = true) -> JwtPresentationPayload {
-  //  guard let vp = try? NSKeyedArchiver.archivedData(withRootObject: input, requiringSecureCoding: true) else { return JwtPresentationPayload()}
-  //iPrint(input)
   guard let aud = input.verifier else { return JwtPresentationPayload()}
   let formatter = ISO8601DateFormatter.init()
   
@@ -376,12 +359,11 @@ public func transformPresentationInput(input: PresentationPayload, removeOrigina
         let vcType = try? JSONDecoder().decode(VerifiableCredentialType.self, from: vcData),
         let vc = vcType.credentialValue as? [String]
   else { return JwtPresentationPayload() }
-  //test
+  
   iPrint(vc)
   
   var payload: JwtPresentationPayload = JwtPresentationPayload(vp: VerifiablePresentationObject(context: input.context, type: input.type, verifiableCredential: vc), iss: input.holder, aud: aud, nbf: nil, exp: nil, jti: nil, nonce: nil)
   
-  iPrint(payload)
   if input.expirationDate != nil, let expDate = input.expirationDate {
     let exp = floor(formatter.date(from: expDate)!.timeIntervalSinceNow / 1000)
     iPrint(expDate)
@@ -399,20 +381,16 @@ public func transformPresentationInput(input: PresentationPayload, removeOrigina
     payload.jti = id
   }
   
-  iPrint(payload)
   return payload
 }
 
 public func transformCredentialInput(input: CredentialPayload) -> JwtCredentialPayload {
   var jwtPayload: JwtCredentialPayload = JwtCredentialPayload()
   
-  iPrint(input)
   let formatter = ISO8601DateFormatter()
   
-  let credentialSubject = try! JSONDecoder().decode(VerifiableCredentialObject.self, from: try! input.toJsonData())
-//  jwtPayload.vc?.credentialSubject = input.credentialSubject
-//  jwtPayload.vc?.context = input.context
-//  jwtPayload.vc?.type = input.type
+  guard let inputData = try? input.toJsonData(),
+          let credentialSubject = try? JSONDecoder().decode(VerifiableCredentialObject.self, from: inputData) else { return JwtCredentialPayload() }
   
   jwtPayload.vc = credentialSubject
   
@@ -421,7 +399,7 @@ public func transformCredentialInput(input: CredentialPayload) -> JwtCredentialP
   jwtPayload.jti = input.id ?? nil
   
   // Date transform
-  jwtPayload.nbf = formatter.date(from: input.issuanceDate ?? "")//input.issuanceDate
+  jwtPayload.nbf = formatter.date(from: input.issuanceDate ?? "")
   jwtPayload.exp = formatter.date(from: input.expirationDate ?? "")
   
   jwtPayload.iss = input.issuer.first?.value ?? nil

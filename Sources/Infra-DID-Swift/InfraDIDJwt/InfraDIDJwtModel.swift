@@ -27,9 +27,6 @@ public enum SignerResult {
   case string(String)
 }
 
-//public typealias Signer = (data: SignerInputData) -> Promise<SignerResult>
-//public typealias SignerAlgorithm = (payload: String, signer: Signer) -> Promise<String>
-
 public struct JwtOptions {
   var issuer: String
   var signer: JWTSigner?
@@ -43,7 +40,6 @@ public struct JwtOptions {
     self.signer = signer
     self.alg = alg
     self.expiresIn = expiresIn
-    //self.signer = signer
   }
 }
 
@@ -90,7 +86,6 @@ public struct JwtHeader {
   }
 }
 
-
 public enum JwtPayloadAudienceType: Codable {
   case string(String)
   case array([String])
@@ -129,14 +124,12 @@ public struct JwtPayload: Claims {
   
   enum CodingKeys:  String, CodingKey {
     case iss, sub, aud, iat, nbf, exp, rexp, did, vc, vp, nonce
-    //case subJwk = "sub_jwk"
   }
   
   public init(iat: Date? = nil, iss: String? = "", sub: String? = "", nbf: Date? = nil,
               exp: Date? = nil, rexp: Double? = nil,
               aud: [String]? = nil, did: String? = nil, vc: VerifiableCredentialObject? = nil, vp: VerifiablePresentationObject? = nil,
               nonce: String? = nil) {
-    //self.requested = requested
     self.iat = iat
     self.iss = iss
     self.sub = sub
@@ -144,9 +137,7 @@ public struct JwtPayload: Claims {
     self.exp = exp
     self.rexp = rexp
     self.aud = aud
-    //self.subJwk = subJwk
     self.did = did
-    //self.claim = claim
     self.vc = vc
     self.vp = vp
     self.nonce = nonce
@@ -154,7 +145,6 @@ public struct JwtPayload: Claims {
   
   public init(from decoder: Decoder) throws {
     let values = try decoder.container(keyedBy: CodingKeys.self)
-    iPrint(values)
     iss = (try? values.decode(String.self, forKey: .iss)) ?? nil
     sub = (try? values.decode(String.self, forKey: .sub)) ?? nil
     exp = (try? values.decode(Date.self, forKey: .exp)) ?? nil
@@ -162,9 +152,7 @@ public struct JwtPayload: Claims {
     iat = (try? values.decode(Date.self, forKey: .iat)) ?? nil
     nbf = (try? values.decode(Date.self, forKey: .nbf)) ?? nil
     rexp = (try? values.decode(Double.self, forKey: .rexp)) ?? nil
-   // requested = (try? values.decode([String].self, forKey: .requested)) ?? []
     did = (try? values.decode(String.self, forKey: .did)) ?? nil
-    //subJwk = (try? values.decode([String:Any].self, forKey: .subJwk)) ?? nil
     vc = (try? values.decode(VerifiableCredentialObject.self, forKey: .vc)) ?? nil
     vp = (try? values.decode(VerifiablePresentationObject.self, forKey: .vp)) ?? nil
     nonce = (try? values.decode(String.self, forKey: .vp)) ?? nil
@@ -177,7 +165,6 @@ public struct JwtPayload: Claims {
     try container.encode(self.sub, forKey: .sub)
     try container.encode(self.exp, forKey: .exp)
     try container.encode(self.rexp, forKey: .rexp)
-    //try container.encode(self.requested, forKey: .requested)
     try container.encode(self.aud, forKey: .aud)
     try container.encode(self.nbf, forKey: .nbf)
     try container.encode(self.did, forKey: .did)
@@ -185,10 +172,8 @@ public struct JwtPayload: Claims {
     try container.encode(self.vp, forKey: .vp)
     try container.encode(self.nonce, forKey: .nonce)
   }
-  //JSONEncoder()
 }
 
-//
 public struct JwtDecoded {
   var header: Header
   var payload: JwtPayload
@@ -244,8 +229,6 @@ public struct JwtVerified: Codable {
     issuer = (try? values.decode(String.self, forKey: .issuer)) ?? ""
     signer = (try? values.decode(VerificationMethod.self, forKey: .signer)) ?? VerificationMethod()
     jwt = (try? values.decode(String.self, forKey: .jwt)) ?? ""
-
-
   }
   
   public func encode(from encoder: Encoder) throws {
@@ -261,12 +244,3 @@ public struct JwtVerified: Codable {
 public struct LegacyVerificationMethod {
   var publicKey: String?
 }
-
-//public struct PublicKeyTypes { //ES256K : EcdsaSecp256k1VerificationKey2019
-//  var name: [String:[String]]
-//  
-//  public init(name: [String:[String]] = []) {
-//    self.name = name
-//  }
-//}
-
