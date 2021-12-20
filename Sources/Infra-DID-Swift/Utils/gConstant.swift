@@ -71,3 +71,27 @@ extension String{
     }
   }
 }
+
+//Eosio Chain Func
+public func jsonRpcFetchRows(rpc: EosioRpcProvider, options: EosioRpcTableRowsRequest) -> Promise<[String:Any]> {
+  
+  return Promise { seal in
+    rpc.getTableRows(requestParameters: options) { result in
+      switch result {
+      case .success(let res):
+        iPrint(res)
+        if !(res.rows.isEmpty) {
+          if let row = res.rows[0] as? [String:Any] {
+            iPrint("response Completed")
+            seal.fulfill(row)
+          }
+        } else {
+          seal.reject(APIError.emptyError)
+        }
+      case .failure(let err):
+        iPrint(err.localizedDescription)
+        seal.reject(APIError.resultError)
+      }
+    }
+  }
+}
