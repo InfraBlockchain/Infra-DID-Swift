@@ -385,6 +385,7 @@ public func transformPresentationInput(input: PresentationPayload, removeOrigina
 }
 
 public func transformCredentialInput(input: CredentialPayload) -> JwtCredentialPayload {
+  iPrint(input)
   var jwtPayload: JwtCredentialPayload = JwtCredentialPayload()
   
   let formatter = ISO8601DateFormatter()

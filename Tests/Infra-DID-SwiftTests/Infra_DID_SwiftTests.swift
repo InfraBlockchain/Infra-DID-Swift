@@ -25,7 +25,7 @@ final class Infra_DID_SwiftTests: XCTestCase {
     
     
     let didApi = InfraDIDConstructor(config: idConfig)
-    didApi.actionPubKeyDID(action: .set, key: "svc/MessagingService", value: "https://infradid.com/pk/1/mysvcr9", newKey: "")
+    didApi.actionPubKeyDID(actionName: .set, key: "svc/MessagingService", value: "https://infradid.com/pk/1/mysvcr9", newKey: "")
   }
   
   
@@ -73,7 +73,7 @@ final class Infra_DID_SwiftTests: XCTestCase {
 
   }
   
-  func testVerifyVcJwt() throws {
+  func testVerifyVcJwt() async throws {
     
     let infraDidResolver = getResolver(options: MultiNetworkConfiguration(networks: [NetworkConfiguration(networkId: "01", registryContract: "fmapkumrotfc", rpcEndpoint: "https://api.testnet.eos.io")], noRevocationCheck: false))
     
