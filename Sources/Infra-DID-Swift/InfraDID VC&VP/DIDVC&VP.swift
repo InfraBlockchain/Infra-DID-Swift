@@ -221,7 +221,7 @@ private func validatePresentationPayload(payload: PresentationPayload) -> Bool {
 //Verify VP & VC
 public func verifyPresentation(presentation: String, resolver: Resolvable, options: PresentationOptions = PresentationOptions()) async -> VerifiedPresentation {
   
-  guard let verified = try? await verifyJwt(jwt: presentation, options: JwtVerifyOptions(proofPurpose: nil, audience: options.audience ?? nil, resolver: resolver)) else { return VerifiedPresentation()} // VerifyVpJwt
+  guard let verified = try? verifyJwt(jwt: presentation, options: JwtVerifyOptions(proofPurpose: nil, audience: options.audience ?? nil, resolver: resolver)) else { return VerifiedPresentation()} // VerifyVpJwt
 
   var verifiedPresentation = VerifiedPresentation(verifiedJwt: verified, verifiablePresentation: PresentationPayload())
   //
@@ -235,7 +235,7 @@ public func verifyPresentation(presentation: String, resolver: Resolvable, optio
   if options.vcValidateFlag { // Verify VC JWT in VP
     if let value = verifiedPresentation.verifiablePresentation.verifiableCredential.credentialValue as? [CredentialPayload]{
       for i in 0..<value.count {
-        let verifiedCredential = await verifyCredential(credential: value[i].proof["jwt"] ?? "", resolver: resolver)
+        let verifiedCredential = verifyCredential(credential: value[i].proof["jwt"] ?? "", resolver: resolver)
         verifiedPresentation.verifiableCredentials.append(verifiedCredential)
       }
     }
@@ -249,8 +249,8 @@ public func verifyPresentation(presentation: String, resolver: Resolvable, optio
 // resolver: Did Resolver
 // options:
 
-public func verifyCredential(credential: String, resolver: Resolvable, options: CredentialOptions = CredentialOptions()) async -> VerifiedCredential {
-  guard let verified = try? await verifyJwt(jwt: credential, options: JwtVerifyOptions(proofPurpose: nil, audience: options.audience ?? nil, resolver: resolver)) else { return VerifiedCredential() }
+public func verifyCredential(credential: String, resolver: Resolvable, options: CredentialOptions = CredentialOptions()) -> VerifiedCredential {
+  guard let verified = try? verifyJwt(jwt: credential, options: JwtVerifyOptions(proofPurpose: nil, audience: options.audience ?? nil, resolver: resolver)) else { return VerifiedCredential() }
   
   var verifiedCredential = VerifiedCredential(verifiedJwt: verified, verifiableCredential: CredentialPayload())
   

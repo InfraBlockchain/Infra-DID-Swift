@@ -85,7 +85,7 @@ public func createJwt(payload: JwtPayload, jwtOptions: JwtOptions, header: Heade
   return await createJws(payload: fullPayload, signer: signer, header: header, options: JwsCreationOptions(canonicalize: jwtOptions.canonicalize))
 }
 
-public func verifyJwt(jwt: String, options: JwtVerifyOptions) async throws -> JwtVerified {
+public func verifyJwt(jwt: String, options: JwtVerifyOptions) throws -> JwtVerified {
   let jwtDecoded = decodeJwt(jwt: jwt)
   
   var proofPurpose: ProofPurposeTypes? = options.proofPurpose ?? nil
@@ -123,16 +123,16 @@ public func verifyJwt(jwt: String, options: JwtVerifyOptions) async throws -> Jw
     throw JWTError(localizedDescription: "invalid_jwt: No DID has been found in the JWT")
   }
   
-  guard let authenticator = try? await resolveAuthenticator(resolver: resolver, alg: jwtDecoded.header.alg!, issuer: did, proofPurpose: proofPurpose ?? .authentication) else { return JwtVerified() }
+  guard let authenticator = try? resolveAuthenticator(resolver: resolver, alg: jwtDecoded.header.alg!, issuer: did, proofPurpose: proofPurpose ?? .authentication) else { return JwtVerified() }
   iPrint(authenticator)
 
-  guard let verified = try? await resolveVerified(authenticator: authenticator, jwt: jwt, jwtDecoded: jwtDecoded, options: options) else { return JwtVerified() }
+  guard let verified = try? resolveVerified(authenticator: authenticator, jwt: jwt, jwtDecoded: jwtDecoded, options: options) else { return JwtVerified() }
   
   return verified
 
 }
 
-private func resolveVerified(authenticator: DIDAuthenticator, jwt: String, jwtDecoded: JwtDecoded, options: JwtVerifyOptions) async throws -> JwtVerified {
+private func resolveVerified(authenticator: DIDAuthenticator, jwt: String, jwtDecoded: JwtDecoded, options: JwtVerifyOptions) throws -> JwtVerified {
   iPrint(jwtDecoded.payload)
   if authenticator.authenticators.count > 1 {
     iPrint(authenticator.authenticators)
@@ -190,7 +190,7 @@ private func resolveVerified(authenticator: DIDAuthenticator, jwt: String, jwtDe
 }
 
 
-private func resolveAuthenticator(resolver: Resolvable, alg: String, issuer: String, proofPurpose: ProofPurposeTypes) async throws -> DIDAuthenticator {
+private func resolveAuthenticator(resolver: Resolvable, alg: String, issuer: String, proofPurpose: ProofPurposeTypes) throws -> DIDAuthenticator {
   let verifyType = alg != "" ? "EcdsaSecp256k1VerificationKey2019" : ""
   
   guard verifyType != "" else { throw JWTError(localizedDescription: "not_supported: No supported signature types for algorithm")}
@@ -198,7 +198,7 @@ private func resolveAuthenticator(resolver: Resolvable, alg: String, issuer: Str
   var didResult = DIDResolutionResult()
   var authenticator = DIDAuthenticator()
   
-  let res = await resolver.resolve(didUrl: issuer, options: DIDResolutionOptions(accept: didJson))
+  let res = resolver.resolve(didUrl: issuer, options: DIDResolutionOptions(accept: didJson))
   
   if res.isFulfilled && res.value != nil {
     guard let result = res.value else { return DIDAuthenticator() }

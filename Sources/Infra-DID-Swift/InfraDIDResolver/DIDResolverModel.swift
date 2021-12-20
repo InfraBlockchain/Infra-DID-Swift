@@ -411,14 +411,14 @@ public func DIDResolve(did: String, parsed: ParsedDID, resolver: Resolver, optio
   return Promise<DIDResolutionResult>.value(DIDResolutionResult())
 }
 public var didResolver = WrappedResolve
-public typealias DIDResolverType = (String, ParsedDID, Resolver, DIDResolutionOptions) async -> Promise<DIDResolutionResult>
+public typealias DIDResolverType = (String, ParsedDID, Resolver, DIDResolutionOptions) -> Promise<DIDResolutionResult>
 //
 
 //
 public func WrappedResolve() -> Promise<DIDResolutionResult>
 { return Promise<DIDResolutionResult>.value(DIDResolutionResult()) }
 public var wrappedResolver: () -> Promise<DIDResolutionResult> = WrappedResolve
-public typealias wrappedResolverType = () async -> Promise<DIDResolutionResult>
+public typealias wrappedResolverType = () -> Promise<DIDResolutionResult>
 //
 
 
@@ -426,7 +426,7 @@ public typealias wrappedResolverType = () async -> Promise<DIDResolutionResult>
 public func DIDCache(parsed: ParsedDID, resolve: @escaping wrappedResolverType) -> Promise<DIDResolutionResult>
 { return Promise<DIDResolutionResult>.value(DIDResolutionResult()) }
 public var didCache = DIDCache
-public typealias DidCacheType = (_ parsed: ParsedDID, _ resolve: @escaping wrappedResolverType) async -> Promise<DIDResolutionResult>
+public typealias DidCacheType = (_ parsed: ParsedDID, _ resolve: @escaping wrappedResolverType) -> Promise<DIDResolutionResult>
 //
 
 //
@@ -469,12 +469,12 @@ public func inMemoryCache() -> DidCacheType {
 
   return {(did, wrapped) -> Promise<DIDResolutionResult> in
     if did.params != nil && did.params?.params["no-cache"] == "true" {
-      return await wrapped()
+      return wrapped()
     }
     
     let cached = cache[did.didUrl]
     if cached != nil { return Promise<DIDResolutionResult>.value(cached!) }
-    let result = await wrapped()
+    let result = wrapped()
     
     if result.value?.didResolutionMetadata.errorDescription != .notFound {
       cache[did.didUrl] = result.value!

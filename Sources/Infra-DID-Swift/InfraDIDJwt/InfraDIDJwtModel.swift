@@ -75,16 +75,6 @@ public struct DIDAuthenticator {
     self.didResolutionResult = didResolutionResult
   }
 }
-//
-public struct JwtHeader {
-  var type: String = "JWT"
-  var alg: String
-  //var
-  
-  public init(alg: String = "") {
-    self.alg = alg
-  }
-}
 
 public enum JwtPayloadAudienceType: Codable {
   case string(String)
