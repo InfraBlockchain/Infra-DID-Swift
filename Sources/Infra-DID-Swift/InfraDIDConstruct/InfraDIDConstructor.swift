@@ -219,15 +219,22 @@ extension InfraDIDConstructor: InfraDIDConfApiDependency {
     
     transaction.config.expireSeconds = 30
     transaction.config.blocksBehind = 3
+    //transaction.config.useLastIrreversible = true
     transaction.rpcProvider = self.jsonRpc
     transaction.signatureProvider = try! EosioSoftkeySignatureProvider(privateKeys: sigProviderPrivKeys)
     transaction.serializationProvider = EosioAbieosSerializationProvider()
+    //transaction.allowSignatureProviderToModifyTransaction = false
     transaction.add(action: action)
     
-    transaction.signAndBroadcast(.promise).done { isSuccess in
-      iPrint(isSuccess)
-    }.catch { err in
-      iPrint(err.localizedDescription)
+//    do {
+//      transaction.signAndBroadcast(.promise).done { isSuccess in
+//        iPrint(isSuccess)
+//      }.catch { err in
+//        iPrint(err.localizedDescription)
+//      }
+//    }
+    transaction.signAndBroadcast { result in
+      iPrint(result)
     }
     
 //    transaction.signAndBroadcast { result in
