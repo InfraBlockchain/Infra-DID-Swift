@@ -76,10 +76,23 @@ public func validateJwtPresentationPayload(payload: JwtPresentationPayload) asyn
 public func validateJwtCredentialPayload(payload: JwtCredentialPayload) async throws -> Bool {
   iPrint(payload)
   
-  guard let vc = payload.vc, vc.type.count != 0 , vc.context.count != 0, vc.credentialSubject != [:] else {
+  
+  guard let vc = payload.vc, vc.type.count != 0 , vc.context.count != 0, let _ = vc.credentialSubject.credentialValue as? [String:Any]  else {
     throw JWTError(localizedDescription: "Verifiable Credential Not Found")}
   
   guard payload.iss != nil, payload.nbf != nil else {
+    throw JWTError(localizedDescription: "Payload Configuration Error")
+  }
+  
+  return true
+}
+
+public func validateCredentialPayload(payload: CredentialPayload) throws -> Bool {
+  
+  guard payload.context.count != 0, payload.type.count != 0, let vcSubject = payload.credentialSubject.credentialValue as? [String:Any]  else {
+    throw JWTError(localizedDescription: "Verifiable Credential Not Found")}
+  
+  guard payload.issuanceDate != nil else {
     throw JWTError(localizedDescription: "Payload Configuration Error")
   }
   
@@ -193,7 +206,7 @@ public func normalizeCredential(input: JwtPayload, jwt: String) -> CredentialPay
   
   credentialPayload.id = input.jti ?? nil
   credentialPayload.type = vc.type
-  credentialPayload.credentialSubject["id"] = did
+  credentialPayload.credentialSubject = vc.credentialSubject
   credentialPayload.issuer = ["id": iss]
   credentialPayload.context = vc.context
   credentialPayload.proof = ["type": "JwtProof2020", "jwt": jwt]
@@ -254,7 +267,10 @@ public func verifyCredential(credential: String, resolver: Resolvable, options: 
   
   var verifiedCredential = VerifiedCredential(verifiedJwt: verified, verifiableCredential: CredentialPayload())
   
+  
   verifiedCredential.verifiableCredential = normalizeCredential(input: verified.payload!, jwt: verified.jwt)
+  
+  guard let bool = try? validateCredentialPayload(payload: verifiedCredential.verifiableCredential), bool else { return VerifiedCredential() }
   
   return verifiedCredential
 }
