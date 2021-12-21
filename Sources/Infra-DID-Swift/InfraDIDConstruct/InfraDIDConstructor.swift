@@ -209,8 +209,6 @@ extension InfraDIDConstructor: InfraDIDConfApiDependency {
     }
     guard let transactionAction = action else { return }
     self.actionTransaction(action: transactionAction)
-    
-    //}
   }
   
   
@@ -219,13 +217,12 @@ extension InfraDIDConstructor: InfraDIDConfApiDependency {
     
     transaction.config.expireSeconds = 30
     transaction.config.blocksBehind = 3
-    //transaction.config.useLastIrreversible = true
+    //transaction.config.useLastIrreversible = false
     transaction.rpcProvider = self.jsonRpc
     transaction.signatureProvider = try! EosioSoftkeySignatureProvider(privateKeys: sigProviderPrivKeys)
     transaction.serializationProvider = EosioAbieosSerializationProvider()
     //transaction.allowSignatureProviderToModifyTransaction = false
     transaction.add(action: action)
-    
 //    do {
 //      transaction.signAndBroadcast(.promise).done { isSuccess in
 //        iPrint(isSuccess)
@@ -233,25 +230,22 @@ extension InfraDIDConstructor: InfraDIDConfApiDependency {
 //        iPrint(err.localizedDescription)
 //      }
 //    }
-    transaction.signAndBroadcast { result in
-      iPrint(result)
-    }
-    
 //    transaction.signAndBroadcast { result in
-//      switch result {
-//      case .success(let isSuccess):
-//        iPrint(isSuccess)
-//        self.rpcGroup.leave()
-//      case .failure(let err):
-//        iPrint(err.localizedDescription)
-//        self.rpcGroup.leave()
-//      }
+//      iPrint(result)
 //    }
-    self.rpcGroup.wait()
     
-    self.rpcGroup.notify(queue: DispatchQueue.main) {
-      iPrint(transaction.transactionId)
+    transaction.signAndBroadcast { result in
+      switch result {
+      case .success(let isSuccess):
+        iPrint(isSuccess)
+        self.rpcGroup.leave()
+      case .failure(let err):
+        iPrint(err.localizedDescription)
+        self.rpcGroup.leave()
+      }
     }
+    
+    self.rpcGroup.wait()
   }
   
   

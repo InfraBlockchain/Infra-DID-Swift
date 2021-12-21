@@ -30,7 +30,8 @@ final class Infra_DID_SwiftTests: XCTestCase {
     
     
     let didApi = InfraDIDConstructor(config: idConfig)
-    didApi.actionPubKeyDID(actionName: .set, key: "svc/MessagingService", value: "https://infradid.com/pk/3/mysvcr9", newKey: "")
+    didApi.actionPubKeyDID(actionName: .clear, key: "", value: "", newKey: "")
+    //didApi.actionPubKeyDID(actionName: .set, key: "svc/MessagingService", value: "https://infradid.com/pk/3/mysvcr9", newKey: "")
   }
   
   
