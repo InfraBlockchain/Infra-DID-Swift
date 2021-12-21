@@ -39,10 +39,72 @@ public enum EvidenceType: Codable {
   }
 }
 
+public enum SubjectValue: Codable {
+    case string(String)
+    case int(Int)
+    case double(Double)
+    case bool(Bool)
+    case object([String: SubjectValue])
+    case array([SubjectValue])
+    
+    public init(from decoder: Decoder) throws {
+        let container = try decoder.singleValueContainer()
+        if let value = try? container.decode(String.self) {
+            self = .string(value)
+        } else if let value = try? container.decode(Int.self) {
+            self = .int(value)
+        } else if let value = try? container.decode(Double.self) {
+            self = .double(value)
+        } else if let value = try? container.decode(Bool.self) {
+            self = .bool(value)
+        } else if let value = try? container.decode([String: SubjectValue].self) {
+            self = .object(value)
+        } else if let value = try? container.decode([SubjectValue].self) {
+            self = .array(value)
+        } else {
+            throw DecodingError.typeMismatch(SubjectValue.self, DecodingError.Context(codingPath: container.codingPath, debugDescription: "Not a JSON"))
+        }
+    }
+  
+  public func encode(to encoder: Encoder) throws {
+    var container = encoder.singleValueContainer()
+    switch self {
+    case .string(let value):
+      try container.encode(value)
+    case .int(let value):
+      try container.encode(value)
+    case .double(let value):
+      try container.encode(value)
+    case .object(let value):
+      try container.encode(value)
+    case .array(let value):
+      try container.encode(value)
+    case .bool(let value):
+      try container.encode(value)
+    }
+  }
+  
+  var credentialValue: Any {
+    switch self {
+    case .object(let payoad):
+      return payoad
+    case .array(let payload):
+      return payload
+    case .string(let str):
+      return str
+    case .int(let int):
+      return int
+    case .double(let double):
+      return double
+    case .bool(let bool):
+      return bool
+    }
+  }
+}
 public struct VerifiableCredentialObject: Codable { //first jwt decoded vc
   var context: [String]
   var type: [String]
-  var credentialSubject: [String:String]
+  var credentialSubject: SubjectValue
   
   public enum CodingKeys: String, CodingKey {
     case context = "@context"
@@ -53,7 +115,7 @@ public struct VerifiableCredentialObject: Codable { //first jwt decoded vc
     let values = try decoder.container(keyedBy: CodingKeys.self)
     context = (try? values.decode([String].self, forKey: .context)) ?? []
     type = (try? values.decode([String].self, forKey: .type)) ?? []
-    credentialSubject = (try? values.decode([String:String].self, forKey: .credentialSubject)) ?? [:]
+    credentialSubject = (try? values.decode(SubjectValue.self, forKey: .credentialSubject)) ?? SubjectValue.array([])
     
   }
   
@@ -80,7 +142,7 @@ public struct CredentialPayload: Codable { // organic struct add payload after v
   var issuer: [String:String]
   var issuanceDate: String?
   var expirationDate: String?
-  var credentialSubject: [String:String]
+  var credentialSubject: SubjectValue
   var credentialStatus: CredentialStatus
   var evidence: EvidenceType?
   var termsOfUse: EvidenceType?
@@ -93,7 +155,7 @@ public struct CredentialPayload: Codable { // organic struct add payload after v
   
   public init(context: [String] = [], id: String? = nil, type: [String] = [] ,
               issuer: [String:String] = [:], issuanceDate: String? = nil, expirationDate: String? = nil,
-              credentialSubject: [String:String] = [:], credentialStatus: CredentialStatus = CredentialStatus(),
+              credentialSubject: SubjectValue = SubjectValue.object([:]), credentialStatus: CredentialStatus = CredentialStatus(),
               evidence: EvidenceType? = nil, termsOfUse: EvidenceType? = nil) {
     self.context = context
     self.id = id
@@ -117,7 +179,7 @@ public struct CredentialPayload: Codable { // organic struct add payload after v
     credentialStatus = (try? values.decode(CredentialStatus.self, forKey: .credentialStatus)) ?? CredentialStatus()
     issuanceDate = (try? values.decode(String.self, forKey: .issuanceDate)) ?? nil
     expirationDate = (try? values.decode(String.self, forKey: .expirationDate)) ?? nil
-    credentialSubject = (try? values.decode([String:String].self, forKey: .credentialSubject)) ?? [:]
+    credentialSubject = (try? values.decode(SubjectValue.self, forKey: .credentialSubject)) ?? SubjectValue.object([:])
     proof = (try? values.decode([String:String].self, forKey: .proof)) ?? [:]
     evidence = (try? values.decode(EvidenceType.self, forKey: .proof)) ?? EvidenceType.string("")
     termsOfUse = (try? values.decode(EvidenceType.self, forKey: .proof)) ?? EvidenceType.string("")
@@ -391,11 +453,13 @@ public func transformCredentialInput(input: CredentialPayload) -> JwtCredentialP
   let formatter = ISO8601DateFormatter()
   
   guard let inputData = try? input.toJsonData(),
-          let credentialSubject = try? JSONDecoder().decode(VerifiableCredentialObject.self, from: inputData) else { return JwtCredentialPayload() }
-  
+          let credentialSubject = try? JSONDecoder().decode(VerifiableCredentialObject.self, from: inputData),
+        let credentialSubjectValue = credentialSubject.credentialSubject.credentialValue as? [String:Any]
+  else { return JwtCredentialPayload() }
+    
   jwtPayload.vc = credentialSubject
   
-  jwtPayload.sub = input.credentialSubject["id"] ?? nil
+  jwtPayload.sub = credentialSubjectValue["id"] as? String ?? ""
   
   jwtPayload.jti = input.id ?? nil
   

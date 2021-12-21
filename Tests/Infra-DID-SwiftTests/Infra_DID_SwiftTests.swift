@@ -105,7 +105,7 @@ final class Infra_DID_SwiftTests: XCTestCase {
     let formatter = ISO8601DateFormatter.init()
     let issuer = didApi.getJWTIssuer()
     
-    let payload = CredentialPayload(context: ["https://www.w3.org/2018/credentials/v1"], id: "http://example.vc/credentials/123532", type: ["VerifiableCredential", "VaccinationCredential"], issuer: ["id": "\(idConfig.did)"], issuanceDate: formatter.string(from: Date.now), expirationDate: nil, credentialSubject: ["id": "did:infra:01:PUB_K1_7jCDarXnZ3SdPAwfFEciTSyUzA4fnfnktvFH9Fj7J89UrFiHpt", "claim1": "claim1Value"], credentialStatus: CredentialStatus(), evidence: nil, termsOfUse: nil)
+    let payload = CredentialPayload(context: ["https://www.w3.org/2018/credentials/v1"], id: "http://example.vc/credentials/123532", type: ["VerifiableCredential", "VaccinationCredential"], issuer: ["id": "\(idConfig.did)"], issuanceDate: formatter.string(from: Date.now), expirationDate: nil, credentialSubject: SubjectValue.object(["id": SubjectValue.string("did:infra:01:PUB_K1_7jCDarXnZ3SdPAwfFEciTSyUzA4fnfnktvFH9Fj7J89UrFiHpt"), "claim1": SubjectValue.string("claim1Value")]), credentialStatus: CredentialStatus(), evidence: nil, termsOfUse: nil)
     
     let result = await createVerifiableCredentialJwt(payload: payload, issuer: issuer)
     iPrint(result)
