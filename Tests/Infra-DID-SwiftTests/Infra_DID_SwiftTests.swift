@@ -24,11 +24,13 @@ final class Infra_DID_SwiftTests: XCTestCase {
     let a = InfraDIDConstructor.createPubKeyDID(networkID: "01")
     guard let did = a["did"], let pvKey = a["privateKey"], let netId = a["did"]?.split(separator: ":")[2]
     else { return }
-    let idConfig: IdConfiguration = IdConfiguration(did: did, didOwnerPrivateKey: pvKey, networkId: "01", registryContract: "fmapkumrotfc", rpcEndpoint: "https://api.testnet.eos.io", jwtSigner: nil, txfeePayAccount: "qwexfhmvvdci", txfeePayerPrivateKey: "5KV84hXSJvu3nfqb9b1raRMnzvULaHH6Fsaz4xBZG2QbfPwMg76", pubKeyDidSignDataPrefix: nil)
+    
+    iPrint(did, pvKey)
+    let idConfig: IdConfiguration = IdConfiguration(did: "did:infra:01:PUB_K1_8YtaTuYQCZWJSBgsGbNtHsmmtVAJjP7C6wrAAnEdSFVX4yusJ3", didOwnerPrivateKey: "PVT_K1_5JFDRnraovhDB3816cmYaAX5L2pC26kUTJAGacbgJ8FfjyY37P8", networkId: "01", registryContract: "fmapkumrotfc", rpcEndpoint: "https://api.testnet.eos.io", jwtSigner: nil, txfeePayAccount: "qwexfhmvvdci", txfeePayerPrivateKey: "5KV84hXSJvu3nfqb9b1raRMnzvULaHH6Fsaz4xBZG2QbfPwMg76", pubKeyDidSignDataPrefix: nil)
     
     
     let didApi = InfraDIDConstructor(config: idConfig)
-    didApi.actionPubKeyDID(actionName: .set, key: "svc/MessagingService", value: "https://infradid.com/pk/1/mysvcr9", newKey: "")
+    didApi.actionPubKeyDID(actionName: .set, key: "svc/MessagingService", value: "https://infradid.com/pk/3/mysvcr9", newKey: "")
   }
   
   
