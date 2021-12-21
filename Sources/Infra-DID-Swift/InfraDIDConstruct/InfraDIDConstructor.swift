@@ -140,7 +140,9 @@ extension InfraDIDConstructor: InfraDIDConfApiDependency {
           break
         }
       }
+      self.rpcGroup.wait()
     }
+    
   }
   
   public func actionPubKeyDID(actionName: TransactionAction, key: String = "",
@@ -153,7 +155,7 @@ extension InfraDIDConstructor: InfraDIDConfApiDependency {
     
     
     let nonceValue = getNonceForPubKeyDid()
-    self.rpcGroup.wait()
+    //self.rpcGroup.wait()
     
     if let nonce = nonceValue.value,
        let prefixData = self.defaultPubKeyDidSignDataPrefix.data(using: .utf8),
@@ -207,11 +209,12 @@ extension InfraDIDConstructor: InfraDIDConfApiDependency {
     }
     guard let transactionAction = action else { return }
     self.actionTransaction(action: transactionAction)
-    self.rpcGroup.wait()
+    
     //}
   }
   
-  private func actionTransaction(action: EosioTransaction.Action) {
+  
+  private func actionTransaction(action: EosioTransaction.Action)  {
     let transaction = EosioTransaction.init()
     
     transaction.config.expireSeconds = 30
@@ -221,15 +224,26 @@ extension InfraDIDConstructor: InfraDIDConfApiDependency {
     transaction.serializationProvider = EosioAbieosSerializationProvider()
     transaction.add(action: action)
     
-    transaction.signAndBroadcast { result in
-      switch result {
-      case .success(let isSuccess):
-        iPrint(isSuccess)
-        self.rpcGroup.leave()
-      case .failure(let err):
-        iPrint(err.localizedDescription)
-        self.rpcGroup.leave()
-      }
+    transaction.signAndBroadcast(.promise).done { isSuccess in
+      iPrint(isSuccess)
+    }.catch { err in
+      iPrint(err.localizedDescription)
+    }
+    
+//    transaction.signAndBroadcast { result in
+//      switch result {
+//      case .success(let isSuccess):
+//        iPrint(isSuccess)
+//        self.rpcGroup.leave()
+//      case .failure(let err):
+//        iPrint(err.localizedDescription)
+//        self.rpcGroup.leave()
+//      }
+//    }
+    self.rpcGroup.wait()
+    
+    self.rpcGroup.notify(queue: DispatchQueue.main) {
+      iPrint(transaction.transactionId)
     }
   }
   
