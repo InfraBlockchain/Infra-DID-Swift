@@ -113,8 +113,9 @@ extension InfraDIDConstructor: InfraDIDConfApiDependency {
     
     
     let sliceKeyData = Data(sliceKey)
-    
-    let options: EosioRpcTableRowsRequest = EosioRpcTableRowsRequest(scope: self.idConfig.registryContract, code: self.idConfig.registryContract, table: "pubkeydid", json: true, limit: 1, tableKey: nil, lowerBound: sliceKeyData.hexEncodedString(), upperBound: sliceKeyData.hexEncodedString(), indexPosition: "2", keyType: "sha256", encodeType: .hex, reverse: false, showPayer: false)
+    iPrint(sliceKeyData)
+    iPrint(sliceKeyData.hexEncodedString().count)
+    let options: EosioRpcTableRowsRequest = EosioRpcTableRowsRequest(scope: self.idConfig.registryContract, code: self.idConfig.registryContract, table: "pubkeydid", json: true, limit: 1, tableKey: nil, lowerBound: sliceKeyData.hexEncodedString(), upperBound: sliceKeyData.hexEncodedString(), indexPosition: "2", keyType: "sha256", encodeType: .dec, reverse: false, showPayer: false)
     
     return Promise { seal in
       
@@ -172,12 +173,14 @@ extension InfraDIDConstructor: InfraDIDConfApiDependency {
       bufArray.append(contentsOf: changeKeyData)
     }
     
-    
+    iPrint(self.didPubKey?.count)
     let signature = try? EosioEccSign.signWithK1(publicKey: keyPair.publicKey.rawRepresentation, privateKey: keyPair.rawRepresentation, data: Data(bufArray))//try! self.didOwnerPrivateKeyObjc?.signature(for: digest)
     
     iPrint(signature)
     
     guard let sign = signature, let actor = self.idConfig.txfeePayerAccount, let pubKey = self.didPubKey else { return }
+    
+    iPrint(sign.toEosioK1Signature.count)
     
     //let transactionSet: TransactionDefaultSet = TransactionDefaultSet(actionName: action, signKey: sign.toEosioK1Signature)
     var action: EosioTransaction.Action?
