@@ -21,7 +21,10 @@ final class Infra_DID_SwiftTests: XCTestCase {
   }
   
   func testIdConfiguration() async throws {
-    let idConfig: IdConfiguration = IdConfiguration(did: "did:infra:01:PUB_K1_7EKfvdZPzKX5jR7JTAreGnQguY7QnA9pdDbPqA4cNF9SQunuC3", didOwnerPrivateKey: "PVT_K1_5JYKUZKqumZmNmh35AcgrbtCHorFG2jcx5WsbkMjRRup9rXEwdx", networkId: "01", registryContract: "fmapkumrotfc", rpcEndpoint: "https://api.testnet.eos.io", jwtSigner: nil, txfeePayAccount: "qwexfhmvvdci", txfeePayerPrivateKey: "5KV84hXSJvu3nfqb9b1raRMnzvULaHH6Fsaz4xBZG2QbfPwMg76", pubKeyDidSignDataPrefix: nil)
+    let a = InfraDIDConstructor.createPubKeyDID(networkID: "01")
+    guard let did = a["did"], let pvKey = a["privateKey"], let netId = a["did"]?.split(separator: ":")[2]
+    else { return }
+    let idConfig: IdConfiguration = IdConfiguration(did: did, didOwnerPrivateKey: pvKey, networkId: "01", registryContract: "fmapkumrotfc", rpcEndpoint: "https://api.testnet.eos.io", jwtSigner: nil, txfeePayAccount: "qwexfhmvvdci", txfeePayerPrivateKey: "5KV84hXSJvu3nfqb9b1raRMnzvULaHH6Fsaz4xBZG2QbfPwMg76", pubKeyDidSignDataPrefix: nil)
     
     
     let didApi = InfraDIDConstructor(config: idConfig)
@@ -96,9 +99,6 @@ final class Infra_DID_SwiftTests: XCTestCase {
     guard let did = a["did"], let pvKey = a["privateKey"], let netId = a["did"]?.split(separator: ":")[2]
     else { return }
     
-    
-    //let keyPair = try! secp256k1.Signing.PrivateKey.init(rawRepresentation: try! Data(hex: "278a5de700e29faae8e40e366ec5012b5ec63d36ec77e8a2417154cc1d25383f"))
-    //let did = "did:infra:01:\(keyPair.publicKey.rawRepresentation.toEosioK1PublicKey)"
     let idConfig: IdConfiguration = IdConfiguration(did: did, didOwnerPrivateKey: pvKey, networkId: "01", registryContract: "fmapkumrotfc", rpcEndpoint: "https://api.testnet.eos.io", jwtSigner: nil, txfeePayAccount: "qwexfhmvvdci", txfeePayerPrivateKey: "5KV84hXSJvu3nfqb9b1raRMnzvULaHH6Fsaz4xBZG2QbfPwMg76", pubKeyDidSignDataPrefix: nil)
     
     let didApi = InfraDIDConstructor(config: idConfig)
