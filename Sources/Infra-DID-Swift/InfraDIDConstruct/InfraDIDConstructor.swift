@@ -70,13 +70,15 @@ public class InfraDIDConstructor {
     self.didOwnerPrivateKeyObjc = keyPair
     
     
-    sigProviderPrivKeys.append(config.didOwnerPrivateKey)
+    
     if (config.txfeePayerAccount != nil) && (config.txfeePayerPrivateKey != nil) {
       guard let key: String = config.txfeePayerPrivateKey else {return}
       
-      sigProviderPrivKeys.append(key)
+      sigProviderPrivKeys.append(key) // for get_required_keys
       idConfig.txfeePayerAccount = config.txfeePayerAccount
     }
+    
+    sigProviderPrivKeys.append(config.didOwnerPrivateKey)
     
     idConfig.pubKeyDidSignDataPrefix = config.pubKeyDidSignDataPrefix ?? defaultPubKeyDidSignDataPrefix
     
@@ -182,8 +184,8 @@ extension InfraDIDConstructor: InfraDIDConfApiDependency {
     
     guard let sign = signature, let actor = self.idConfig.txfeePayerAccount, let pubKey = self.didPubKey else { return }
     
-    iPrint(sign.toEosioK1Signature.count)
-    
+    iPrint(sign.toEosioK1Signature)
+
     //let transactionSet: TransactionDefaultSet = TransactionDefaultSet(actionName: action, signKey: sign.toEosioK1Signature)
     var action: EosioTransaction.Action?
     
@@ -219,6 +221,7 @@ extension InfraDIDConstructor: InfraDIDConfApiDependency {
     transaction.config.blocksBehind = 3
     //transaction.config.useLastIrreversible = false
     transaction.rpcProvider = self.jsonRpc
+    //transaction.rpcProviderWithoutProtocol = self.jsonRpc
     transaction.signatureProvider = try! EosioSoftkeySignatureProvider(privateKeys: sigProviderPrivKeys)
     transaction.serializationProvider = EosioAbieosSerializationProvider()
     //transaction.allowSignatureProviderToModifyTransaction = false
@@ -234,7 +237,7 @@ extension InfraDIDConstructor: InfraDIDConfApiDependency {
 //      iPrint(result)
 //    }
     
-    transaction.signAndBroadcast { result in
+    transaction.signBroadCastWithGetBlock(rpcProvider: self.jsonRpc){ result in
       switch result {
       case .success(let isSuccess):
         iPrint(isSuccess)

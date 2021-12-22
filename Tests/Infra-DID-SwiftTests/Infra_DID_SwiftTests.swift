@@ -24,14 +24,12 @@ final class Infra_DID_SwiftTests: XCTestCase {
     let a = InfraDIDConstructor.createPubKeyDID(networkID: "01")
     guard let did = a["did"], let pvKey = a["privateKey"], let netId = a["did"]?.split(separator: ":")[2]
     else { return }
-    
-    iPrint(did, pvKey)
     let idConfig: IdConfiguration = IdConfiguration(did: "did:infra:01:PUB_K1_8YtaTuYQCZWJSBgsGbNtHsmmtVAJjP7C6wrAAnEdSFVX4yusJ3", didOwnerPrivateKey: "PVT_K1_5JFDRnraovhDB3816cmYaAX5L2pC26kUTJAGacbgJ8FfjyY37P8", networkId: "01", registryContract: "fmapkumrotfc", rpcEndpoint: "https://api.testnet.eos.io", jwtSigner: nil, txfeePayAccount: "qwexfhmvvdci", txfeePayerPrivateKey: "5KV84hXSJvu3nfqb9b1raRMnzvULaHH6Fsaz4xBZG2QbfPwMg76", pubKeyDidSignDataPrefix: nil)
     
     
     let didApi = InfraDIDConstructor(config: idConfig)
-    didApi.actionPubKeyDID(actionName: .clear, key: "", value: "", newKey: "")
-    //didApi.actionPubKeyDID(actionName: .set, key: "svc/MessagingService", value: "https://infradid.com/pk/3/mysvcr9", newKey: "")
+   // didApi.actionPubKeyDID(actionName: .clear, key: "", value: "", newKey: "")
+    didApi.actionPubKeyDID(actionName: .set, key: "svc/MessagingService", value: "https://infradid.com/pk/3/mysvcr9", newKey: "")
   }
   
   
@@ -92,9 +90,10 @@ final class Infra_DID_SwiftTests: XCTestCase {
   
   
   func testKey() async throws {
-    let key = try! Data(hexString: "03cdf359def0d227223b10fba97c3b786899c0cc33ffd6cc8d60ce709f489c4f47")
-    //key?.toEosioK1PublicKey
-    iPrint(key?.toEosioK1PublicKey)
+    let key = try! Data(eosioPublicKey: "PUB_K1_8YtaTuYQCZWJSBgsGbNtHsmmtVAJjP7C6wrAAnEdSFVX4yusJ3")
+    iPrint(key.hexEncodedString())
+    iPrint(key.count)
+    iPrint(key.toEosioLegacyPublicKey)
   }
   
   func testCreateVC() async throws {
