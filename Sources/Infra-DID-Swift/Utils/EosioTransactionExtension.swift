@@ -24,7 +24,8 @@ extension EosioTransaction {
     sendTransactionRequest.packedTrx = serializedTransaction.hex
     sendTransactionRequest.signatures = signatures
     sendTransactionRequest.packedContextFreeData = serializedContextFreeData.hex
-    //sendTransactionRequest.compression = 
+    //sendTransactionRequest.compression =
+    
     rpcProvider.sendTransaction(requestParameters: sendTransactionRequest) { [weak self] (response) in
       guard let strongSelf = self else {
         return completion(.failure(EosioError(.unexpectedError, reason: "self does not exist")))
