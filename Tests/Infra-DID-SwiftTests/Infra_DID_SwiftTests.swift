@@ -90,10 +90,10 @@ final class Infra_DID_SwiftTests: XCTestCase {
   
   
   func testKey() async throws {
-    let key = try! Data(eosioPublicKey: "PUB_K1_8YtaTuYQCZWJSBgsGbNtHsmmtVAJjP7C6wrAAnEdSFVX4yusJ3")
+    let key = try! Data(eosioPublicKey: "EOS6iM11zaxqGaPKboKMBFKMNAtAxPws3NttuJZYmsk1HAHM5348A")
     iPrint(key.hexEncodedString())
     iPrint(key.count)
-    iPrint(key.toEosioLegacyPublicKey)
+    iPrint(key.toEosioK1PublicKey)
   }
   
   func testCreateVC() async throws {
