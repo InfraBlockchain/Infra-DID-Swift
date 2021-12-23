@@ -70,7 +70,7 @@ public class InfraDIDConstructor {
     self.didOwnerPrivateKeyObjc = keyPair
     
     
-    
+    sigProviderPrivKeys.append(config.didOwnerPrivateKey.replacingOccurrences(of: "PVT_K1_", with: ""))
     if (config.txfeePayerAccount != nil) && (config.txfeePayerPrivateKey != nil) {
       guard let key: String = config.txfeePayerPrivateKey else {return}
       
@@ -78,7 +78,7 @@ public class InfraDIDConstructor {
       idConfig.txfeePayerAccount = config.txfeePayerAccount
     }
     
-    sigProviderPrivKeys.append(config.didOwnerPrivateKey)
+    
     
     idConfig.pubKeyDidSignDataPrefix = config.pubKeyDidSignDataPrefix ?? defaultPubKeyDidSignDataPrefix
     
@@ -94,6 +94,7 @@ public class InfraDIDConstructor {
     
     guard let pvData: Data = generateRandomBytes(bytes: 32),
           let keyPair = try? secp256k1.Signing.PrivateKey.init(rawRepresentation: pvData) else { return [:] }
+    
     
     let privateKey: String = keyPair.rawRepresentation.toEosioK1PrivateKey
     let publicKey: String = keyPair.publicKey.rawRepresentation.toEosioK1PublicKey
@@ -164,8 +165,8 @@ extension InfraDIDConstructor: InfraDIDConfApiDependency {
        let actNameData = actionName.rawValue.data(using: .utf8),
        let pubKeyData = self.didPubKey?.data(using: .utf8),
        let keyData = key.data(using: .utf8),
-       let valueData = value.data(using: .utf8),
-       let changeKeyData = newKey.data(using: .utf8)
+       let valueData = value.data(using: .utf8)
+       //let changeKeyData = newKey.data(using: .utf8)
     {
       
       bufArray.append(contentsOf: prefixData)
@@ -174,11 +175,14 @@ extension InfraDIDConstructor: InfraDIDConfApiDependency {
       bufArray.append(contentsOf: valueData)
       bufArray.append(contentsOf: pubKeyData)
       bufArray.append(UInt8.init(nonce))
-      bufArray.append(contentsOf: changeKeyData)
+     // bufArray.append(contentsOf: changeKeyData)
     }
     
     iPrint(self.didPubKey?.count)
-    let signature = try? EosioEccSign.signWithK1(publicKey: keyPair.publicKey.rawRepresentation, privateKey: keyPair.rawRepresentation, data: Data(bufArray))//try! self.didOwnerPrivateKeyObjc?.signature(for: digest)
+    
+    //let digest = SHA256.hash(data: bufArray)
+    //let signature = try? self.didOwnerPrivateKeyObjc?.signature(for: bufArray)
+    let signature = try? EosioEccSign.signWithK1(publicKey: keyPair.publicKey.rawRepresentation, privateKey: keyPair.rawRepresentation, data: Data(bufArray))
     
     iPrint(signature)
     
@@ -217,37 +221,29 @@ extension InfraDIDConstructor: InfraDIDConfApiDependency {
   private func actionTransaction(action: EosioTransaction.Action)  {
     let transaction = EosioTransaction.init()
     
-    transaction.config.expireSeconds = 60
+    transaction.config.expireSeconds = 60 * 8
     transaction.config.blocksBehind = 3
     //transaction.config.useLastIrreversible = false
     transaction.rpcProvider = self.jsonRpc
     //transaction.rpcProviderWithoutProtocol = self.jsonRpc
+    iPrint(sigProviderPrivKeys)
     transaction.signatureProvider = try! EosioSoftkeySignatureProvider(privateKeys: sigProviderPrivKeys)
     transaction.serializationProvider = EosioAbieosSerializationProvider()
-    //transaction.allowSignatureProviderToModifyTransaction = false
     transaction.add(action: action)
-//    do {
-//      transaction.signAndBroadcast(.promise).done { isSuccess in
-//        iPrint(isSuccess)
-//      }.catch { err in
-//        iPrint(err.localizedDescription)
-//      }
-//    }
-//    transaction.signAndBroadcast { result in
-//      iPrint(result)
-//    }
-    
-    transaction.signBroadCastWithGetBlock(rpcProvider: self.jsonRpc){ result in
-      switch result {
-      case .success(let isSuccess):
-        iPrint(isSuccess)
-        self.rpcGroup.leave()
-      case .failure(let err):
-        iPrint(err.localizedDescription)
-        self.rpcGroup.leave()
+
+    do {
+      transaction.signBroadCastWithGetBlock(rpcProvider: self.jsonRpc){ result in
+        switch result {
+        case .success(let isSuccess):
+          iPrint(isSuccess)
+          self.rpcGroup.leave()
+        case .failure(let err):
+          iPrint(err.localizedDescription)
+          self.rpcGroup.leave()
+        }
       }
     }
-    
+
     self.rpcGroup.wait()
   }
   
