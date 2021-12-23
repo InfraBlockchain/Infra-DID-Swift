@@ -217,7 +217,7 @@ extension InfraDIDConstructor: InfraDIDConfApiDependency {
   private func actionTransaction(action: EosioTransaction.Action)  {
     let transaction = EosioTransaction.init()
     
-    transaction.config.expireSeconds = 30
+    transaction.config.expireSeconds = 60
     transaction.config.blocksBehind = 3
     //transaction.config.useLastIrreversible = false
     transaction.rpcProvider = self.jsonRpc
