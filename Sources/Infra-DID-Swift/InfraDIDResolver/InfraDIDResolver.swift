@@ -16,10 +16,6 @@ public enum APIError: Error {
   case resultError
 }
 
-//extension APIError {
-//  var nsError: NSError { return NSError(APIError: self) }
-//}
-
 public enum verificationMethodTypes: String {
   case EcdsaSecp256k1VerificationKey2019 = "EcdsaSecp256k1VerificationKey2019"
   case EcdsaSecp256k1RecoveryMethod2020 = "EcdsaSecp256k1RecoveryMethod2020"
@@ -47,10 +43,7 @@ public func getResolver(options: ConfigurationOptions) -> [String:DIDResolverTyp
 }
 
 public class InfraDIDResolver {
-  //  private var subjectPk = PassthroughSubject<[String:Any], Never>()
-  //  private var subjectOwner =  PassthroughSubject<[String:Any], Never>()
-  //  private var subjectAccount =  PassthroughSubject<[String:Any], Never>()
-  
+
   private var networks: ConfiguredNetworks
   private var noRevocationCheck: Bool = false
   private var deactivated: Bool = false
@@ -98,7 +91,7 @@ extension InfraDIDResolver: InfraDIDResolvable {
         resolvedDIDDoc = resolvedDoc
       }
       
-
+      
       let status = resolvedDIDDoc.deactivated
       guard let document = resolvedDIDDoc.didDocument else { return Promise<DIDResolutionResult>.value(DIDResolutionResult())}
       
@@ -116,7 +109,6 @@ extension InfraDIDResolver: InfraDIDResolvable {
     return ["infra": self.resolve]
   }
   
-  
   private func resolvePubKeyDID(did: String, pubKey: String, network: ConfiguredNetwork) -> Promise<ResolvedDIDDocument> {
     guard let pubKeyData = try? Data(eosioPublicKey: pubKey) else { return emptyResolvedDocument }
     let pubKeyArray = [UInt8](pubKeyData)
@@ -125,47 +117,42 @@ extension InfraDIDResolver: InfraDIDResolvable {
     
     let sliceKeyData = Data(sliceKey)
     let pubKeyIndex = sliceKeyData.hexEncodedString()
-    var resolvedDoc = ResolvedDIDDocument()
     
     guard let jsonRpc = network.jsonRPC else { return emptyResolvedDocument }
     
-//    var deactivated: Bool = false
-//
-//    var resultRow: [String:Any] = [:]
     return Promise { seal in
-        firstly {
-          jsonRpcFetchRows(rpc: jsonRpc, options: EosioRpcTableRowsRequest(scope: network.regisrtyContract, code: network.regisrtyContract, table: "pubkeydid", json: true, limit: 1, tableKey: nil, lowerBound: pubKeyIndex, upperBound: pubKeyIndex, indexPosition: "2", keyType: "sha256", encodeType: .hex, reverse: nil, showPayer: nil))
-          
-        }.then({ row in
-          self.deactivatedCheck(row: row)
-        }).then { row in
-          jsonRpcFetchRows(rpc: jsonRpc, options: EosioRpcTableRowsRequest(scope: network.regisrtyContract, code: network.regisrtyContract, table: "pkdidowner", json: true, limit: 1, tableKey: nil, lowerBound: row["pkid"] as? String , upperBound: nil, indexPosition: "2", keyType: "i64", encodeType: .hex, reverse: nil, showPayer: nil))
-        }.then { row in
-          self.pubKeyParsing(keyAttr: row)
-        }.done { (pubKey, row) in
+      firstly {
+        jsonRpcFetchRows(rpc: jsonRpc, options: EosioRpcTableRowsRequest(scope: network.regisrtyContract, code: network.regisrtyContract, table: "pubkeydid", json: true, limit: 1, tableKey: nil, lowerBound: pubKeyIndex, upperBound: pubKeyIndex, indexPosition: "2", keyType: "sha256", encodeType: .hex, reverse: nil, showPayer: nil))
+        
+      }.then({ row in
+        self.deactivatedCheck(row: row)
+      }).then { row in
+        jsonRpcFetchRows(rpc: jsonRpc, options: EosioRpcTableRowsRequest(scope: network.regisrtyContract, code: network.regisrtyContract, table: "pkdidowner", json: true, limit: 1, tableKey: nil, lowerBound: row["pkid"] as? String , upperBound: nil, indexPosition: "2", keyType: "i64", encodeType: .hex, reverse: nil, showPayer: nil))
+      }.then { row in
+        self.pubKeyParsing(keyAttr: row)
+      }.done { (pubKey, row) in
+        iPrint(self.deactivated)
+        seal.fulfill(self.wrapDidDocument(did: did, controllerPubKey: pubKey, pkdidAttr: row, deactivated: self.deactivated))
+        self.resolveGroup.leave()
+      }.catch { error in
+        switch error {
+        case APIError.emptyError:
           iPrint(self.deactivated)
-          seal.fulfill(self.wrapDidDocument(did: did, controllerPubKey: pubKey, pkdidAttr: row, deactivated: self.deactivated))
+          seal.fulfill(self.wrapDidDocument(did: did, controllerPubKey: pubKeyData, pkdidAttr: [:], deactivated: self.deactivated))
           self.resolveGroup.leave()
-        }.catch { error in
-          switch error {
-          case APIError.emptyError:
-            iPrint(self.deactivated)
-            seal.fulfill(self.wrapDidDocument(did: did, controllerPubKey: pubKeyData, pkdidAttr: [:], deactivated: self.deactivated))
-            self.resolveGroup.leave()
-          case APIError.parsingError:
-            iPrint("parsing Error")
-          case APIError.resultError:
-            iPrint("Api Result Error")
-          default:
-            break
-          }
+        case APIError.parsingError:
+          iPrint("parsing Error")
+        case APIError.resultError:
+          iPrint("Api Result Error")
+        default:
+          break
         }
       }
+    }
   }
   
   private func resolveAccountDID(did: String, accountName: String, network: ConfiguredNetwork) -> Promise<ResolvedDIDDocument> {
     var activeKeyStr = ""
-    var resolvedDoc = ResolvedDIDDocument()
     
     guard let rpc = network.jsonRPC else { return emptyResolvedDocument }
     
@@ -186,7 +173,6 @@ extension InfraDIDResolver: InfraDIDResolvable {
     }
   }
   
-  
   private func jsonRpcFetchAccountInfo(jsonRpc: EosioRpcProvider, accountName: String) -> Promise<String> {
     return Promise { seal in
       jsonRpc.getAccount(requestParameters: EosioRpcAccountRequest(accountName: accountName)) { result in
@@ -205,10 +191,7 @@ extension InfraDIDResolver: InfraDIDResolvable {
     }
   }
   
-
-  
   private func wrapDidDocument(did: String, controllerPubKey: Data?, pkdidAttr: [String:Any], deactivated: Bool) -> ResolvedDIDDocument {
-    iPrint("response is \(pkdidAttr)")
     guard let pubKey = controllerPubKey?.hexEncodedString() else { return ResolvedDIDDocument() }
     var baseDidDocument = DIDDocument(context: ["https://www.w3.org/ns/did/v1"], id: did, alsoKnownAs: nil, controller: nil, verificationMethod: [], service: nil, publicKey: nil, authentication: [])
     let publicKeys = [VerificationMethod(id: "\(did)#controller", type: verificationMethodTypes.EcdsaSecp256k1VerificationKey2019.rawValue, controller: did, publicKeyBase58: nil, publicKeyBase64: nil, publicKeyJwk: nil, publicKeyHex: pubKey, publicKeyMultibase: nil, blockchainAccountId: nil, ethereumAddress: nil)]
@@ -237,8 +220,7 @@ extension InfraDIDResolver: InfraDIDResolvable {
         }
       }
     }
-    
-    
+  
     baseDidDocument.verificationMethod = publicKeys
     baseDidDocument.authentication = authentication
     
@@ -275,17 +257,3 @@ extension InfraDIDResolver: InfraDIDResolvable {
   }
   
 }
-
-
-
-
-
-//GetTableRows Result
-//                                          rows: [
-//                                            {
-//                                              pkid: 3,
-//                                              pk: 'EOS5TaEgpVur391dimVnFCDHB122DXYBbwWdKUpEJCNv3knyTzRMd',
-//                                              nonce: 3,
-//                                              attr: []
-//                                            }
-//                                          ],

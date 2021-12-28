@@ -11,11 +11,6 @@ import secp256k1_implementation
 import EosioSwiftEcc
 
 
-public struct TransactionDefaultSet {
-  var actionName: TransactionAction
-  var signKey: String
-}
-
 public enum TransactionAction: String {
   case set = "pksetattr"
   case revoke = "pkdidrevoke"

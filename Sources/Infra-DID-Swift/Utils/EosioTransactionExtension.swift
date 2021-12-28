@@ -7,62 +7,26 @@
 
 import Foundation
 import EosioSwift
+import EosioSwiftSoftkeySignatureProvider
 
 
-
+//GetBlockInfoBase to GetBlock Modification Extension
 extension EosioTransaction {
   
-  public func broadcastWithGetBlock(rpcProvider: EosioRpcProvider?, completion: @escaping (EosioResult<Bool, EosioError>) -> Void) {
-    guard let serializedTransaction = serializedTransaction, let signatures = signatures, signatures.count > 0 else {
-      return completion(.failure(EosioError(.eosioTransactionError, reason: "Transaction must be signed before broadcast")))
-    }
-    guard let rpcProvider = rpcProvider else {
-      return completion(.failure(EosioError(.eosioTransactionError, reason: "No rpc provider available")))
-    }
-    var sendTransactionRequest = EosioRpcSendTransactionRequest()
-    
-    sendTransactionRequest.packedTrx = serializedTransaction.hex
-    sendTransactionRequest.signatures = signatures
-    sendTransactionRequest.packedContextFreeData = serializedContextFreeData.hex
-    //sendTransactionRequest.compression =
-    
-    rpcProvider.sendTransaction(requestParameters: sendTransactionRequest) { [weak self] (response) in
-      guard let strongSelf = self else {
-        return completion(.failure(EosioError(.unexpectedError, reason: "self does not exist")))
-      }
-      switch response {
-      case .failure(let error):
-        completion(.failure(error))
-      case .success(let pushTransactionResponse):
-        //strongSelf.transactionId = pushTransactionResponse.transactionId
-        let returnActionValues = pushTransactionResponse.returnActionValues()
-        print("Action Return Values: \(String(describing: returnActionValues))")
-        strongSelf.actions.enumerated().forEach { (index, action) in
-          if returnActionValues.indices.contains(index) {
-            //action.returnValue = returnActionValues[index]
-          }
-        }
-        return completion(.success(true))
-      }
-    }
-  }
   
-  public func signBroadCastWithGetBlock(rpcProvider: EosioRpcProvider?, completion: @escaping (EosioResult<Bool, EosioError>) -> Void) {
-    //    guard let rpcProvider = rpcProvider else {
-    //      return completion(.failure(EosioError(.unexpectedError, reason: "rpcProvider does not exist")))
-    //    }
+  public func signBroadCastWithGetBlock(completion: @escaping (EosioResult<Bool, EosioError>) -> Void) {
     signWithGetBlock { [weak self] (result) in
       guard let strongSelf = self else {
         return completion(.failure(EosioError(.unexpectedError, reason: "self does not exist")))
       }
-      //      guard let rpcProvider = rpcProvider else {
-      //        return completion(.failure(EosioError(.unexpectedError, reason: "rpcProvider does not exist")))
-      //      }
+      guard let _ = strongSelf.rpcProvider else {
+        return completion(.failure(EosioError(.unexpectedError, reason: "rpcProvider does not exist")))
+      }
       switch result {
       case .failure(let error):
         completion(.failure(error))
       case .success:
-        strongSelf.broadcastWithGetBlock(rpcProvider: rpcProvider, completion: completion)
+        strongSelf.broadcast(completion: completion)//broadcastWithGetBlock(rpcProvider: rpcProvider, completion: completion)
       }
     }
   }
@@ -128,9 +92,6 @@ extension EosioTransaction {
   }
   
   private func getInfoAndSetValuesWithGetBlock(completion: @escaping (EosioResult<Bool, EosioError>) -> Void) {
-    //    guard let rpcProvider = rpcProvider else {
-    //      return completion(.failure(EosioError(.unexpectedError, reason: "rpcProvider does not exist")))
-    //    }
     // if all the data is set, just return true
     if refBlockNum > 0 && refBlockPrefix > 0  && chainId != "" && expiration > Date(timeIntervalSince1970: 0) {
       return completion(.success(true))
@@ -176,7 +137,7 @@ extension EosioTransaction {
             blockNum = 1
           }
         }
-        strongSelf.getBlockAndSetTaposWithGetBlock(rpcProvider: rpcProvider as! EosioRpcProvider, blockNum: blockNum, completion: completion)
+        strongSelf.getBlockAndSetTaposWithGetBlock(rpcProvider: (rpcProvider as! EosioRpcProvider), blockNum: blockNum, completion: completion)
       }
     }
   }
@@ -187,13 +148,11 @@ extension EosioTransaction {
     if self.refBlockPrefix > 0 && self.refBlockNum > 0 {
       return completion(.success(true))
     }
-    // if no rpcProvider available, return error
-    //      guard let rpcProvider = rpcProviderWithoutProtocol else {
-    //          return completion(.failure(EosioError(.eosioTransactionError, reason: "No rpc provider available")))
-    //      }
+
     guard let rpcProvider = rpcProvider else {
       return completion(.failure(EosioError(.unexpectedError, reason: "rpcProvider does not exist")))
     }
+    
     rpcProvider.getBlock(requestParameters: EosioRpcBlockRequest(blockNumOrId: blockNum), completion: { [weak self] (blockResponse) in
       guard let strongSelf = self else {
         return completion(.failure(EosioError(.getBlockError, reason: "self does not exist")))
@@ -212,22 +171,3 @@ extension EosioTransaction {
   
   
 }
-
-//extension EosioRpcProviderProtocol  {
-//
-//
-//  func getBlocks(requestParameters: EosioRpcBlockRequest, completion: @escaping (EosioResult<EosioRpcBlockResponse, EosioError>) -> Void) {
-//    getResource(rpc: "chain/get_block", requestParameters: requestParameters) {(result: EosioRpcBlockInfoResponse?, error: EosioError?) in
-//      completion(EosioResult(success: result, failure: error)!)
-//    }
-//  }
-//
-//}
-//
-//extension EosioRpcProvider: EosioRpcProviderProtocol {
-//  func getBlocks(requestParameters: EosioRpcBlockRequest, completion: @escaping (EosioResult<EosioRpcBlockResponse, EosioError>) -> Void) {
-//    getResource(rpc: "chain/get_block", requestParameters: requestParameters) {(result: EosioRpcBlockInfoResponse?, error: EosioError?) in
-//        completion(EosioResult(success: result, failure: error)!)
-//    }
-//  }
-//}

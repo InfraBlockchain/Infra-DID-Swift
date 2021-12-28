@@ -6,6 +6,11 @@ import CryptoKit
 import secp256k1
 import EosioSwift
 
+
+#if SWIFT_PACKAGE
+import libtom
+#endif
+
 final class Infra_DID_SwiftTests: XCTestCase {
   
 
@@ -21,16 +26,16 @@ final class Infra_DID_SwiftTests: XCTestCase {
   }
   
   func testIdConfiguration() async throws {
-    let a = InfraDIDConstructor.createPubKeyDID(networkID: "01")
-    guard let did = a["did"], let pvKey = a["privateKey"], let netId = a["did"]?.split(separator: ":")[2]
-    else { return }
+//    let a = InfraDIDConstructor.createPubKeyDID(networkID: "01")
+//    guard let did = a["did"], let pvKey = a["privateKey"], let netId = a["did"]?.split(separator: ":")[2]
+//    else { return }
     
-    let idConfig: IdConfiguration = IdConfiguration(did: did, didOwnerPrivateKey: pvKey, networkId: "01", registryContract: "fmapkumrotfc", rpcEndpoint: "https://api.testnet.eos.io", jwtSigner: nil, txfeePayAccount: "qwexfhmvvdci", txfeePayerPrivateKey: "5KV84hXSJvu3nfqb9b1raRMnzvULaHH6Fsaz4xBZG2QbfPwMg76", pubKeyDidSignDataPrefix: nil)
+    let idConfig: IdConfiguration = IdConfiguration(did: "did:infra:01:PUB_K1_6bHxkmnSJQCD1AA5cARqsXDGUWY5ScVxtkwdb71quQVJ5E1JTH", didOwnerPrivateKey: "PVT_K1_5K9H1nzqyBAmuuvWCyVgsFciVsiSike1L38WG6Y6LjcssBmNpvT", networkId: "01", registryContract: "fmapkumrotfc", rpcEndpoint: "https://api.testnet.eos.io", jwtSigner: nil, txfeePayAccount: "qwexfhmvvdci", txfeePayerPrivateKey: "5KV84hXSJvu3nfqb9b1raRMnzvULaHH6Fsaz4xBZG2QbfPwMg76", pubKeyDidSignDataPrefix: nil)
     
     
     let didApi = InfraDIDConstructor(config: idConfig)
-    didApi.actionPubKeyDID(actionName: .clear, key: "", value: "", newKey: "")
-    //didApi.actionPubKeyDID(actionName: .set, key: "svc/MessagingService", value: "https://infradid.com/pk/3/mysvcr9", newKey: "")
+    //didApi.actionPubKeyDID(actionName: .clear, key: "", value: "", newKey: "")
+    didApi.actionPubKeyDID(actionName: .set, key: "svc/MessagingService", value: "https://infradid.com/pk/3/mysvcr90", newKey: "")
   }
   
   
@@ -94,10 +99,6 @@ final class Infra_DID_SwiftTests: XCTestCase {
     //PUB_K1_6iM11zaxqGaPKboKMBFKMNAtAxPws3NttuJZYmsk1HAHTGtwh8
 
     
-    let sig = try! Data(eosioSignature: "SIG_K1_KdnpCVpcBbWWkmfipUeLJx8JyuWGo1qLDgFgBXtZjdyhmBhLAFHBKWtSpahhv1ENJtXYkohSLasB6HKUnddwH5L6JzmXG2")
-    let message = try! Data(hex: "352fc461ff2966429cec00000000018056a6576a588d5c0000b8399bac30ac01e050da5bb6d515b700000000a8ed3232a3010003c2cff9c83dd96fb24f6de4c4f6a2d9c57ea8b047dde25d0d83a1720125d312f0147376632f4d6573736167696e67536572766963652168747470733a2f2f696e6672616469642e636f6d2f706b2f332f6d797376637239001f28455d34886d03e2de9600b27aa1c0136ff1349758226e14a60105a35839c7fb1c7fff4bd8947ce2d3c57732a9086674c81c992fe19ebac04dd1601e1a2f8371e050da5bb6d515b700")
-    
-    //EccRecoverKey.recoverPublicKey(signatureDer: sig, message: message, recid: 0, curve: .k1)
   }
   
   func testCreateVC() async throws {

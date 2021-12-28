@@ -527,7 +527,7 @@ public func wrapLegacyResolver(resolve: LegacyDIDResolverType) -> DIDResolverTyp
   let didResolver: DIDResolverType = {  _, _, _, _ in
     var doc = Promise<DIDDocument>.value(DIDDocument())
     do {
-      let legacy: LegacyDIDResolverType = { did, parsedDID, resolver in
+      let _: LegacyDIDResolverType = { did, parsedDID, resolver in
         doc = LegacyDIDResolve(did: did, parsed: parsedDID, resolver: resolver)
         return doc
       }
