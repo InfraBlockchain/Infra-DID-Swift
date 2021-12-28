@@ -11,16 +11,14 @@ import PromiseKit
 //Method: Create VC Based JWT
 
 public func createVerifiableCredentialJwt(payload: CredentialPayload, issuer: JwtVcIssuer) async -> String {
-  var jwtPayload: JwtCredentialPayload = transformCredentialInput(input: payload)
+  let jwtPayload: JwtCredentialPayload = transformCredentialInput(input: payload)
   
   guard let bool = try? await validateJwtCredentialPayload(payload: jwtPayload), bool else { return "" }
-  
   
   let jsonData = try! JSONEncoder().encode(jwtPayload)
   guard let json = try? JSONDecoder().decode(JwtPayload.self, from: jsonData) else {
     return ""
   }
-  iPrint(json)
   
   return try! await createJwt(payload: json, jwtOptions: JwtOptions(issuer: issuer.did != "" ? issuer.did : jwtPayload.iss ?? "", canonicalize: false, signer: issuer.signer, alg: nil, expiresIn: nil), header: Header())
 }
@@ -28,13 +26,8 @@ public func createVerifiableCredentialJwt(payload: CredentialPayload, issuer: Jw
 //Method: Create VP Based JWT
 
 public func createVerifiablePresentationJwt(payload: PresentationPayload, holder: JwtVcIssuer, options: PresentationOptions = PresentationOptions()) async -> String {
-  //iPrint(payload)
-  
-  //let payload: PresentationPayload = transformPresentationInput(input: payload)
   var jwtPayload: JwtPresentationPayload = transformPresentationInput(input: payload)
-  
-  iPrint(jwtPayload)
-  
+    
   if options.challenge != nil && jwtPayload.nonce == nil {
     jwtPayload.nonce = options.challenge
   }
@@ -51,7 +44,6 @@ public func createVerifiablePresentationJwt(payload: PresentationPayload, holder
   guard let json = try? JSONDecoder().decode(JwtPayload.self, from: jsonData) else {
     return ""
   }
-  iPrint(json)
   
   return try! await createJwt(payload: json, jwtOptions: JwtOptions(issuer: holder.did != "" ? holder.did : jwtPayload.iss ?? "", canonicalize: false, signer: holder.signer, alg: nil, expiresIn: nil), header: Header())
 }
@@ -70,13 +62,10 @@ public func validateJwtPresentationPayload(payload: JwtPresentationPayload) asyn
   guard part[0].count != 0 else { throw JWTError(localizedDescription: "Jwt Format Error")}
   
   return true
-  // onCompleted()
 }
 
 public func validateJwtCredentialPayload(payload: JwtCredentialPayload) async throws -> Bool {
-  iPrint(payload)
-  
-  
+
   guard let vc = payload.vc, vc.type.count != 0 , vc.context.count != 0, let _ = vc.credentialSubject.credentialValue as? [String:Any]  else {
     throw JWTError(localizedDescription: "Verifiable Credential Not Found")}
   
@@ -89,7 +78,7 @@ public func validateJwtCredentialPayload(payload: JwtCredentialPayload) async th
 
 public func validateCredentialPayload(payload: CredentialPayload) throws -> Bool {
   
-  guard payload.context.count != 0, payload.type.count != 0, let vcSubject = payload.credentialSubject.credentialValue as? [String:Any]  else {
+  guard payload.context.count != 0, payload.type.count != 0, let _ = payload.credentialSubject.credentialValue as? [String:Any]  else {
     throw JWTError(localizedDescription: "Verifiable Credential Not Found")}
   
   guard payload.issuanceDate != nil else {
@@ -136,10 +125,10 @@ public func normalizedPresentation(jwt: String, removeOriginalFields: Bool = tru
 
 public func normalizeJwtPresentation(input: String) async throws -> PresentationPayload {
   let decoded = decodeJwt(jwt: input)
-  iPrint(decoded)
+
   if decoded.payload.iss == nil { throw JWTError(localizedDescription: "not Found Did") }
   
-  var decodedPayload = decoded.payload
+  let decodedPayload = decoded.payload
   
   let encoder = JSONEncoder()
   let decoder = JSONDecoder()
@@ -150,7 +139,6 @@ public func normalizeJwtPresentation(input: String) async throws -> Presentation
         let jsonPayload = try? decoder.decode(JwtPayload.self, from: data) else {
           return PresentationPayload()
         }
-  iPrint(jsonPayload)
   
   var payload = normalizeJwtPresentationPayload(input: jsonPayload)
   payload.proof = ["type": "JwtProof2020", "jwt": "\(input)"]
@@ -163,7 +151,6 @@ public func normalizeJwtPresentationPayload(input: JwtPayload) -> PresentationPa
   
   var payload: PresentationPayload = PresentationPayload() //initialized
   
-  iPrint(input)
   guard let vp = input.vp else { return PresentationPayload() }
   let vcJwt = vp.verifiableCredential.map {
     decodeJwt(jwt: $0)
@@ -175,7 +162,6 @@ public func normalizeJwtPresentationPayload(input: JwtPayload) -> PresentationPa
     }
   )
   
-  //guard let vc = vcJwt.payload
   if input.aud != nil {
     payload.verifier = input.aud!
   }
@@ -199,7 +185,7 @@ public func normalizeCredential(input: JwtPayload, jwt: String) -> CredentialPay
   
   var credentialPayload = CredentialPayload()
   
-  guard let vc = input.vc, let did = input.sub,
+  guard let vc = input.vc, let _ = input.sub,
         let iss = input.iss else { return CredentialPayload() }
   
   let formatter = ISO8601DateFormatter()
@@ -237,8 +223,7 @@ public func verifyPresentation(presentation: String, resolver: Resolvable, optio
   guard let verified = try? verifyJwt(jwt: presentation, options: JwtVerifyOptions(proofPurpose: nil, audience: options.audience ?? nil, resolver: resolver)) else { return VerifiedPresentation()} // VerifyVpJwt
 
   var verifiedPresentation = VerifiedPresentation(verifiedJwt: verified, verifiablePresentation: PresentationPayload())
-  //
-  //
+
   try? await verifyPresentationPayloadOptions(payload: verified.payload!, options: options)
   
   guard let presentationPayload = try? await normalizedPresentation(jwt: verified.jwt) else { return VerifiedPresentation() }
@@ -266,7 +251,6 @@ public func verifyCredential(credential: String, resolver: Resolvable, options: 
   guard let verified = try? verifyJwt(jwt: credential, options: JwtVerifyOptions(proofPurpose: nil, audience: options.audience ?? nil, resolver: resolver)) else { return VerifiedCredential() }
   
   var verifiedCredential = VerifiedCredential(verifiedJwt: verified, verifiableCredential: CredentialPayload())
-  
   
   verifiedCredential.verifiableCredential = normalizeCredential(input: verified.payload!, jwt: verified.jwt)
   

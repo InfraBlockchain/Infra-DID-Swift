@@ -413,10 +413,6 @@ public func transformPresentationInput(input: PresentationPayload, removeOrigina
   guard let aud = input.verifier else { return JwtPresentationPayload()}
   let formatter = ISO8601DateFormatter.init()
   
-  if type(of: input.verifiableCredential) is String.Type {
-    iPrint(input)
-  }
-  
   guard let vcData = try? input.verifiableCredential.toJsonData(),
         let vcType = try? JSONDecoder().decode(VerifiableCredentialType.self, from: vcData),
         let vc = vcType.credentialValue as? [String]

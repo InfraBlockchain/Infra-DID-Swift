@@ -34,8 +34,6 @@ public class Resolver: Resolvable {
   public init(registry: ResolverRegistry, options: ResolverOptions = ResolverOptions(cache: nil, legacyResolver: nil)) {
     self.resolverRegistry = registry
     
-    guard let optionCache = options.cache else { return }
-
     self.cache = options.cache != nil ? inMemoryCache() : noCache
     
     guard var registry = self.resolverRegistry else { return }

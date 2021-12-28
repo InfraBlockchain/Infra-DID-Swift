@@ -34,8 +34,6 @@ public class InfraDIDConstructor {
   private var jsonRpc: EosioRpcProvider?
   private var rpcGroup = DispatchGroup.init()
   
-  //private var currentCurveType: EllipticCurveType = EllipticCurveType.k1
-  
   private var didOwnerPrivateKeyObjc: secp256k1.Signing.PrivateKey?
   private var sigProviderPrivKeys: [String] = []
   
@@ -49,7 +47,6 @@ public class InfraDIDConstructor {
     let didSplit = config.did.split(separator: ":")
     
     guard didSplit.count == 4 else { return }
-    //guard currentCurveType == .k1 else { return }
     
     let idNetwork = String(didSplit[3])
     
@@ -69,16 +66,13 @@ public class InfraDIDConstructor {
     let keyPair = try! secp256k1.Signing.PrivateKey.init(rawRepresentation: dataPvKey)
     self.didOwnerPrivateKeyObjc = keyPair
     
-    
-    sigProviderPrivKeys.append(config.didOwnerPrivateKey.replacingOccurrences(of: "PVT_K1_", with: ""))
+    sigProviderPrivKeys.append(config.didOwnerPrivateKey)
     if (config.txfeePayerAccount != nil) && (config.txfeePayerPrivateKey != nil) {
       guard let key: String = config.txfeePayerPrivateKey else {return}
       
       sigProviderPrivKeys.append(key) // for get_required_keys
       idConfig.txfeePayerAccount = config.txfeePayerAccount
     }
-    
-    
     
     idConfig.pubKeyDidSignDataPrefix = config.pubKeyDidSignDataPrefix ?? defaultPubKeyDidSignDataPrefix
     
@@ -94,7 +88,6 @@ public class InfraDIDConstructor {
     
     guard let pvData: Data = generateRandomBytes(bytes: 32),
           let keyPair = try? secp256k1.Signing.PrivateKey.init(rawRepresentation: pvData) else { return [:] }
-    
     
     let privateKey: String = keyPair.rawRepresentation.toEosioK1PrivateKey
     let publicKey: String = keyPair.publicKey.rawRepresentation.toEosioK1PublicKey
@@ -114,10 +107,8 @@ extension InfraDIDConstructor: InfraDIDConfApiDependency {
     let pubKeyArray = [UInt8](dataPubKey)
     let sliceKey = pubKeyArray[1...pubKeyArray.count-1]
     
-    
     let sliceKeyData = Data(sliceKey)
-    iPrint(sliceKeyData)
-    iPrint(sliceKeyData.hexEncodedString().count)
+    
     let options: EosioRpcTableRowsRequest = EosioRpcTableRowsRequest(scope: self.idConfig.registryContract, code: self.idConfig.registryContract, table: "pubkeydid", json: true, limit: 1, tableKey: nil, lowerBound: sliceKeyData.hexEncodedString(), upperBound: sliceKeyData.hexEncodedString(), indexPosition: "2", keyType: "sha256", encodeType: .dec, reverse: false, showPayer: false)
     
     return Promise { seal in
@@ -150,47 +141,43 @@ extension InfraDIDConstructor: InfraDIDConfApiDependency {
   
   public func actionPubKeyDID(actionName: TransactionAction, key: String = "",
                               value: String = "", newKey: String = "") {
-    //let actionName: String = action.rawValue
     var bufArray: [UInt8] = [] //digest buffer initialize
     
     guard let keyPair = self.didOwnerPrivateKeyObjc else { return }
     self.rpcGroup.enter()
     
-    
     let nonceValue = getNonceForPubKeyDid()
-    //self.rpcGroup.wait()
     
     if let nonce = nonceValue.value,
        let prefixData = self.defaultPubKeyDidSignDataPrefix.data(using: .utf8),
        let actNameData = actionName.rawValue.data(using: .utf8),
-       let pubKeyData = self.didPubKey?.data(using: .utf8),
-       let keyData = key.data(using: .utf8),
-       let valueData = value.data(using: .utf8)
-       //let changeKeyData = newKey.data(using: .utf8)
+       
+        let keyData = key.data(using: .utf8),
+       let valueData = value.data(using: .utf8),
+       let changeKeyData = newKey.data(using: .utf8)
     {
+      bufArray.append(contentsOf: prefixData) // 13
+      bufArray.append(contentsOf: actNameData) // 9
       
-      bufArray.append(contentsOf: prefixData)
-      bufArray.append(contentsOf: actNameData)
-      bufArray.append(contentsOf: keyData)
-      bufArray.append(contentsOf: valueData)
-      bufArray.append(contentsOf: pubKeyData)
-      bufArray.append(UInt8.init(nonce))
-     // bufArray.append(contentsOf: changeKeyData)
+      bufArray.append(UInt8(0)) // k1 Type == 0 , R1 Type == 1
+      bufArray.append(contentsOf: keyPair.publicKey.rawRepresentation)
+      bufArray.append(contentsOf: nonce.toByteArray())
+      bufArray.append(contentsOf: keyData) // 20
+      bufArray.append(contentsOf: valueData) // 33
+      bufArray.append(contentsOf: changeKeyData)
     }
     
-    iPrint(self.didPubKey?.count)
+    //iPrint(bufArray)
+    //iPrint(bufArray.count)
     
-    //let digest = SHA256.hash(data: bufArray)
-    //let signature = try? self.didOwnerPrivateKeyObjc?.signature(for: bufArray)
-    let signature = try? EosioEccSign.signWithK1(publicKey: keyPair.publicKey.rawRepresentation, privateKey: keyPair.rawRepresentation, data: Data(bufArray))
+    //publicKeyData is Only 65 Bytes(unCompressedKey) for Recover
+    let publicKeyData = try! EccRecoverKey.recoverPublicKey(privateKey: keyPair.rawRepresentation, curve: .k1) // uncompressedKey
     
-    iPrint(signature)
+    let signature = try? EosioEccSign.signWithK1(publicKey: publicKeyData, privateKey: keyPair.rawRepresentation, data: Data(bufArray))
+    
     
     guard let sign = signature, let actor = self.idConfig.txfeePayerAccount, let pubKey = self.didPubKey else { return }
     
-    iPrint(sign.toEosioK1Signature)
-
-    //let transactionSet: TransactionDefaultSet = TransactionDefaultSet(actionName: action, signKey: sign.toEosioK1Signature)
     var action: EosioTransaction.Action?
     
     self.rpcGroup.enter()
@@ -198,55 +185,49 @@ extension InfraDIDConstructor: InfraDIDConfApiDependency {
     switch actionName {
     case .set:
       action = try! EosioTransaction.Action.init(account: EosioName(self.idConfig.registryContract), name: EosioName(actionName.rawValue), authorization: [EosioTransaction.Action.Authorization.init(actor: EosioName(actor), permission: EosioName("active"))],
-                                                                              data: ["pk": pubKey, "key": key, "value": value, "sig": sign.toEosioK1Signature, "ram_payer": actor])
+                                                 data: ["pk": keyPair.publicKey.rawRepresentation.toEosioLegacyPublicKey, "key": key, "value": value, "sig": sign.toEosioK1Signature, "ram_payer": actor])
     case .changeOwner:
       action = try! EosioTransaction.Action.init(account: self.idConfig.registryContract, name: actionName.rawValue, authorization: [EosioTransaction.Action.Authorization.init(actor: actor, permission: "active")],
-                                                                              data: ["pk": pubKey, "new_owner_pk": newKey, "sig": sign.toEosioK1Signature, "ram_payer": actor])
+                                                 data: ["pk": pubKey, "new_owner_pk": newKey, "sig": sign.toEosioK1Signature, "ram_payer": actor])
     case .revoke:
       action = try! EosioTransaction.Action.init(account: self.idConfig.registryContract, name: actionName.rawValue, authorization: [EosioTransaction.Action.Authorization.init(actor: actor, permission: "active")],
-                                                                              data: ["pk": pubKey, "sig": sign.toEosioK1Signature, "ram_payer": actor])
+                                                 data: ["pk": pubKey, "sig": sign.toEosioK1Signature, "ram_payer": actor])
     case .clear:
       action = try! EosioTransaction.Action.init(account: EosioName(self.idConfig.registryContract), name: EosioName(actionName.rawValue), authorization: [EosioTransaction.Action.Authorization.init(actor: EosioName(actor), permission: EosioName("active"))],
-                                                                              data: ["pk": pubKey, "sig": sign.toEosioK1Signature])
+                                                 data: ["pk": pubKey, "sig": sign.toEosioK1Signature])
     case .setAccount:
       guard let account = self.didAccount else { return }
       action = try! EosioTransaction.Action.init(account: self.idConfig.registryContract, name: actionName.rawValue, authorization: [EosioTransaction.Action.Authorization.init(actor: actor, permission: "active")],
-                                                                              data: ["account": account, "key": key, "value": value])
+                                                 data: ["account": account, "key": key, "value": value])
     }
     guard let transactionAction = action else { return }
     self.actionTransaction(action: transactionAction)
   }
   
-  
   private func actionTransaction(action: EosioTransaction.Action)  {
     let transaction = EosioTransaction.init()
     
-    transaction.config.expireSeconds = 60 * 8
+    transaction.config.expireSeconds = 60
     transaction.config.blocksBehind = 3
-    //transaction.config.useLastIrreversible = false
     transaction.rpcProvider = self.jsonRpc
-    //transaction.rpcProviderWithoutProtocol = self.jsonRpc
-    iPrint(sigProviderPrivKeys)
+    
     transaction.signatureProvider = try! EosioSoftkeySignatureProvider(privateKeys: sigProviderPrivKeys)
     transaction.serializationProvider = EosioAbieosSerializationProvider()
     transaction.add(action: action)
-
-    do {
-      transaction.signBroadCastWithGetBlock(rpcProvider: self.jsonRpc){ result in
-        switch result {
-        case .success(let isSuccess):
-          iPrint(isSuccess)
-          self.rpcGroup.leave()
-        case .failure(let err):
-          iPrint(err.localizedDescription)
-          self.rpcGroup.leave()
-        }
+    
+    transaction.signBroadCastWithGetBlock { result in
+      switch result {
+      case .success(let isSuccess):
+        iPrint(isSuccess)
+        self.rpcGroup.leave()
+      case .failure(let err):
+        iPrint(err.localizedDescription)
+        self.rpcGroup.leave()
       }
     }
-
+    
     self.rpcGroup.wait()
   }
-  
   
   public func getJWTIssuer() -> JwtVcIssuer {
     guard let pvKey: Data = try? Data(eosioPrivateKey: self.idConfig.didOwnerPrivateKey) else { return JwtVcIssuer() }

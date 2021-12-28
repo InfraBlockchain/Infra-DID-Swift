@@ -6,7 +6,7 @@ import PackageDescription
 let package = Package(
     name: "Infra-DID-Swift",
     platforms: [
-        .iOS(.v15),
+        .iOS(.v12),
         .macOS(.v12)
     ],
     products: [
@@ -15,10 +15,6 @@ let package = Package(
             name: "Infra-DID-Swift",
             type: .dynamic,
             targets: ["Infra-DID-Swift"])
-//        .library(
-//            name: "Utils",
-//            type: .dynamic,
-//            targets: ["Infra-DID-Swift"]),
     ],
     dependencies: [
         // Dependencies declare other packages that this package depends on.
@@ -27,9 +23,8 @@ let package = Package(
       .package(
               name: "secp256k1",
               url: "https://github.com/GigaBitcoin/secp256k1.swift.git",
-              from: "0.3.0"
-          ),
-      .package(url: "https://github.com/Kitura/BlueECC.git", from: "1.1.0")
+              .upToNextMajor(from: "0.3.4")
+          )
     ],
     targets: [
         // Targets are the basic building blocks of a package. A target can define a module or a test suite.
@@ -41,8 +36,7 @@ let package = Package(
                 .product(name: "EosioSwiftAbieosSerializationProvider", package: "EosioSwift"),
                 .product(name: "EosioSwiftEcc", package: "EosioSwift"),
                 .product(name: "EosioSwiftSoftkeySignatureProvider", package: "EosioSwift"),
-                .product(name: "secp256k1", package: "secp256k1", condition: nil),
-                .product(name: "CryptorECC", package: "BlueECC", condition: nil)
+                .product(name: "secp256k1", package: "secp256k1", condition: nil)
         ]),
         .testTarget(
             name: "Infra-DID-SwiftTests",

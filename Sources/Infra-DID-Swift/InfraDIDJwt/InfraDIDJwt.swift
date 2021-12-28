@@ -31,7 +31,7 @@ private func decodeJws(jws: String) -> JwsDecoded {
 }
 
 public func decodeJwt(jwt: String) -> JwtDecoded { //jwt값을 decode하고 그 안의 payload를 디코딩해서 json 형태로 파싱하고 객체에 복사한다.
-  if jwt == "" { NSError.init().localizedDescription }
+  if jwt == "" { return JwtDecoded() }
   
   var decodeJwt = JwtDecoded()
   
@@ -89,7 +89,6 @@ public func verifyJwt(jwt: String, options: JwtVerifyOptions) throws -> JwtVerif
   let jwtDecoded = decodeJwt(jwt: jwt)
   
   var proofPurpose: ProofPurposeTypes? = options.proofPurpose ?? nil
-  var resultVerified = JwtVerified()
 
   guard let resolver = options.resolver else { throw JWTError(localizedDescription: "resolver error") }
   
@@ -179,7 +178,7 @@ private func resolveVerified(authenticator: DIDAuthenticator, jwt: String, jwtDe
     }
     
     if jwtDecoded.payload.aud != nil {
-      guard let aud = jwtDecoded.payload.aud else { throw JWTError(localizedDescription: "Nil Error")}
+      guard let _ = jwtDecoded.payload.aud else { throw JWTError(localizedDescription: "Nil Error")}
       
       if options.audience == nil && options.callbackUrl == nil {
         throw JWTError(localizedDescription: "invalid_config: JWT audience is required but your app address has not been configured")

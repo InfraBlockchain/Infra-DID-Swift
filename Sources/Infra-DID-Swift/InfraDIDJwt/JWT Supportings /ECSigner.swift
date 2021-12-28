@@ -20,7 +20,7 @@ import libtom
 
 // Class for ECDSA signing using BlueECC
 @available(OSX 10.13, iOS 11, tvOS 11.0, watchOS 4.0, *)
-class BlueECSigner: SignerAlgorithm {
+class ECSigner: SignerAlgorithm {
   let name: String = "ECDSA"
   
   private let key: Data
@@ -61,7 +61,7 @@ class BlueECSigner: SignerAlgorithm {
 
 // Class for ECDSA verifying using BlueECC
 @available(OSX 10.13, iOS 11, tvOS 11.0, watchOS 4.0, *)
-class BlueECVerifier: VerifierAlgorithm {
+class ECVerifier: VerifierAlgorithm {
   
   let name: String = "ECDSA"
   
@@ -77,7 +77,6 @@ class BlueECVerifier: VerifierAlgorithm {
   // Verify a signed JWT String
   func verify(jwt: String) -> Bool {
     let components = jwt.components(separatedBy: ".")
-    let jsonDecoder = JSONDecoder()
     
     if components.count == 3 {
       guard let signature = base64urlDecodedData(base64urlEncoded: components[2]),
@@ -193,7 +192,7 @@ public struct JWTSigner {
   /// - Parameter privateKey: The UTF8 encoded PEM private key, with either a "BEGIN EC PRIVATE KEY" or "BEGIN PRIVATE KEY" header.
   @available(OSX 10.13, iOS 11, tvOS 11.0, watchOS 4.0, *)
   public static func es256(privateKey: Data) -> JWTSigner {
-    return JWTSigner(name: "ES256K", signerAlgorithm: BlueECSigner(key: privateKey, curve: .k1))
+    return JWTSigner(name: "ES256K", signerAlgorithm: ECSigner(key: privateKey, curve: .k1))
   }
   
 }
@@ -214,7 +213,7 @@ public struct JWTVerifier {
   /// - Parameter publicKey: The UTF8 encoded PEM public key, with a "BEGIN PUBLIC KEY" header.
   @available(OSX 10.13, iOS 11, tvOS 11.0, watchOS 4.0, *)
   public static func es256(publicKey: Data) -> JWTVerifier {
-    return JWTVerifier(verifierAlgorithm: BlueECVerifier(key: publicKey, curve: .k1))
+    return JWTVerifier(verifierAlgorithm: ECVerifier(key: publicKey, curve: .k1))
   }
   public static let none = JWTVerifier(verifierAlgorithm: NoneAlgorithm())
   
