@@ -10,7 +10,17 @@ import secp256k1
 import secp256k1_implementation
 import EosioSwiftEcc
 
-
+/** Enum TransactionAction
+ 
+ - Case with:
+ 
+    - pksetattr
+    - pkdidrevoke
+    - pkdidclear
+    - pkchowner
+    - accsetattr
+ 
+ */
 public enum TransactionAction: String {
   case set = "pksetattr"
   case revoke = "pkdidrevoke"
@@ -19,6 +29,21 @@ public enum TransactionAction: String {
   case setAccount = "accsetattr"
 }
 
+/** Struct IdConfiguration
+ 
+ - Property with:
+ 
+    - did
+    - didOwnerPrivateKey
+    - networkId
+    - registryContract
+    - rpcEndpoint
+    - jwtSigner
+    - txfeePayerAccount
+    - txfeePayerPrivateKey
+    - pubKeyDidSignDataPrefix
+ 
+ */
 public struct IdConfiguration{
   var did: String
   var didOwnerPrivateKey: String // Contoller Key
@@ -46,9 +71,18 @@ public struct IdConfiguration{
   }
 }
 
-public struct JwtVcIssuer {
+/** Struct JwtIssuer
+ 
+ - Property with:
+ 
+    - did
+    - JwtSigner
+    - signAlgorithm
+ 
+ */
+public struct JwtIssuer {
   var did: String
-  var signer: JWTSigner //did jwt signer
+  var signer: JWTSigner
   var alg: String?
   
   public init(did: String = "", alg: String? = nil, signer: JWTSigner = JWTSigner.es256(privateKey: Data.init())) {

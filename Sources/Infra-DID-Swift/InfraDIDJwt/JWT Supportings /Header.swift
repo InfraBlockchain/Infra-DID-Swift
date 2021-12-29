@@ -7,19 +7,23 @@
 
 import Foundation
 
-// MARK: Header
 
+// MARK: Header
 /**
  A representation of a JSON Web Token header.
  https://tools.ietf.org/html/rfc7515#section-4.1
+ 
+ - Property with:
+ 
+    - typ
+    - kid
+ 
  ### Usage Example: ###
  ```swift
- struct MyClaims: Claims {
- var name: String
- }
- let myHeader = Header(kid: "keyID")
- let jwt = JWT(header: myHeader, claims: MyClaims(name: "Kitura"))
+ let myHeader = Header()
+ let jwt = JWT(header: myHeader, claims: JwtPayloadStruct)
  ```
+ 
  */
 public struct Header: Codable {
   

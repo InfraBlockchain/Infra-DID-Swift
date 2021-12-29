@@ -9,6 +9,17 @@ import Foundation
 
 // MARK: JWTError
 
+/**
+ A struct representing the different errors that can be thrown by SwiftJWT
+ 
+ - Property with:
+ 
+    - localizedDescription
+    - internalError
+    - message
+ 
+ */
+
 /// A struct representing the different errors that can be thrown by SwiftJWT
 public struct JWTError: Error, Equatable {
   
