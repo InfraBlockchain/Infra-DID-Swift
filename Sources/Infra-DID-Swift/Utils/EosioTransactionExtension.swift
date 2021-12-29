@@ -10,7 +10,12 @@ import EosioSwift
 import EosioSwiftSoftkeySignatureProvider
 
 
-//GetBlockInfoBase to GetBlock Modification Extension
+// MARK: extension EosioTransaction
+  /**
+   
+   This is an extended version of transaction to make a transaction using the getblock api.
+   
+   */
 extension EosioTransaction {
   
   
@@ -26,7 +31,7 @@ extension EosioTransaction {
       case .failure(let error):
         completion(.failure(error))
       case .success:
-        strongSelf.broadcast(completion: completion)//broadcastWithGetBlock(rpcProvider: rpcProvider, completion: completion)
+        strongSelf.broadcast(completion: completion)
       }
     }
   }

@@ -7,6 +7,8 @@
 
 import Foundation
 import PromiseKit
+import simd
+import zlib
 
 public struct DIDResolutionResultSet: Decodable {
   var didResolutionResult: DIDResolutionResult
@@ -21,6 +23,17 @@ public struct DIDResolutionResultSet: Decodable {
   }
 }
 
+// MARK: DIDResolutionResult
+/**
+ DID Resolve Result
+ 
+ - Property with:
+ 
+    - didResolutionMetadata
+    - didDocument
+    - didDocumentMetadata
+ 
+ */
 public struct DIDResolutionResult: Codable {
   
   var didResolutionMetadata: DIDResolutionMetadata
@@ -32,13 +45,6 @@ public struct DIDResolutionResult: Codable {
     case didDocument
     case didDocumentMetadata
   }
-  
-  //  public init(from decoder: Decoder) throws {
-  //    let values = try decoder.container(keyedBy: CodingKeys.self)
-  //    didResolutionMetadata = (try? values.decode(DIDResolutionMetadata.self, forKey: .didResolutionMetadata)) ?? DIDResolutionMetadata()
-  //    //didDocument = (try? values.decode(DIDDocument?.self, forKey: .didDocument)) ?? nil
-  //    //didDocumentMetadata = (try? values.decode(DIDDocumentMetaData.self, forKey: .didDocumentMetadata)) ?? DIDDocumentMetaData()
-  //  }
   
   public init(didResolutionMetadata: DIDResolutionMetadata
               = DIDResolutionMetadata(),
@@ -65,11 +71,6 @@ public struct DIDResolutionOptions: Decodable {
   public enum CodingKeys: CodingKey {
     case accept
   }
-  
-  //  public init(from decoder: Decoder) throws {
-  //    let values = try decoder.container(keyedBy: CodingKeys.self)
-  //    accept = (try? values.decode(String?.self, forKey: .accept))
-  //  }
   
   public init(accept: String? = nil) {
     self.accept = accept
@@ -102,14 +103,6 @@ public struct DIDResolutionMetadata: Codable {
   }
 }
 
-//extension DIDResolutionMetadata: Decodable {
-//  public init(from decoder: Decoder) throws {
-//    let values = try decoder.container(keyedBy: CodingKeys.self)
-//    contentType = (try? values.decodeIfPresent(String?.self, forKey: .contentType)) ?? nil
-//    errorDescription = (try? values.decodeIfPresent(ErrorType?.self, forKey: .errorDescription)) ?? nil
-//    message = (try? values.decodeIfPresent(String?.self, forKey: .message)) ?? nil
-//  }
-//}
 
 public struct DIDDocumentMetaData: Codable {
   var created: String?
@@ -139,21 +132,9 @@ public struct DIDDocumentMetaData: Codable {
     self.canonicalId = canonicalId
     
   }
-  
-  //      public init(from decoder: Decoder) throws {
-  //        let values = try decoder.container(keyedBy: CodingKeys.self)
-  //        created = (try? values.decode(String.self, forKey: .created)) ?? nil
-  //        updated = (try? values.decode(String.self, forKey: .updated)) ?? nil
-  //        deactivated = (try? values.decode(Bool.self, forKey: .deactivated)) ?? nil
-  //        versionId = (try? values.decode(String.self, forKey: .versionId)) ?? nil
-  //        nextUpdate = (try? values.decode(String.self, forKey: .nextUpdate)) ?? nil
-  //        nextVersionId = (try? values.decode(String.self, forKey: .nextVersionId)) ?? nil
-  //        equivalentId = (try? values.decode(String.self, forKey: .equivalentId)) ?? nil
-  //        canonicalId = (try? values.decode(String.self, forKey: .canonicalId)) ?? nil
-  //      }
+
 }
 
-//
 public enum KeyCapabilitySectionType: String {
   case authentication = "authentication"
   case assertionMethod = "assertionMethod"
@@ -202,6 +183,25 @@ public enum controllerType: Codable {
   }
 }
 
+// MARK: DIDDocument
+/**
+ DID Document
+ 
+ - Property with:
+ 
+    - context
+    - id
+    - alsoKnownAs
+    - controller
+    - verificationMethod
+    - service
+    - publicKey
+    - authentication
+    - capabilityInvocation
+    - assertionMethod
+    - capabilityDelegation
+ 
+ */
 public struct DIDDocument: Encodable {
   var context: [String] //string or [string]
   var id: String
@@ -214,8 +214,6 @@ public struct DIDDocument: Encodable {
   var capabilityInvocation: [String]
   var assertionMethod: [String]
   var capabilityDelegation: [String]
-  
-  
   
   enum CodingKeys: String, CodingKey {
     case context = "@context"
@@ -241,6 +239,7 @@ public struct DIDDocument: Encodable {
     self.capabilityInvocation = capabilityInvocation
   }
 }
+
 extension DIDDocument: Decodable {
   public init(from decoder: Decoder) throws {
     let values = try decoder.container(keyedBy: CodingKeys.self)
@@ -268,14 +267,6 @@ public struct ServiceEndpoint: Codable {
     case id, type, serviceEndpoint, description
   }
   
-  //      public init(from decoder: Decoder) throws {
-  //        let values = try decoder.container(keyedBy: CodingKeys.self)
-  //        id = (try? values.decode(String.self, forKey: .id)) ?? ""
-  //        type = (try? values.decode(String.self, forKey: .type)) ?? ""
-  //        serviceEndpoint = (try? values.decode(String.self, forKey: .serviceEndpoint)) ?? ""
-  //        description = (try? values.decode(String.self, forKey: .description)) ?? nil
-  //      }
-  
   public init(id: String = "", type: String = "", serviceEndpoint: String = "", description: String? = nil) {
     self.id = id
     self.type = type
@@ -283,7 +274,7 @@ public struct ServiceEndpoint: Codable {
     self.description = description
   }
 }
-//
+
 public struct JsonWebKey: Codable {
   var alg: String?
   var crv: String?
@@ -301,21 +292,6 @@ public struct JsonWebKey: Codable {
     case alg, crv, e, ext, key_ops, kid, kty, n, use, x, y
   }
   
-  //      public init(from decoder: Decoder) throws {
-  //        let values = try decoder.container(keyedBy: CodingKeys.self)
-  //        alg = (try? values.decode(String.self, forKey: .alg)) ?? nil
-  //        crv = (try? values.decode(String.self, forKey: .crv)) ?? nil
-  //        e = (try? values.decode(String.self, forKey: .e)) ?? nil
-  //        ext = (try? values.decode(String.self, forKey: .ext)) ?? nil
-  //        key_ops = (try? values.decode([String?].self, forKey: .key_ops)) ?? nil
-  //        kid = (try? values.decode(String.self, forKey: .kid)) ?? nil
-  //        kty = (try? values.decode(String.self, forKey: .kty)) ?? ""
-  //        n = (try? values.decode(String.self, forKey: .n)) ?? nil
-  //        use = (try? values.decode(String.self, forKey: .use)) ?? nil
-  //        x = (try? values.decode(String.self, forKey: .x)) ?? nil
-  //        y = (try? values.decode(String.self, forKey: .y)) ?? nil
-  //      }
-  
   public init(alg: String? = nil, crv: String? = nil, e: String? = nil,
               ext: String? = nil, key_ops: [String?] = [], kid: String? = nil,
               kty: String = "", n: String? = nil, use: String? = nil, x: String? = nil, y: String? = nil) {
@@ -332,7 +308,6 @@ public struct JsonWebKey: Codable {
     self.y = y
   }
 }
-
 
 public struct VerificationMethod: Codable {
   var id: String
@@ -366,7 +341,7 @@ public struct VerificationMethod: Codable {
     self.ethereumAddress = ethereumAddress
   }
 }
-//
+
 public struct Params: Codable {
   var params: [String:String]
   
@@ -406,33 +381,33 @@ public struct ParsedDID: Codable {
   }
 }
 
-//
-public func DIDResolve(did: String, parsed: ParsedDID, resolver: Resolver, options: DIDResolutionOptions) -> Promise<DIDResolutionResult> {
-  return Promise<DIDResolutionResult>.value(DIDResolutionResult())
-}
-public var didResolver = WrappedResolve
+
+//public func DIDResolve(did: String, parsed: ParsedDID, resolver: Resolver, options: DIDResolutionOptions) -> Promise<DIDResolutionResult> {
+//  return Promise<DIDResolutionResult>.value(DIDResolutionResult())
+//}
+//public var didResolver = WrappedResolve
 public typealias DIDResolverType = (String, ParsedDID, Resolver, DIDResolutionOptions) -> Promise<DIDResolutionResult>
-//
+
 
 //
-public func WrappedResolve() -> Promise<DIDResolutionResult>
-{ return Promise<DIDResolutionResult>.value(DIDResolutionResult()) }
-public var wrappedResolver: () -> Promise<DIDResolutionResult> = WrappedResolve
+//public func WrappedResolve() -> Promise<DIDResolutionResult>
+//{ return Promise<DIDResolutionResult>.value(DIDResolutionResult()) }
+//public var wrappedResolver: () -> Promise<DIDResolutionResult> = WrappedResolve
 public typealias wrappedResolverType = () -> Promise<DIDResolutionResult>
 //
 
 
 //
-public func DIDCache(parsed: ParsedDID, resolve: @escaping wrappedResolverType) -> Promise<DIDResolutionResult>
-{ return Promise<DIDResolutionResult>.value(DIDResolutionResult()) }
-public var didCache = DIDCache
+//public func DIDCache(parsed: ParsedDID, resolve: @escaping wrappedResolverType) -> Promise<DIDResolutionResult>
+//{ return Promise<DIDResolutionResult>.value(DIDResolutionResult()) }
+//public var didCache = DIDCache
 public typealias DidCacheType = (_ parsed: ParsedDID, _ resolve: @escaping wrappedResolverType) -> Promise<DIDResolutionResult>
 //
 
 //
-public func LegacyDIDResolve(did: String, parsed: ParsedDID, resolver: Resolver) -> Promise<DIDDocument>
-{ return Promise<DIDDocument>.value(DIDDocument()) }
-public var legacyDIDResolver = LegacyDIDResolve
+//public func LegacyDIDResolve(did: String, parsed: ParsedDID, resolver: Resolver) -> Promise<DIDDocument>
+//{ return Promise<DIDDocument>.value(DIDDocument()) }
+//public var legacyDIDResolver = LegacyDIDResolve
 public typealias LegacyDIDResolverType = (String, ParsedDID, Resolver) -> Promise<DIDDocument>
 //
 
@@ -460,7 +435,6 @@ public struct ResolverRegistry {
   }
 }
 
-//global Constant
 public var currentParsedDID: ParsedDID? = nil
 public var currentParsedDIDDocument: DIDResolutionResult? = nil
 
@@ -522,28 +496,20 @@ public func parse(didUrl: String) -> ParsedDID? {
   return nil
 }
 
-public func wrapLegacyResolver(resolve: LegacyDIDResolverType) -> DIDResolverType {
-
-  let didResolver: DIDResolverType = {  _, _, _, _ in
-    var doc = Promise<DIDDocument>.value(DIDDocument())
-    do {
-      let _: LegacyDIDResolverType = { did, parsedDID, resolver in
-        doc = LegacyDIDResolve(did: did, parsed: parsedDID, resolver: resolver)
-        return doc
-      }
-      guard let document = doc.value else { return Promise<DIDResolutionResult>.value(DIDResolutionResult())}
-      return Promise<DIDResolutionResult>.value(DIDResolutionResult(
-        didResolutionMetadata: DIDResolutionMetadata(contentType: "application/did+ld+json", errorDescription: nil, message: nil), didDocument: document, didDocumentMetaData: DIDDocumentMetaData()))
-    }
-    catch(let err) {
-        return Promise<DIDResolutionResult>.value(DIDResolutionResult(didResolutionMetadata: DIDResolutionMetadata(contentType: nil,
-                                  errorDescription: .notFound,
-                                  message: err.localizedDescription),
-                                  didDocument: nil,
-                                  didDocumentMetaData: DIDDocumentMetaData()))
+public func wrapLegacyResolver(resolve: @escaping LegacyDIDResolverType) -> DIDResolverType {
+  return {(did, parsed, resolver, _) -> Promise<DIDResolutionResult> in
+    let doc = resolve(did, parsed, resolver)
+    
+    guard let document = doc.value else {
+      return Promise<DIDResolutionResult>.value(DIDResolutionResult(didResolutionMetadata: DIDResolutionMetadata(contentType: nil,
+                                errorDescription: .notFound,
+                                message: "This is not in spec, nut may be helpful"),
+                                didDocument: nil,
+                                didDocumentMetaData: DIDDocumentMetaData()))}
+    
+    
+    return Promise<DIDResolutionResult>.value(DIDResolutionResult(
+      didResolutionMetadata: DIDResolutionMetadata(contentType: "application/did+ld+json", errorDescription: nil, message: nil), didDocument: document, didDocumentMetaData: DIDDocumentMetaData()))
     }
   }
-  return didResolver
-}
-
 

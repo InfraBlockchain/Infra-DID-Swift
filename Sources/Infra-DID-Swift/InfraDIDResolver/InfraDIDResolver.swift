@@ -42,6 +42,17 @@ public func getResolver(options: ConfigurationOptions) -> [String:DIDResolverTyp
   return InfraDIDResolver(options: options).build()
 }
 
+
+// MARK: Resolver
+  /**
+   DID Resolver Class bound to the infradidresolver class
+   
+   - Parameter with:
+   
+      - resolverRegistry
+      - cache
+   
+   */
 public class InfraDIDResolver {
 
   private var networks: ConfiguredNetworks
@@ -61,6 +72,23 @@ public class InfraDIDResolver {
 }
 
 extension InfraDIDResolver: InfraDIDResolvable {
+  // MARK: resolveMain
+    /** Method
+     
+     Create DID ResolutionResult Using ParsedDID
+     
+     - Parameter with:
+     
+        - did
+        - ParsedDID
+        - Resolver
+        - DIDResolutionOptions
+     
+     - Throws: None
+     
+     - Returns: Promise Value DIDResolutionResult
+     
+     */
   public func resolve(did: String, parsed: ParsedDID, unUsed: Resolver, options: DIDResolutionOptions) -> Promise<DIDResolutionResult> {
     iPrint(parsed)
     let idSplit = parsed.id.split(separator: ":")
@@ -105,10 +133,36 @@ extension InfraDIDResolver: InfraDIDResolvable {
     
   }
   
+  // MARK: build
+    /** Method
+     Bound with DIDResolver
+     
+     - Parameter with: Void
+     
+     - Throws: None
+     
+     - Returns: Dictionary<String: DIDResolver>
+     
+     */
   public func build() -> [String:DIDResolverType] {
     return ["infra": self.resolve]
   }
   
+  // MARK: resolvePubKeyDID
+    /** Method
+        Resolved DIDDocument Based On PubKeyDID Using PromiseChain
+     
+     - Parameter with:
+     
+        - did
+        - pubKey
+        - ConfiguredNetwork
+     
+     - Throws: None
+     
+     - Returns: Promise Value ResolvedDIDDocument
+     
+     */
   private func resolvePubKeyDID(did: String, pubKey: String, network: ConfiguredNetwork) -> Promise<ResolvedDIDDocument> {
     guard let pubKeyData = try? Data(eosioPublicKey: pubKey) else { return emptyResolvedDocument }
     let pubKeyArray = [UInt8](pubKeyData)
@@ -151,6 +205,21 @@ extension InfraDIDResolver: InfraDIDResolvable {
     }
   }
   
+  // MARK: resolveAccountDID
+    /** Method
+        Resolved DIDDocument Based On AccountDID Using PromiseChain
+     
+     - Parameter with:
+     
+        - did
+        - accountName
+        - ConfiguredNetwork
+     
+     - Throws: None
+     
+     - Returns: Promise Value ResolvedDIDDocument
+     
+     */
   private func resolveAccountDID(did: String, accountName: String, network: ConfiguredNetwork) -> Promise<ResolvedDIDDocument> {
     var activeKeyStr = ""
     
@@ -190,6 +259,7 @@ extension InfraDIDResolver: InfraDIDResolvable {
       }
     }
   }
+  
   
   private func wrapDidDocument(did: String, controllerPubKey: Data?, pkdidAttr: [String:Any], deactivated: Bool) -> ResolvedDIDDocument {
     guard let pubKey = controllerPubKey?.hexEncodedString() else { return ResolvedDIDDocument() }

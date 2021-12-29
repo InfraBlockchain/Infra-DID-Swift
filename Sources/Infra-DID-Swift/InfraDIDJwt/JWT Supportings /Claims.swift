@@ -8,20 +8,19 @@
 import Foundation
 
 
+
 // MARK: Claims
 /**
  A protocol for representing the claims on a JSON web token.
  https://tools.ietf.org/html/rfc7519#section-4.1
-### Usage Example: ###
-```swift
-struct AdminClaims: Claims {
-    var sub: String
-    var isAdmin: Bool
-    var exp: Date?
-}
- let jwt = JWT(claims: AdminClaims(sub: "Kitura", isAdmin: true, exp: Date(timeIntervalSinceNow: 3600)))
-```
-*/
+ 
+ - Parameter with:
+ 
+    - exp
+    - nbf
+    - iat
+ 
+ */
 public protocol Claims: Codable {
     
     /**
@@ -53,6 +52,7 @@ public protocol Claims: Codable {
     /// Encode the Claim object as a Base64 String.
     func encode() throws -> String
 }
+
 public extension Claims {
     
     var exp: Date? {

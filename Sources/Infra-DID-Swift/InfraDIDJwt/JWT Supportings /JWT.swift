@@ -11,18 +11,13 @@ import PromiseKit
 // MARK: JWT
 
 /**
- 
  A struct representing the `Header` and `Claims` of a JSON Web Token.
  
- ### Usage Example: ###
- ```swift
- struct MyClaims: Claims {
-    var name: String
- }
- let jwt = JWT(claims: MyClaims(name: "Kitura"))
- let key = "<PrivateKey>".data(using: .utf8)!
- let signedJWT: String? = try? jwt.sign(using: .rs256(key: key, keyType: .privateKey))
- ```
+ - Property with:
+ 
+    - header
+    - claims
+ 
  */
 
 public struct JWT<T: Claims>: Codable {
@@ -90,13 +85,6 @@ public struct JWT<T: Claims>: Codable {
         let claimsString = try claims.encode()
         header.alg = tempHeader.alg
         return try await jwtSigner.sign(header: headerString, claims: claimsString)
-//      iPrint(jwtSigner)
-//        var tempHeader = header
-//        tempHeader.alg = jwtSigner.name
-//        let headerString = try tempHeader.encode()
-//        let claimsString = try claims.encode()
-//        header.alg = tempHeader.alg
-//        return try jwtSigner.sign(header: headerString, claims: claimsString).value ?? ""
     }
 
     /// Verify the signature of the encoded JWT using the given algorithm.
@@ -107,13 +95,5 @@ public struct JWT<T: Claims>: Codable {
     public static func verify(_ jwt: String, using jwtVerifier: JWTVerifier) -> Bool {
         return jwtVerifier.verify(jwt: jwt)
     }
-
-    /// Validate the time based standard JWT claims.
-    /// This function checks that the "exp" (expiration time) is in the future
-    /// and the "iat" (issued at) and "nbf" (not before) headers are in the past,
-    ///
-    /// - Parameter leeway: The time in seconds that the JWT can be invalid but still accepted to account for clock differences.
-    /// - Returns: A value of `ValidateClaimsResult`.
-
 }
 

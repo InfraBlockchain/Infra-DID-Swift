@@ -18,20 +18,33 @@ import EosioSwift
 import libtom
 #endif
 
-// Class for ECDSA signing using BlueECC
-@available(OSX 10.13, iOS 11, tvOS 11.0, watchOS 4.0, *)
+/**
+ ###ECSigner###
+ */
+/// Class for ECDSA signing using ECC
 class ECSigner: SignerAlgorithm {
   let name: String = "ECDSA"
   
   private let key: Data
   private let curve: EllipticCurveType
   
-  // Initialize a signer using .utf8 encoded PEM private key.
   init(key: Data, curve: EllipticCurveType) {
     self.key = key
     self.curve = curve
   }
   
+  /** Method sign
+   
+   - Parameter with:
+      - header
+      - claims
+   
+   - Throws:
+      1) JWTError.invalidJWTString
+   
+   - Returns: Signed JwtString
+   
+   */
   func sign(header: String, claims: String) async throws -> String {
     
     let unsignedJWT = header + "." + claims
@@ -43,10 +56,23 @@ class ECSigner: SignerAlgorithm {
     return unsignedJWT + "." + base64urlEncodedString(data: signature)
   }
   
-  // send utf8 encoded `header.claims` to BlueECC for signing
-  private func sign(_ data: Data) throws -> Data {
-    
-    iPrint(key.count)
+  
+  /** Method sign
+   
+  send utf8 encoded `header.claims` to BlueECC for signing
+   
+   - Parameter with:
+      - header
+      - claims
+   
+   - Throws:
+      1) JWTError.invalidJWTString
+   
+   - Returns: Signed JwtString
+   
+   */
+  ///
+  private func sign(_ data: Data) -> Data {
     
     let privateKey = try! secp256k1.Signing.PrivateKey.init(rawRepresentation: key)
     var sig = try! EosioEccSign.signWithK1(publicKey: privateKey.publicKey.rawRepresentation, privateKey: privateKey.rawRepresentation, data: data)
@@ -55,12 +81,14 @@ class ECSigner: SignerAlgorithm {
       sig = sig.dropFirst()
     }
     
-    return sig//signedData.rawRepresentation//signedData.rawRepresentation
+    return sig
   }
 }
 
+/**
+ ###ECVerifier###
+ */
 // Class for ECDSA verifying using BlueECC
-@available(OSX 10.13, iOS 11, tvOS 11.0, watchOS 4.0, *)
 class ECVerifier: VerifierAlgorithm {
   
   let name: String = "ECDSA"
@@ -68,13 +96,22 @@ class ECVerifier: VerifierAlgorithm {
   private let key: Data
   private let curve: EllipticCurveType
   
-  // Initialize a verifier using .utf8 encoded PEM public key.
   init(key: Data, curve: EllipticCurveType) {
     self.key = key
     self.curve = curve
   }
   
-  // Verify a signed JWT String
+  /** Method Verify a signed JWT String
+   
+   - Parameter with:
+   
+      - JwtString
+   
+   - Throws: None
+   
+   - Returns: isVerified
+   
+   */
   func verify(jwt: String) -> Bool {
     let components = jwt.components(separatedBy: ".")
     
@@ -91,10 +128,30 @@ class ECVerifier: VerifierAlgorithm {
     }
   }
   
-  // Send the base64URLencoded signature and `header.claims` to BlueECC for verification.
+  
+  /** Method Verify Signature
+   
+   Send the base64URLencoded signature and `header.claims` to ECC for verification.
+   
+   - Parameter with:
+   
+      - signature
+      - data(ex.. message)
+   
+   - Throws:
+      1) Base address of publicKey is nil
+      2) Cannot set curve on key
+      3) Cannot load private key and create public key
+      4) Base address of digest is nil
+      5) signature is Not valid
+   
+   - Returns: isVerified
+   
+   */
+  //
   private func verify(signature: Data, for data: Data) throws -> Bool {
     do {
-      iPrint(signature)
+      
       var isValid: Bool = false
       
       register_all_ciphers()
@@ -151,7 +208,7 @@ class ECVerifier: VerifierAlgorithm {
             iPrint(verifyResult)
             iPrint("status is \(status)")
             guard verifyResult == CRYPT_OK, status != CRYPT_OK else { // signature is Not valid
-              throw JWTError(localizedDescription: "signature is Not valid")
+              throw JWTError(localizedDescription: "Signature is Not valid")
               
             }
             isValid = true
@@ -172,6 +229,14 @@ class ECVerifier: VerifierAlgorithm {
   
 }
 
+/** Struct JWTSigner
+ 
+ - Property with:
+ 
+    - name
+    - signerAlgorithm
+ 
+ */
 public struct JWTSigner {
   
   /// The name of the algorithm that will be set in the "alg" header
@@ -197,6 +262,13 @@ public struct JWTSigner {
   
 }
 
+/** Struct JWTVerifier
+ 
+ - Property with:
+ 
+    - verifierAlgorithm
+ 
+ */
 public struct JWTVerifier {
   let verifierAlgorithm: VerifierAlgorithm
   

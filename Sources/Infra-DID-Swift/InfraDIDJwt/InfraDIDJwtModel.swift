@@ -17,15 +17,15 @@ public enum ProofPurposeTypes: String {
   case capabilityInvocation = "capabilityInvocation"
 }
 
-public enum SignerInputData {
-  case string(String)
-  case array([UInt8])
-}
-
-public enum SignerResult {
-  case signature(EcdsaSignature)
-  case string(String)
-}
+//public enum SignerInputData {
+//  case string(String)
+//  case array([UInt8])
+//}
+//
+//public enum SignerResult {
+//  case signature(EcdsaSignature)
+//  case string(String)
+//}
 
 public struct JwtOptions {
   var issuer: String
@@ -43,6 +43,7 @@ public struct JwtOptions {
   }
 }
 
+
 public struct JwtVerifyOptions {
   var auth: Bool?
   var audience: String?
@@ -59,10 +60,22 @@ public struct JwtVerifyOptions {
   }
 }
 
+
 public struct JwsCreationOptions {
   var canonicalize: Bool?
 }
 
+// MARK: DIDAuthenticator
+/**
+ 
+ 
+ - Property with:
+ 
+    - authenticators
+    - issuer
+    - didResolutionResult
+ 
+ */
 public struct DIDAuthenticator {
   var authenticators: [VerificationMethod]
   var issuer: String
@@ -76,25 +89,28 @@ public struct DIDAuthenticator {
   }
 }
 
-public enum JwtPayloadAudienceType: Codable {
-  case string(String)
-  case array([String])
-  
-  public init(from decoder: Decoder) throws {
-    let container = try decoder.singleValueContainer()
-    if let x = try? container.decode(String.self) {
-      self = .string(x)
-      return
-    }
-    if let x = try? container.decode([String].self) {
-      self = .array(x)
-      return
-    }
-    throw DecodingError.typeMismatch(JwtPayloadAudienceType.self, DecodingError.Context(codingPath: decoder.codingPath, debugDescription: "Wrong type for audience"))
-  }
-}
-
-//VC Payload
+// MARK: JwtPayload
+/**
+ 
+ Payload with both credential and Presentation, inherit Claims
+ 
+ - Property with:
+ 
+    - iss
+    - sub
+    - aud
+    - iat
+    - nbf
+    - exp
+    - rexp
+    - did
+    - jti
+    - jti
+    - vc
+    - vp
+    - nonce
+ 
+ */
 public struct JwtPayload: Claims {
   var iss: String?
   var sub: String?
@@ -164,6 +180,15 @@ public struct JwtPayload: Claims {
   }
 }
 
+// MARK: decodeJws
+/** Struct CredentialStatus
+ 
+ - Property with:
+ 
+    - id
+    - type
+ 
+ */
 public struct JwtDecoded {
   var header: Header
   var payload: JwtPayload
@@ -179,6 +204,17 @@ public struct JwtDecoded {
 }
 
 
+// MARK: JwsDecoded
+/**
+ 
+ - Property with:
+ 
+    - header
+    - payload
+    - signature
+    - data
+ 
+ */
 public struct JwsDecoded {
   var header: Header
   var payload: String
@@ -193,6 +229,18 @@ public struct JwsDecoded {
   }
 }
 
+// MARK: JwtVerified
+/**
+ 
+ - Property with:
+ 
+    - payload
+    - didResolutionResult
+    - issuer
+    - signer
+    - jwt
+ 
+ */
 public struct JwtVerified: Codable {
   var payload: JwtPayload?
   var didResolutionResult: DIDResolutionResult

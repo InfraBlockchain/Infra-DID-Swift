@@ -15,13 +15,39 @@ import EosioSwiftSoftkeySignatureProvider
 import EosioSwiftAbieosSerializationProvider
 
 
-protocol InfraDIDConfApiDependency { // method Construction & Manipulation DID
+/** Protocol InfraDIDConfApiDependency
+ 
+ - Method actionPubKeyDID
+ 
+ - Parameter with:
+ 
+    - actionName
+    - key
+    - value
+    - newKey
+ 
+ */
+protocol InfraDIDConfApiDependency {
   
   func actionPubKeyDID(actionName: TransactionAction, key: String,
                        value: String, newKey: String)
 }
 
-
+/** Struct InfraDIDConstructor
+ 
+ - Property with:
+ 
+    - idConfig
+    - defaultPubKeyDidSignDataPrefix
+    - didPubKey
+    - didAccount
+    - did
+    - jsonRpc
+    - rpcGroup
+    - didOwnerPrivateKeyObjc
+    - sigProviderPrivKeys
+ 
+ */
 public class InfraDIDConstructor {
   
   private var idConfig = IdConfiguration() //default Struct
@@ -84,6 +110,16 @@ public class InfraDIDConstructor {
     }
   }
   
+  /** Method to Create DID based on Secp256k1
+   
+   - Parameter with: NetworkID for DID creation
+   
+   - Throws: None
+   
+   - Returns: DID Parsing Dictionary
+   
+   */
+
   static public func createPubKeyDID(networkID: String) -> [String: String] {
     
     guard let pvData: Data = generateRandomBytes(bytes: 32),
@@ -101,6 +137,15 @@ public class InfraDIDConstructor {
 
 extension InfraDIDConstructor: InfraDIDConfApiDependency {
   
+  /** Method Get Nonce from the table of the corresponding did in the blockchain
+   
+   - Parameter with: NetworkID for DID creation
+   
+   - Throws: None
+   
+   - Returns: DID Parsing Dictionary
+   
+   */
   private func getNonceForPubKeyDid() -> Promise<Double> {
     guard let pubKey: String = self.didPubKey, let jsonRPC = self.jsonRpc else { return Promise<Double>.value(0.0) }
     let dataPubKey = try! Data(eosioPublicKey: pubKey)
@@ -148,6 +193,7 @@ extension InfraDIDConstructor: InfraDIDConfApiDependency {
     
     let nonceValue = getNonceForPubKeyDid()
     
+    ///Create UInt8 ByteArray
     if let nonce = nonceValue.value,
        let prefixData = self.defaultPubKeyDidSignDataPrefix.data(using: .utf8),
        let actNameData = actionName.rawValue.data(using: .utf8),
@@ -167,14 +213,11 @@ extension InfraDIDConstructor: InfraDIDConfApiDependency {
       bufArray.append(contentsOf: changeKeyData)
     }
     
-    //iPrint(bufArray)
-    //iPrint(bufArray.count)
-    
-    //publicKeyData is Only 65 Bytes(unCompressedKey) for Recover
+    ///publicKeyData is Only 65 Bytes(unCompressedKey) for Recover
     let publicKeyData = try! EccRecoverKey.recoverPublicKey(privateKey: keyPair.rawRepresentation, curve: .k1) // uncompressedKey
     
+    ///Ecdsa Sign Secp256k1
     let signature = try? EosioEccSign.signWithK1(publicKey: publicKeyData, privateKey: keyPair.rawRepresentation, data: Data(bufArray))
-    
     
     guard let sign = signature, let actor = self.idConfig.txfeePayerAccount, let pubKey = self.didPubKey else { return }
     
@@ -204,6 +247,15 @@ extension InfraDIDConstructor: InfraDIDConfApiDependency {
     self.actionTransaction(action: transactionAction)
   }
   
+  /** Method ActionTransaction
+   
+   - Parameter with: ActionName
+   
+   - Throws: None
+   
+   - Returns: None
+   
+   */
   private func actionTransaction(action: EosioTransaction.Action)  {
     let transaction = EosioTransaction.init()
     
@@ -229,9 +281,18 @@ extension InfraDIDConstructor: InfraDIDConfApiDependency {
     self.rpcGroup.wait()
   }
   
-  public func getJWTIssuer() -> JwtVcIssuer {
-    guard let pvKey: Data = try? Data(eosioPrivateKey: self.idConfig.didOwnerPrivateKey) else { return JwtVcIssuer() }
+  /** Method Get Issuer
+   
+   - Parameter with: None
+   
+   - Throws: None
+   
+   - Returns: JwtIssuer
+   
+   */
+  public func getJWTIssuer() -> JwtIssuer {
+    guard let pvKey: Data = try? Data(eosioPrivateKey: self.idConfig.didOwnerPrivateKey) else { return JwtIssuer() }
     let signer: JWTSigner = JWTSigner.es256(privateKey: pvKey)
-    return JwtVcIssuer(did: self.idConfig.did, alg: "ES256K", signer: signer)
+    return JwtIssuer(did: self.idConfig.did, alg: "ES256K", signer: signer)
   }
 }

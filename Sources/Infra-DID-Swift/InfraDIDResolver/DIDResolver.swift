@@ -13,11 +13,36 @@ public protocol Resolvable {
 }
 
 
+// MARK: Resolver
+  /**
+   DID Resolver Class bound to the infradidresolver class
+   
+   - Parameter with:
+   
+      - resolverRegistry
+      - cache
+   
+   */
 public class Resolver: Resolvable {
   
   private var resolverRegistry: ResolverRegistry?
   private var cache: DidCacheType?
   
+  
+  // MARK: resolve
+    /**
+     DID Parsing And Caching
+     
+     - Parameter with:
+     
+        - didUrl
+        - DIDResolutionOptions
+     
+     - Throws: None
+     
+     - Returns: Promise Value DIDResolutionResult
+     
+     */
   public func resolve(didUrl: String, options: DIDResolutionOptions?) -> Promise<DIDResolutionResult> {
     let parsed = parse(didUrl: didUrl)
     
