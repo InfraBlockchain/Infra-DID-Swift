@@ -1,7 +1,14 @@
 # Infra DID Swift Library
 
-* Infra DID API Reference
-  - dwqk
+* Infra DID Method Spec
+  - https://github.com/InfraBlockchain/infra-did-method-specs/blob/main/docs/Infra-DID-method-spec.md
+
+* Infra DID Registry Smart Contract on InfraBlockchain
+  - https://github.com/InfraBlockchain/infra-did-registry
+
+* Infra DID Resolver (DIF javascript universal resolver compatible)
+  - https://github.com/InfraBlockchain/infra-did-resolver
+
 
 Feature provided by Infra-DID-Swift Library :
   - Infra DID Creation
@@ -467,7 +474,9 @@ Verified Presentation Result
   }
 }
 ```
+## API Documentation
+   For more information visit our [API reference].
 
+## License
 
-
-
+**Infra-DID-Swift** is under MIT license. See the [LICENSE](LICENSE) file for more info.
