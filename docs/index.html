@@ -242,22 +242,32 @@
 
 <p>Set Pub-Key DID Attribute</p>
 <pre class="highlight swift"><code>   <span class="k">let</span> <span class="nv">didApi</span> <span class="o">=</span> <span class="kt">InfraDIDConstructor</span><span class="p">(</span><span class="nv">config</span><span class="p">:</span> <span class="n">idConfig</span><span class="p">)</span>
-   <span class="n">didApi</span><span class="o">.</span><span class="nf">actionPubKeyDID</span><span class="p">(</span><span class="nv">actionName</span><span class="p">:</span> <span class="o">.</span><span class="k">set</span><span class="p">,</span> <span class="nv">key</span><span class="p">:</span> <span class="s">"svc/MessagingService"</span><span class="p">,</span> <span class="nv">value</span><span class="p">:</span> <span class="s">"https://infradid.com/pk/3/mysvcr90"</span><span class="p">,</span> <span class="nv">newKey</span><span class="p">:</span> <span class="s">""</span><span class="p">)</span>
+   <span class="kt">DispatchQueue</span><span class="o">.</span><span class="nf">global</span><span class="p">()</span><span class="o">.</span><span class="k">async</span> <span class="p">{</span>
+      <span class="n">didApi</span><span class="o">.</span><span class="nf">actionPubKeyDID</span><span class="p">(</span><span class="nv">actionName</span><span class="p">:</span> <span class="o">.</span><span class="k">set</span><span class="p">,</span> <span class="nv">key</span><span class="p">:</span> <span class="s">"svc/MessagingService"</span><span class="p">,</span> <span class="nv">value</span><span class="p">:</span> <span class="s">"https://infradid.com/pk/3/mysvcr90"</span><span class="p">,</span> <span class="nv">newKey</span><span class="p">:</span> <span class="s">""</span><span class="p">)</span>
+   <span class="p">}</span>
+
 </code></pre>
 
 <p>Revoke Pub-Key DID Attribute</p>
 <pre class="highlight swift"><code>   <span class="k">let</span> <span class="nv">didApi</span> <span class="o">=</span> <span class="kt">InfraDIDConstructor</span><span class="p">(</span><span class="nv">config</span><span class="p">:</span> <span class="n">idConfig</span><span class="p">)</span>
-   <span class="n">didApi</span><span class="o">.</span><span class="nf">actionPubKeyDID</span><span class="p">(</span><span class="nv">actionName</span><span class="p">:</span> <span class="o">.</span><span class="n">revoke</span><span class="p">)</span>
+   <span class="kt">DispatchQueue</span><span class="o">.</span><span class="nf">global</span><span class="p">()</span><span class="o">.</span><span class="k">async</span> <span class="p">{</span>
+      <span class="n">didApi</span><span class="o">.</span><span class="nf">actionPubKeyDID</span><span class="p">(</span><span class="nv">actionName</span><span class="p">:</span> <span class="o">.</span><span class="n">revoke</span><span class="p">)</span>
+   <span class="p">}</span>
+
 </code></pre>
 
 <p>Clear Pub-Key DID Attribute</p>
 <pre class="highlight swift"><code>   <span class="k">let</span> <span class="nv">didApi</span> <span class="o">=</span> <span class="kt">InfraDIDConstructor</span><span class="p">(</span><span class="nv">config</span><span class="p">:</span> <span class="n">idConfig</span><span class="p">)</span>
-   <span class="n">didApi</span><span class="o">.</span><span class="nf">actionPubKeyDID</span><span class="p">(</span><span class="nv">actionName</span><span class="p">:</span> <span class="o">.</span><span class="n">clear</span><span class="p">)</span>
+   <span class="kt">DispatchQueue</span><span class="o">.</span><span class="nf">global</span><span class="p">()</span><span class="o">.</span><span class="k">async</span> <span class="p">{</span>
+      <span class="n">didApi</span><span class="o">.</span><span class="nf">actionPubKeyDID</span><span class="p">(</span><span class="nv">actionName</span><span class="p">:</span> <span class="o">.</span><span class="n">clear</span><span class="p">)</span>
+   <span class="p">}</span>
 </code></pre>
 
 <p>Change Pub-Key DID Owner Key</p>
 <pre class="highlight swift"><code>   <span class="k">let</span> <span class="nv">didApi</span> <span class="o">=</span> <span class="kt">InfraDIDConstructor</span><span class="p">(</span><span class="nv">config</span><span class="p">:</span> <span class="n">idConfig</span><span class="p">)</span>
-   <span class="n">didApi</span><span class="o">.</span><span class="nf">actionPubKeyDID</span><span class="p">(</span><span class="nv">actionName</span><span class="p">:</span> <span class="o">.</span><span class="n">changeOwner</span><span class="p">,</span> <span class="nv">key</span><span class="p">:</span> <span class="s">""</span><span class="p">,</span> <span class="nv">value</span><span class="p">:</span> <span class="s">""</span><span class="p">,</span> <span class="nv">newKey</span><span class="p">:</span> <span class="s">"PUB_K1_584qGNgteYFppoisbDz6vBFArrw3As8qeeRCekLepG4pJVrhJt"</span><span class="p">)</span>
+   <span class="kt">DispatchQueue</span><span class="o">.</span><span class="nf">global</span><span class="p">()</span><span class="o">.</span><span class="k">async</span> <span class="p">{</span>
+      <span class="n">didApi</span><span class="o">.</span><span class="nf">actionPubKeyDID</span><span class="p">(</span><span class="nv">actionName</span><span class="p">:</span> <span class="o">.</span><span class="n">changeOwner</span><span class="p">,</span> <span class="nv">key</span><span class="p">:</span> <span class="s">""</span><span class="p">,</span> <span class="nv">value</span><span class="p">:</span> <span class="s">""</span><span class="p">,</span> <span class="nv">newKey</span><span class="p">:</span> <span class="s">"PUB_K1_584qGNgteYFppoisbDz6vBFArrw3As8qeeRCekLepG4pJVrhJt"</span><span class="p">)</span>
+   <span class="p">}</span>
 </code></pre>
 
 <p>Set Account-based DID Owner Key</p>
@@ -272,7 +282,9 @@
       <span class="nv">txfeePayerPrivateKey</span><span class="p">:</span><span class="s">"TXFEE_PAYER_PRIVATE_KEY"</span><span class="p">,</span> <span class="nv">pubKeyDidSignDataPrefix</span><span class="p">:</span> <span class="kc">nil</span><span class="p">)</span>
 
    <span class="k">let</span> <span class="nv">didApi</span> <span class="o">=</span> <span class="kt">InfraDIDConstructor</span><span class="p">(</span><span class="nv">config</span><span class="p">:</span> <span class="n">idConfig</span><span class="p">)</span>
-   <span class="n">didApi</span><span class="o">.</span><span class="nf">actionPubKeyDID</span><span class="p">(</span><span class="nv">actionName</span><span class="p">:</span> <span class="o">.</span><span class="n">setAccount</span><span class="p">,</span> <span class="nv">key</span><span class="p">:</span> <span class="s">"svc/MessagingService"</span><span class="p">,</span> <span class="nv">value</span><span class="p">:</span> <span class="s">"https://infradid.com/acc/1/mysvcr7"</span><span class="p">,</span> <span class="nv">newKey</span><span class="p">:</span> <span class="s">""</span><span class="p">)</span>
+   <span class="kt">DispatchQueue</span><span class="o">.</span><span class="nf">global</span><span class="p">()</span><span class="o">.</span><span class="k">async</span> <span class="p">{</span>
+     <span class="n">didApi</span><span class="o">.</span><span class="nf">actionPubKeyDID</span><span class="p">(</span><span class="nv">actionName</span><span class="p">:</span> <span class="o">.</span><span class="n">setAccount</span><span class="p">,</span> <span class="nv">key</span><span class="p">:</span> <span class="s">"svc/MessagingService"</span><span class="p">,</span> <span class="nv">value</span><span class="p">:</span> <span class="s">"https://infradid.com/acc/1/mysvcr7"</span><span class="p">,</span> <span class="nv">newKey</span><span class="p">:</span> <span class="s">""</span><span class="p">)</span>
+   <span class="p">}</span>
 </code></pre>
 <h3 id='did-resolver-getting' class='heading'>DID Resolver Getting</h3>
 <pre class="highlight swift"><code>   <span class="k">let</span> <span class="nv">infraDidResolver</span> <span class="o">=</span> <span class="nf">getResolver</span><span class="p">(</span><span class="nv">options</span><span class="p">:</span> <span class="kt">MultiNetworkConfiguration</span><span class="p">(</span><span class="nv">networks</span><span class="p">:</span> <span class="p">[</span><span class="kt">NetworkConfiguration</span><span class="p">(</span><span class="nv">networkId</span><span class="p">:</span> <span class="s">"01"</span><span class="p">,</span> <span class="nv">registryContract</span><span class="p">:</span> <span class="s">"fmapkumrotfc"</span><span class="p">,</span>                                                                                  <span class="nv">rpcEndpoint</span><span class="p">:</span> <span class="s">"https://api.testnet.eos.io"</span><span class="p">)],</span> <span class="nv">noRevocationCheck</span><span class="p">:</span> <span class="kc">false</span><span class="p">))</span>
