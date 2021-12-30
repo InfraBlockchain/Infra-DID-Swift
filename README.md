@@ -507,7 +507,7 @@ Verified Presentation Result
     ```
     
 ## API Documentation
-   For more information visit our [API reference].
+   For more information visit our [API reference](https://kitura.github.io/Swift-JWT/index.html).
 
 ## License
 
