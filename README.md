@@ -507,7 +507,7 @@ Verified Presentation Result
     ```
     
 ## API Documentation
-   For more information visit our [API reference](https://github.com/InfraBlockchain/Infra-DID-Swift/blob/master/docs/index.html).
+   For more information visit our [API reference](https://infrablockchain.github.io/Infra-DID-Swift/docs/index.html).
 
 ## License
 
