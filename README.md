@@ -1,5 +1,12 @@
 # Infra DID Swift Library
 
+<p align="left">
+<img src="https://img.shields.io/badge/Swift-5.0-orange.svg" alt="">
+</p>
+
+
+
+
 * Infra DID Method Spec
   - https://github.com/InfraBlockchain/infra-did-method-specs/blob/main/docs/Infra-DID-method-spec.md
 
@@ -48,6 +55,8 @@ currently secp256k1 curve is supported
 
 ### Update DID Attribute
 
+Configuration Example
+```swift
 let idConfig: IdConfiguration =
     IdConfiguration(
       did: "did:infra:01:PUB_K1_6bHxkmnSJQCD1AA5cARqsXDGUWY5ScVxtkwdb71quQVJ5E1JTH",
@@ -57,6 +66,7 @@ let idConfig: IdConfiguration =
       jwtSigner: nil,
       txfeePayAccount: "txfeepayeraa",
       txfeePayerPrivateKey:"TXFEE_PAYER_PRIVATE_KEY", pubKeyDidSignDataPrefix: nil)
+```
       
 Set Pub-Key DID Attribute
 ```swift
@@ -474,6 +484,28 @@ Verified Presentation Result
   }
 }
 ```
+
+## Installation
+
+<!-- - **Using  [CocoaPods](https://cocoapods.org)**:
+
+    ```ruby
+    pod 'Then'
+    ```
+ -->
+- **Using [Swift Package Manager](https://swift.org/package-manager)**:
+
+    ```swift
+    import PackageDescription
+
+    let package = Package(
+      name: "MyAwesomeApp",
+      dependencies: [
+        .Package(url: "https://github.com/InfraBlockchain/Infra-DID-Swift", branch: "master")
+      ]
+    )
+    ```
+    
 ## API Documentation
    For more information visit our [API reference].
 
