@@ -170,7 +170,508 @@
         <section>
           <section class="section">
             
-            <h1 id='infra-did-swift' class='heading'>Infra-DID-Swift</h1>
+            <h1 id='infra-did-swift-library' class='heading'>Infra DID Swift Library</h1>
+
+<p align="left">
+<img src="https://img.shields.io/badge/Swift-5.0-orange.svg" alt="">
+</p>
+
+<ul>
+<li><p>Infra DID Method Spec</p>
+
+<ul>
+<li><a href="https://github.com/InfraBlockchain/infra-did-method-specs/blob/main/docs/Infra-DID-method-spec.md">https://github.com/InfraBlockchain/infra-did-method-specs/blob/main/docs/Infra-DID-method-spec.md</a></li>
+</ul></li>
+<li><p>Infra DID Registry Smart Contract on InfraBlockchain</p>
+
+<ul>
+<li><a href="https://github.com/InfraBlockchain/infra-did-registry">https://github.com/InfraBlockchain/infra-did-registry</a></li>
+</ul></li>
+<li><p>Infra DID Resolver (DIF javascript universal resolver compatible)</p>
+
+<ul>
+<li><a href="https://github.com/InfraBlockchain/infra-did-resolver">https://github.com/InfraBlockchain/infra-did-resolver</a></li>
+</ul></li>
+</ul>
+
+<p>Feature provided by Infra-DID-Swift Library :</p>
+
+<ul>
+<li>Infra DID Creation</li>
+<li>Update DID Attribute</li>
+<li>DID Resolver</li>
+<li>Create And Verify Verifiable Credential JWT</li>
+<li>Create And Verify Verifiable Presentation JWT</li>
+</ul>
+<h3 id='infra-did-api-configuration' class='heading'>Infra DID API Configuration</h3>
+<pre class="highlight swift"><code>   <span class="k">let</span> <span class="nv">idConfig</span><span class="p">:</span> <span class="kt">IdConfiguration</span> <span class="o">=</span>
+    <span class="kt">IdConfiguration</span><span class="p">(</span>
+      <span class="nv">did</span><span class="p">:</span> <span class="s">"did:infra:01:PUB_K1_6bHxkmnSJQCD1AA5cARqsXDGUWY5ScVxtkwdb71quQVJ5E1JTH"</span><span class="p">,</span>
+      <span class="nv">didOwnerPrivateKey</span><span class="p">:</span><span class="s">"PVT_K1_5K9H1nzqyBAmuuvWCyVgsFciVsiSike1L38WG6Y6LjcssBmNpvT"</span><span class="p">,</span> <span class="nv">networkId</span><span class="p">:</span> <span class="s">"01"</span><span class="p">,</span>
+      <span class="nv">registryContract</span><span class="p">:</span> <span class="s">"infradidregi"</span><span class="p">,</span>
+      <span class="nv">rpcEndpoint</span><span class="p">:</span> <span class="s">"https://api.testnet.infrablockchain.com"</span><span class="p">,</span>
+      <span class="nv">jwtSigner</span><span class="p">:</span> <span class="kc">nil</span><span class="p">,</span>
+      <span class="nv">txfeePayAccount</span><span class="p">:</span> <span class="s">"txfeepayeraa"</span><span class="p">,</span>
+      <span class="nv">txfeePayerPrivateKey</span><span class="p">:</span><span class="s">"TXFEE_PAYER_PRIVATE_KEY"</span><span class="p">,</span> <span class="nv">pubKeyDidSignDataPrefix</span><span class="p">:</span> <span class="kc">nil</span><span class="p">)</span>
+
+
+    <span class="k">let</span> <span class="nv">didApi</span> <span class="o">=</span> <span class="kt">InfraDIDConstructor</span><span class="p">(</span><span class="nv">config</span><span class="p">:</span> <span class="n">idConfig</span><span class="p">)</span>
+</code></pre>
+<h3 id='infra-did-creation' class='heading'>Infra DID Creation</h3>
+
+<p>currently secp256k1 curve is supported</p>
+<pre class="highlight swift"><code>   <span class="k">let</span> <span class="nv">did</span> <span class="o">=</span> <span class="kt">InfraDIDConstructor</span><span class="o">.</span><span class="nf">createPubKeyDID</span><span class="p">(</span><span class="nv">networkID</span><span class="p">:</span> <span class="s">"01"</span><span class="p">)</span>
+
+   <span class="n">did</span> <span class="nv">result</span><span class="p">:</span> <span class="p">[</span><span class="s">"privateKey"</span><span class="p">:</span> <span class="s">"PVT_K1_5KSvrttdrp3GbTcCuwcx4Nr9H2qkKwjYfABnDFe3Q7PEj3BUe5B"</span><span class="p">,</span>
+                <span class="s">"did"</span><span class="p">:</span> <span class="s">"did:infra:01:PUB_K1_6UY4G4ZBd27AssbniQ5513LkyVZnM2hYz2Rc7GUjjo8wDAja9r"</span><span class="p">,</span>
+                <span class="s">"publicKey"</span><span class="p">:</span> <span class="s">"PUB_K1_6UY4G4ZBd27AssbniQ5513LkyVZnM2hYz2Rc7GUjjo8wDAja9r"</span><span class="p">]</span> 
+</code></pre>
+<h3 id='update-did-attribute' class='heading'>Update DID Attribute</h3>
+
+<p>Configuration Example</p>
+<pre class="highlight swift"><code><span class="k">let</span> <span class="nv">idConfig</span><span class="p">:</span> <span class="kt">IdConfiguration</span> <span class="o">=</span>
+    <span class="kt">IdConfiguration</span><span class="p">(</span>
+      <span class="nv">did</span><span class="p">:</span> <span class="s">"did:infra:01:PUB_K1_6bHxkmnSJQCD1AA5cARqsXDGUWY5ScVxtkwdb71quQVJ5E1JTH"</span><span class="p">,</span>
+      <span class="nv">didOwnerPrivateKey</span><span class="p">:</span><span class="s">"PVT_K1_5K9H1nzqyBAmuuvWCyVgsFciVsiSike1L38WG6Y6LjcssBmNpvT"</span><span class="p">,</span> <span class="nv">networkId</span><span class="p">:</span> <span class="s">"01"</span><span class="p">,</span>
+      <span class="nv">registryContract</span><span class="p">:</span> <span class="s">"infradidregi"</span><span class="p">,</span>
+      <span class="nv">rpcEndpoint</span><span class="p">:</span> <span class="s">"https://api.testnet.infrablockchain.com"</span><span class="p">,</span>
+      <span class="nv">jwtSigner</span><span class="p">:</span> <span class="kc">nil</span><span class="p">,</span>
+      <span class="nv">txfeePayAccount</span><span class="p">:</span> <span class="s">"txfeepayeraa"</span><span class="p">,</span>
+      <span class="nv">txfeePayerPrivateKey</span><span class="p">:</span><span class="s">"TXFEE_PAYER_PRIVATE_KEY"</span><span class="p">,</span> <span class="nv">pubKeyDidSignDataPrefix</span><span class="p">:</span> <span class="kc">nil</span><span class="p">)</span>
+</code></pre>
+
+<p>Set Pub-Key DID Attribute</p>
+<pre class="highlight swift"><code>   <span class="k">let</span> <span class="nv">didApi</span> <span class="o">=</span> <span class="kt">InfraDIDConstructor</span><span class="p">(</span><span class="nv">config</span><span class="p">:</span> <span class="n">idConfig</span><span class="p">)</span>
+   <span class="n">didApi</span><span class="o">.</span><span class="nf">actionPubKeyDID</span><span class="p">(</span><span class="nv">actionName</span><span class="p">:</span> <span class="o">.</span><span class="k">set</span><span class="p">,</span> <span class="nv">key</span><span class="p">:</span> <span class="s">"svc/MessagingService"</span><span class="p">,</span> <span class="nv">value</span><span class="p">:</span> <span class="s">"https://infradid.com/pk/3/mysvcr90"</span><span class="p">,</span> <span class="nv">newKey</span><span class="p">:</span> <span class="s">""</span><span class="p">)</span>
+</code></pre>
+
+<p>Revoke Pub-Key DID Attribute</p>
+<pre class="highlight swift"><code>   <span class="k">let</span> <span class="nv">didApi</span> <span class="o">=</span> <span class="kt">InfraDIDConstructor</span><span class="p">(</span><span class="nv">config</span><span class="p">:</span> <span class="n">idConfig</span><span class="p">)</span>
+   <span class="n">didApi</span><span class="o">.</span><span class="nf">actionPubKeyDID</span><span class="p">(</span><span class="nv">actionName</span><span class="p">:</span> <span class="o">.</span><span class="n">revoke</span><span class="p">)</span>
+</code></pre>
+
+<p>Clear Pub-Key DID Attribute</p>
+<pre class="highlight swift"><code>   <span class="k">let</span> <span class="nv">didApi</span> <span class="o">=</span> <span class="kt">InfraDIDConstructor</span><span class="p">(</span><span class="nv">config</span><span class="p">:</span> <span class="n">idConfig</span><span class="p">)</span>
+   <span class="n">didApi</span><span class="o">.</span><span class="nf">actionPubKeyDID</span><span class="p">(</span><span class="nv">actionName</span><span class="p">:</span> <span class="o">.</span><span class="n">clear</span><span class="p">)</span>
+</code></pre>
+
+<p>Change Pub-Key DID Owner Key</p>
+<pre class="highlight swift"><code>   <span class="k">let</span> <span class="nv">didApi</span> <span class="o">=</span> <span class="kt">InfraDIDConstructor</span><span class="p">(</span><span class="nv">config</span><span class="p">:</span> <span class="n">idConfig</span><span class="p">)</span>
+   <span class="n">didApi</span><span class="o">.</span><span class="nf">actionPubKeyDID</span><span class="p">(</span><span class="nv">actionName</span><span class="p">:</span> <span class="o">.</span><span class="n">changeOwner</span><span class="p">,</span> <span class="nv">key</span><span class="p">:</span> <span class="s">""</span><span class="p">,</span> <span class="nv">value</span><span class="p">:</span> <span class="s">""</span><span class="p">,</span> <span class="nv">newKey</span><span class="p">:</span> <span class="s">"PUB_K1_584qGNgteYFppoisbDz6vBFArrw3As8qeeRCekLepG4pJVrhJt"</span><span class="p">)</span>
+</code></pre>
+
+<p>Set Account-based DID Owner Key</p>
+<pre class="highlight swift"><code>   <span class="k">let</span> <span class="nv">idConfig</span><span class="p">:</span> <span class="kt">IdConfiguration</span> <span class="o">=</span>
+    <span class="kt">IdConfiguration</span><span class="p">(</span>
+      <span class="nv">did</span><span class="p">:</span> <span class="s">"did:infra:01:jghpykcpaoko"</span><span class="p">,</span>
+      <span class="nv">didOwnerPrivateKey</span><span class="p">:</span><span class="s">"PVT_K1_PRIVATE_KEY"</span><span class="p">,</span> <span class="nv">networkId</span><span class="p">:</span> <span class="s">"01"</span><span class="p">,</span>
+      <span class="nv">registryContract</span><span class="p">:</span> <span class="s">"infradidregi"</span><span class="p">,</span>
+      <span class="nv">rpcEndpoint</span><span class="p">:</span> <span class="s">"https://api.testnet.infrablockchain.com"</span><span class="p">,</span>
+      <span class="nv">jwtSigner</span><span class="p">:</span> <span class="kc">nil</span><span class="p">,</span>
+      <span class="nv">txfeePayAccount</span><span class="p">:</span> <span class="s">"txfeepayeraa"</span><span class="p">,</span>
+      <span class="nv">txfeePayerPrivateKey</span><span class="p">:</span><span class="s">"TXFEE_PAYER_PRIVATE_KEY"</span><span class="p">,</span> <span class="nv">pubKeyDidSignDataPrefix</span><span class="p">:</span> <span class="kc">nil</span><span class="p">)</span>
+
+   <span class="k">let</span> <span class="nv">didApi</span> <span class="o">=</span> <span class="kt">InfraDIDConstructor</span><span class="p">(</span><span class="nv">config</span><span class="p">:</span> <span class="n">idConfig</span><span class="p">)</span>
+   <span class="n">didApi</span><span class="o">.</span><span class="nf">actionPubKeyDID</span><span class="p">(</span><span class="nv">actionName</span><span class="p">:</span> <span class="o">.</span><span class="n">setAccount</span><span class="p">,</span> <span class="nv">key</span><span class="p">:</span> <span class="s">"svc/MessagingService"</span><span class="p">,</span> <span class="nv">value</span><span class="p">:</span> <span class="s">"https://infradid.com/acc/1/mysvcr7"</span><span class="p">,</span> <span class="nv">newKey</span><span class="p">:</span> <span class="s">""</span><span class="p">)</span>
+</code></pre>
+<h3 id='did-resolver-getting' class='heading'>DID Resolver Getting</h3>
+<pre class="highlight swift"><code>   <span class="k">let</span> <span class="nv">infraDidResolver</span> <span class="o">=</span> <span class="nf">getResolver</span><span class="p">(</span><span class="nv">options</span><span class="p">:</span> <span class="kt">MultiNetworkConfiguration</span><span class="p">(</span><span class="nv">networks</span><span class="p">:</span> <span class="p">[</span><span class="kt">NetworkConfiguration</span><span class="p">(</span><span class="nv">networkId</span><span class="p">:</span> <span class="s">"01"</span><span class="p">,</span> <span class="nv">registryContract</span><span class="p">:</span> <span class="s">"fmapkumrotfc"</span><span class="p">,</span>                                                                                  <span class="nv">rpcEndpoint</span><span class="p">:</span> <span class="s">"https://api.testnet.eos.io"</span><span class="p">)],</span> <span class="nv">noRevocationCheck</span><span class="p">:</span> <span class="kc">false</span><span class="p">))</span>
+
+   <span class="k">let</span> <span class="nv">didResolver</span> <span class="o">=</span> <span class="kt">Resolver</span><span class="p">(</span><span class="nv">registry</span><span class="p">:</span> <span class="kt">ResolverRegistry</span><span class="p">(</span><span class="nv">methodName</span><span class="p">:</span> <span class="n">infraDidResolver</span><span class="p">),</span> <span class="nv">options</span><span class="p">:</span> <span class="kt">ResolverOptions</span><span class="p">(</span><span class="nv">cache</span><span class="p">:</span> <span class="kt">ResolverOptionsType</span><span class="o">.</span><span class="nf">bool</span><span class="p">(</span><span class="kc">true</span><span class="p">),</span>                                                                                                                              <span class="nv">legacyResolver</span><span class="p">:</span> <span class="kc">nil</span><span class="p">))</span>
+</code></pre>
+<h3 id='create-and-verify-verifiable-credential-jwt' class='heading'>Create And Verify Verifiable Credential JWT</h3>
+<pre class="highlight swift"><code>   <span class="k">let</span> <span class="nv">idConfig</span><span class="p">:</span> <span class="kt">IdConfiguration</span> <span class="o">=</span>
+    <span class="kt">IdConfiguration</span><span class="p">(</span>
+      <span class="nv">did</span><span class="p">:</span> <span class="s">"did:infra:01:PUB_K1_6bHxkmnSJQCD1AA5cARqsXDGUWY5ScVxtkwdb71quQVJ5E1JTH"</span><span class="p">,</span>
+      <span class="nv">didOwnerPrivateKey</span><span class="p">:</span><span class="s">"PVT_K1_5K9H1nzqyBAmuuvWCyVgsFciVsiSike1L38WG6Y6LjcssBmNpvT"</span><span class="p">,</span> <span class="nv">networkId</span><span class="p">:</span> <span class="s">"01"</span><span class="p">,</span>
+      <span class="nv">registryContract</span><span class="p">:</span> <span class="s">"infradidregi"</span><span class="p">,</span>
+      <span class="nv">rpcEndpoint</span><span class="p">:</span> <span class="s">"https://api.testnet.infrablockchain.com"</span><span class="p">,</span>
+      <span class="nv">jwtSigner</span><span class="p">:</span> <span class="kc">nil</span><span class="p">,</span>
+      <span class="nv">txfeePayAccount</span><span class="p">:</span> <span class="s">"txfeepayeraa"</span><span class="p">,</span>
+      <span class="nv">txfeePayerPrivateKey</span><span class="p">:</span><span class="s">"TXFEE_PAYER_PRIVATE_KEY"</span><span class="p">,</span> <span class="nv">pubKeyDidSignDataPrefix</span><span class="p">:</span> <span class="kc">nil</span><span class="p">)</span>
+
+   <span class="k">let</span> <span class="nv">infraDidResolver</span> <span class="o">=</span> <span class="nf">getResolver</span><span class="p">(</span><span class="nv">options</span><span class="p">:</span> <span class="kt">MultiNetworkConfiguration</span><span class="p">(</span><span class="nv">networks</span><span class="p">:</span> <span class="p">[</span><span class="kt">NetworkConfiguration</span><span class="p">(</span><span class="nv">networkId</span><span class="p">:</span> <span class="s">"01"</span><span class="p">,</span> <span class="nv">registryContract</span><span class="p">:</span> <span class="s">"fmapkumrotfc"</span><span class="p">,</span>                                                                                  <span class="nv">rpcEndpoint</span><span class="p">:</span> <span class="s">"https://api.testnet.eos.io"</span><span class="p">)],</span> <span class="nv">noRevocationCheck</span><span class="p">:</span> <span class="kc">false</span><span class="p">))</span>
+
+   <span class="k">let</span> <span class="nv">didResolver</span> <span class="o">=</span> <span class="kt">Resolver</span><span class="p">(</span><span class="nv">registry</span><span class="p">:</span> <span class="kt">ResolverRegistry</span><span class="p">(</span><span class="nv">methodName</span><span class="p">:</span> <span class="n">infraDidResolver</span><span class="p">),</span> <span class="nv">options</span><span class="p">:</span> <span class="kt">ResolverOptions</span><span class="p">(</span><span class="nv">cache</span><span class="p">:</span> <span class="kt">ResolverOptionsType</span><span class="o">.</span><span class="nf">bool</span><span class="p">(</span><span class="kc">true</span><span class="p">),</span>                                                                                                                              <span class="nv">legacyResolver</span><span class="p">:</span> <span class="kc">nil</span><span class="p">))</span>
+
+    <span class="k">let</span> <span class="nv">didApi</span> <span class="o">=</span> <span class="kt">InfraDIDConstructor</span><span class="p">(</span><span class="nv">config</span><span class="p">:</span> <span class="n">idConfig</span><span class="p">)</span>
+    <span class="k">let</span> <span class="nv">formatter</span> <span class="o">=</span> <span class="kt">ISO8601DateFormatter</span><span class="o">.</span><span class="nf">init</span><span class="p">()</span>
+    <span class="k">let</span> <span class="nv">issuer</span> <span class="o">=</span> <span class="n">didApi</span><span class="o">.</span><span class="nf">getJWTIssuer</span><span class="p">()</span>
+
+    <span class="k">let</span> <span class="nv">payload</span> <span class="o">=</span> <span class="kt">CredentialPayload</span><span class="p">(</span><span class="nv">context</span><span class="p">:</span> <span class="p">[</span><span class="s">"https://www.w3.org/2018/credentials/v1"</span><span class="p">],</span>
+                                    <span class="nv">id</span><span class="p">:</span> <span class="s">"http://example.vc/credentials/123532"</span><span class="p">,</span>
+                                    <span class="nv">type</span><span class="p">:</span> <span class="p">[</span><span class="s">"VerifiableCredential"</span><span class="p">,</span> <span class="s">"VaccinationCredential"</span><span class="p">],</span>
+                                    <span class="nv">issuer</span><span class="p">:</span> <span class="p">[</span><span class="s">"id"</span><span class="p">:</span> <span class="s">"</span><span class="se">\(</span><span class="n">idConfig</span><span class="o">.</span><span class="n">did</span><span class="se">)</span><span class="s">"</span><span class="p">],</span>
+                                    <span class="nv">issuanceDate</span><span class="p">:</span> <span class="n">formatter</span><span class="o">.</span><span class="nf">string</span><span class="p">(</span><span class="nv">from</span><span class="p">:</span> <span class="kt">Date</span><span class="o">.</span><span class="n">now</span><span class="p">),</span>
+                                    <span class="nv">expirationDate</span><span class="p">:</span> <span class="kc">nil</span><span class="p">,</span>
+                                    <span class="nv">credentialSubject</span><span class="p">:</span>
+                                      <span class="kt">SubjectValue</span><span class="o">.</span><span class="nf">object</span><span class="p">(</span>
+                                        <span class="p">[</span><span class="s">"id"</span><span class="p">:</span>
+               <span class="kt">SubjectValue</span><span class="o">.</span><span class="nf">string</span><span class="p">(</span><span class="s">"did:infra:01:PUB_K1_7jCDarXnZ3SdPAwfFEciTSyUzA4fnfnktvFH9Fj7J89UrFiHpt"</span><span class="p">),</span> <span class="s">"claim1"</span><span class="p">:</span> <span class="kt">SubjectValue</span><span class="o">.</span><span class="nf">string</span><span class="p">(</span><span class="s">"claim1Value"</span><span class="p">)]),</span> <span class="nv">credentialStatus</span><span class="p">:</span> <span class="kt">CredentialStatus</span><span class="p">(),</span> <span class="nv">evidence</span><span class="p">:</span> <span class="kc">nil</span><span class="p">,</span> <span class="nv">termsOfUse</span><span class="p">:</span> <span class="kc">nil</span><span class="p">)</span>
+    <span class="kt">DispatchQueue</span><span class="o">.</span><span class="nf">global</span><span class="p">()</span><span class="o">.</span><span class="k">async</span> <span class="p">{</span>
+      <span class="k">let</span> <span class="nv">vc</span> <span class="o">=</span> <span class="nf">createVerifiableCredentialJwt</span><span class="p">(</span><span class="nv">payload</span><span class="p">:</span> <span class="n">payload</span><span class="p">,</span> <span class="nv">issuer</span><span class="p">:</span> <span class="n">issuer</span><span class="p">)</span>
+      <span class="k">let</span> <span class="nv">vcVerified</span> <span class="o">=</span> <span class="nf">verifyCredential</span><span class="p">(</span><span class="nv">credential</span><span class="p">:</span> <span class="n">vc</span><span class="p">,</span> <span class="nv">resolver</span><span class="p">:</span> <span class="n">didResolver</span><span class="p">)</span>
+    <span class="p">}</span>
+
+    <span class="nf">print</span><span class="p">(</span><span class="n">vcVerified</span><span class="p">)</span>
+</code></pre>
+
+<p>Verified Credential Result</p>
+<pre class="highlight swift"><code>   <span class="p">{</span>
+  <span class="s">"verifiable_credential"</span> <span class="p">:</span> <span class="p">{</span>
+    <span class="s">"@context"</span> <span class="p">:</span> <span class="p">[</span>
+      <span class="s">"https:</span><span class="err">\</span><span class="s">/</span><span class="err">\</span><span class="s">/www.w3.org</span><span class="err">\</span><span class="s">/2018</span><span class="err">\</span><span class="s">/credentials</span><span class="err">\</span><span class="s">/v1"</span><span class="p">,</span>
+      <span class="s">"https:</span><span class="err">\</span><span class="s">/</span><span class="err">\</span><span class="s">/coov.io</span><span class="err">\</span><span class="s">/docs</span><span class="err">\</span><span class="s">/v1</span><span class="err">\</span><span class="s">/vc</span><span class="err">\</span><span class="s">/personal"</span>
+    <span class="p">],</span>
+    <span class="s">"credential_status"</span> <span class="p">:</span> <span class="p">{</span>
+      <span class="s">"id"</span> <span class="p">:</span> <span class="s">""</span><span class="p">,</span>
+      <span class="s">"type"</span> <span class="p">:</span> <span class="s">""</span>
+    <span class="p">},</span>
+    <span class="s">"credential_subject"</span> <span class="p">:</span> <span class="p">{</span>
+      <span class="s">"name"</span> <span class="p">:</span> <span class="s">"김준형"</span>
+    <span class="p">},</span>
+    <span class="s">"issuance_date"</span> <span class="p">:</span> <span class="s">"2021-07-29T05:40:02Z"</span><span class="p">,</span>
+    <span class="s">"issuer"</span> <span class="p">:</span> <span class="p">{</span>
+      <span class="s">"id"</span> <span class="p">:</span> <span class="s">"did:infra:01:PUB_K1_6WGrvnuG7xFxCFA4dPrefh93HUdG7d1fjUQNsZXQ6JfRC6G3ZC"</span>
+    <span class="p">},</span>
+    <span class="s">"proof"</span> <span class="p">:</span> <span class="p">{</span>
+      <span class="s">"jwt"</span> <span class="p">:</span> <span class="s">"eyJhbGciOiJFUzI1NksiLCJ0eXAiOiJKV1QifQ.eyJ2YyI6eyJpZCI6ImRpZDppbmZyYTowMTpQVUJfSzFfNWt6TVA0ZVYzRDRRU0tLNWhoWWpYWW53aVJBVjVzaGsyam5oclFCWnFUQndHUzZ5VTciLCJAY29udGV4dCI6WyJodHRwczovL3d3dy53My5vcmcvMjAxOC9jcmVkZW50aWFscy92MSIsImh0dHBzOi8vY29vdi5pby9kb2NzL3YxL3ZjL3BlcnNvbmFsIl0sInR5cGUiOlsiVmVyaWZpYWJsZUNyZWRlbnRpYWwiLCJQZXJzb25hbCJdLCJjcmVkZW50aWFsU3ViamVjdCI6eyJuYW1lIjoi6rmA7KSA7ZiVIn19LCJzdWIiOiJkaWQ6aW5mcmE6MDE6UFVCX0sxXzZEOUhXaXFTcXVxdE1tVlU4UHJpdUQ1NjJQeEE0Y2ZNM251N1RtVUU5VVg5ODRmam9zIiwibmJmIjoxNjI3NTM3MjAyLCJpc3MiOiJkaWQ6aW5mcmE6MDE6UFVCX0sxXzZXR3J2bnVHN3hGeENGQTRkUHJlZmg5M0hVZEc3ZDFmalVRTnNaWFE2SmZSQzZHM1pDIn0.vOS-JvMZOQAxsnd8-IeIuwGtK5q0QEHEFxF2hUuLpBIE24M8TQZgp3E0Hgniy2bI6_ZfIa5jlG3_9r_ce-Fryw"</span><span class="p">,</span>
+      <span class="s">"type"</span> <span class="p">:</span> <span class="s">"JwtProof2020"</span>
+    <span class="p">},</span>
+    <span class="s">"type"</span> <span class="p">:</span> <span class="p">[</span>
+      <span class="s">"VerifiableCredential"</span><span class="p">,</span>
+      <span class="s">"Personal"</span>
+    <span class="p">]</span>
+  <span class="p">},</span>
+  <span class="s">"verified_jwt"</span> <span class="p">:</span> <span class="p">{</span>
+    <span class="s">"did_resolution_result"</span> <span class="p">:</span> <span class="p">{</span>
+      <span class="s">"did_document"</span> <span class="p">:</span> <span class="p">{</span>
+        <span class="s">"@context"</span> <span class="p">:</span> <span class="p">[</span>
+          <span class="s">"https:</span><span class="err">\</span><span class="s">/</span><span class="err">\</span><span class="s">/www.w3.org</span><span class="err">\</span><span class="s">/ns</span><span class="err">\</span><span class="s">/did</span><span class="err">\</span><span class="s">/v1"</span>
+        <span class="p">],</span>
+        <span class="s">"assertion_method"</span> <span class="p">:</span> <span class="p">[</span>
+
+        <span class="p">],</span>
+        <span class="s">"authentication"</span> <span class="p">:</span> <span class="p">[</span>
+          <span class="s">"did:infra:01:PUB_K1_6WGrvnuG7xFxCFA4dPrefh93HUdG7d1fjUQNsZXQ6JfRC6G3ZC#controller"</span>
+        <span class="p">],</span>
+        <span class="s">"capability_delegation"</span> <span class="p">:</span> <span class="p">[</span>
+
+        <span class="p">],</span>
+        <span class="s">"capability_invocation"</span> <span class="p">:</span> <span class="p">[</span>
+
+        <span class="p">],</span>
+        <span class="s">"id"</span> <span class="p">:</span> <span class="s">"did:infra:01:PUB_K1_6WGrvnuG7xFxCFA4dPrefh93HUdG7d1fjUQNsZXQ6JfRC6G3ZC"</span><span class="p">,</span>
+        <span class="s">"verification_method"</span> <span class="p">:</span> <span class="p">[</span>
+          <span class="p">{</span>
+            <span class="s">"controller"</span> <span class="p">:</span> <span class="s">"did:infra:01:PUB_K1_6WGrvnuG7xFxCFA4dPrefh93HUdG7d1fjUQNsZXQ6JfRC6G3ZC"</span><span class="p">,</span>
+            <span class="s">"id"</span> <span class="p">:</span> <span class="s">"did:infra:01:PUB_K1_6WGrvnuG7xFxCFA4dPrefh93HUdG7d1fjUQNsZXQ6JfRC6G3ZC#controller"</span><span class="p">,</span>
+            <span class="s">"public_key_hex"</span> <span class="p">:</span> <span class="s">"02d4f30f6b31a7eb007642cf5e7d7eb12a3db7234cab7da2e84ee78726eb4e3aee"</span><span class="p">,</span>
+            <span class="s">"type"</span> <span class="p">:</span> <span class="s">"EcdsaSecp256k1VerificationKey2019"</span>
+          <span class="p">}</span>
+        <span class="p">]</span>
+      <span class="p">},</span>
+      <span class="s">"did_document_metadata"</span> <span class="p">:</span> <span class="p">{</span>
+        <span class="s">"deactivated"</span> <span class="p">:</span> <span class="kc">true</span>
+      <span class="p">},</span>
+      <span class="s">"did_resolution_metadata"</span> <span class="p">:</span> <span class="p">{</span>
+        <span class="s">"content_type"</span> <span class="p">:</span> <span class="s">"application</span><span class="err">\</span><span class="s">/did+ld+json"</span>
+      <span class="p">}</span>
+    <span class="p">},</span>
+    <span class="s">"issuer"</span> <span class="p">:</span> <span class="s">"did:infra:01:PUB_K1_6WGrvnuG7xFxCFA4dPrefh93HUdG7d1fjUQNsZXQ6JfRC6G3ZC"</span><span class="p">,</span>
+    <span class="s">"jwt"</span> <span class="p">:</span> <span class="s">"eyJhbGciOiJFUzI1NksiLCJ0eXAiOiJKV1QifQ.eyJ2YyI6eyJpZCI6ImRpZDppbmZyYTowMTpQVUJfSzFfNWt6TVA0ZVYzRDRRU0tLNWhoWWpYWW53aVJBVjVzaGsyam5oclFCWnFUQndHUzZ5VTciLCJAY29udGV4dCI6WyJodHRwczovL3d3dy53My5vcmcvMjAxOC9jcmVkZW50aWFscy92MSIsImh0dHBzOi8vY29vdi5pby9kb2NzL3YxL3ZjL3BlcnNvbmFsIl0sInR5cGUiOlsiVmVyaWZpYWJsZUNyZWRlbnRpYWwiLCJQZXJzb25hbCJdLCJjcmVkZW50aWFsU3ViamVjdCI6eyJuYW1lIjoi6rmA7KSA7ZiVIn19LCJzdWIiOiJkaWQ6aW5mcmE6MDE6UFVCX0sxXzZEOUhXaXFTcXVxdE1tVlU4UHJpdUQ1NjJQeEE0Y2ZNM251N1RtVUU5VVg5ODRmam9zIiwibmJmIjoxNjI3NTM3MjAyLCJpc3MiOiJkaWQ6aW5mcmE6MDE6UFVCX0sxXzZXR3J2bnVHN3hGeENGQTRkUHJlZmg5M0hVZEc3ZDFmalVRTnNaWFE2SmZSQzZHM1pDIn0.vOS-JvMZOQAxsnd8-IeIuwGtK5q0QEHEFxF2hUuLpBIE24M8TQZgp3E0Hgniy2bI6_ZfIa5jlG3_9r_ce-Fryw"</span><span class="p">,</span>
+    <span class="s">"payload"</span> <span class="p">:</span> <span class="p">{</span>
+      <span class="s">"iss"</span> <span class="p">:</span> <span class="s">"did:infra:01:PUB_K1_6WGrvnuG7xFxCFA4dPrefh93HUdG7d1fjUQNsZXQ6JfRC6G3ZC"</span><span class="p">,</span>
+      <span class="s">"nbf"</span> <span class="p">:</span> <span class="s">"2021-07-29T05:40:02.000"</span><span class="p">,</span>
+      <span class="s">"sub"</span> <span class="p">:</span> <span class="s">"did:infra:01:PUB_K1_6D9HWiqSquqtMmVU8PriuD562PxA4cfM3nu7TmUE9UX984fjos"</span><span class="p">,</span>
+      <span class="s">"vc"</span> <span class="p">:</span> <span class="p">{</span>
+        <span class="s">"@context"</span> <span class="p">:</span> <span class="p">[</span>
+          <span class="s">"https:</span><span class="err">\</span><span class="s">/</span><span class="err">\</span><span class="s">/www.w3.org</span><span class="err">\</span><span class="s">/2018</span><span class="err">\</span><span class="s">/credentials</span><span class="err">\</span><span class="s">/v1"</span><span class="p">,</span>
+          <span class="s">"https:</span><span class="err">\</span><span class="s">/</span><span class="err">\</span><span class="s">/coov.io</span><span class="err">\</span><span class="s">/docs</span><span class="err">\</span><span class="s">/v1</span><span class="err">\</span><span class="s">/vc</span><span class="err">\</span><span class="s">/personal"</span>
+        <span class="p">],</span>
+        <span class="s">"credential_subject"</span> <span class="p">:</span> <span class="p">{</span>
+          <span class="s">"name"</span> <span class="p">:</span> <span class="s">"김준형"</span>
+        <span class="p">},</span>
+        <span class="s">"type"</span> <span class="p">:</span> <span class="p">[</span>
+          <span class="s">"VerifiableCredential"</span><span class="p">,</span>
+          <span class="s">"Personal"</span>
+        <span class="p">]</span>
+      <span class="p">}</span>
+    <span class="p">},</span>
+    <span class="s">"signer"</span> <span class="p">:</span> <span class="p">{</span>
+      <span class="s">"controller"</span> <span class="p">:</span> <span class="s">"did:infra:01:PUB_K1_6WGrvnuG7xFxCFA4dPrefh93HUdG7d1fjUQNsZXQ6JfRC6G3ZC"</span><span class="p">,</span>
+      <span class="s">"id"</span> <span class="p">:</span> <span class="s">"did:infra:01:PUB_K1_6WGrvnuG7xFxCFA4dPrefh93HUdG7d1fjUQNsZXQ6JfRC6G3ZC#controller"</span><span class="p">,</span>
+      <span class="s">"public_key_hex"</span> <span class="p">:</span> <span class="s">"02d4f30f6b31a7eb007642cf5e7d7eb12a3db7234cab7da2e84ee78726eb4e3aee"</span><span class="p">,</span>
+      <span class="s">"type"</span> <span class="p">:</span> <span class="s">"EcdsaSecp256k1VerificationKey2019"</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+
+</code></pre>
+<h3 id='create-and-verify-verifiable-presentation-jwt' class='heading'>Create And Verify Verifiable Presentation JWT</h3>
+<pre class="highlight swift"><code>   <span class="k">let</span> <span class="nv">idConfig</span><span class="p">:</span> <span class="kt">IdConfiguration</span> <span class="o">=</span>
+    <span class="kt">IdConfiguration</span><span class="p">(</span>
+      <span class="nv">did</span><span class="p">:</span> <span class="s">"did:infra:01:PUB_K1_6bHxkmnSJQCD1AA5cARqsXDGUWY5ScVxtkwdb71quQVJ5E1JTH"</span><span class="p">,</span>
+      <span class="nv">didOwnerPrivateKey</span><span class="p">:</span><span class="s">"PVT_K1_5K9H1nzqyBAmuuvWCyVgsFciVsiSike1L38WG6Y6LjcssBmNpvT"</span><span class="p">,</span> <span class="nv">networkId</span><span class="p">:</span> <span class="s">"01"</span><span class="p">,</span>
+      <span class="nv">registryContract</span><span class="p">:</span> <span class="s">"infradidregi"</span><span class="p">,</span>
+      <span class="nv">rpcEndpoint</span><span class="p">:</span> <span class="s">"https://api.testnet.infrablockchain.com"</span><span class="p">,</span>
+      <span class="nv">jwtSigner</span><span class="p">:</span> <span class="kc">nil</span><span class="p">,</span>
+      <span class="nv">txfeePayAccount</span><span class="p">:</span> <span class="s">"txfeepayeraa"</span><span class="p">,</span>
+      <span class="nv">txfeePayerPrivateKey</span><span class="p">:</span><span class="s">"TXFEE_PAYER_PRIVATE_KEY"</span><span class="p">,</span> <span class="nv">pubKeyDidSignDataPrefix</span><span class="p">:</span> <span class="kc">nil</span><span class="p">)</span>
+
+   <span class="k">let</span> <span class="nv">infraDidResolver</span> <span class="o">=</span> <span class="nf">getResolver</span><span class="p">(</span><span class="nv">options</span><span class="p">:</span> <span class="kt">MultiNetworkConfiguration</span><span class="p">(</span><span class="nv">networks</span><span class="p">:</span> <span class="p">[</span><span class="kt">NetworkConfiguration</span><span class="p">(</span><span class="nv">networkId</span><span class="p">:</span> <span class="s">"01"</span><span class="p">,</span> <span class="nv">registryContract</span><span class="p">:</span> <span class="s">"fmapkumrotfc"</span><span class="p">,</span>                                                                                  <span class="nv">rpcEndpoint</span><span class="p">:</span> <span class="s">"https://api.testnet.eos.io"</span><span class="p">)],</span> <span class="nv">noRevocationCheck</span><span class="p">:</span> <span class="kc">false</span><span class="p">))</span>
+
+   <span class="k">let</span> <span class="nv">didResolver</span> <span class="o">=</span> <span class="kt">Resolver</span><span class="p">(</span><span class="nv">registry</span><span class="p">:</span> <span class="kt">ResolverRegistry</span><span class="p">(</span><span class="nv">methodName</span><span class="p">:</span> <span class="n">infraDidResolver</span><span class="p">),</span> <span class="nv">options</span><span class="p">:</span> <span class="kt">ResolverOptions</span><span class="p">(</span><span class="nv">cache</span><span class="p">:</span> <span class="kt">ResolverOptionsType</span><span class="o">.</span><span class="nf">bool</span><span class="p">(</span><span class="kc">true</span><span class="p">),</span>                                                                                                                              <span class="nv">legacyResolver</span><span class="p">:</span> <span class="kc">nil</span><span class="p">))</span>
+
+    <span class="k">let</span> <span class="nv">didApi</span> <span class="o">=</span> <span class="kt">InfraDIDConstructor</span><span class="p">(</span><span class="nv">config</span><span class="p">:</span> <span class="n">idConfig</span><span class="p">)</span>
+    <span class="k">let</span> <span class="nv">formatter</span> <span class="o">=</span> <span class="kt">ISO8601DateFormatter</span><span class="o">.</span><span class="nf">init</span><span class="p">()</span>
+    <span class="k">let</span> <span class="nv">holder</span> <span class="o">=</span> <span class="n">didApi</span><span class="o">.</span><span class="nf">getJWTIssuer</span><span class="p">()</span>
+    <span class="k">let</span> <span class="nv">payload</span> <span class="o">=</span> <span class="kt">PresentationPayload</span><span class="p">(</span><span class="nv">context</span><span class="p">:</span> <span class="p">[</span><span class="s">"https://www.w3.org/2018/credentials/v1"</span><span class="p">],</span> <span class="nv">type</span><span class="p">:</span> <span class="p">[</span><span class="s">"VerifiablePresentation"</span><span class="p">],</span> 
+    <span class="nv">verifiableCredential</span><span class="p">:</span>                     <span class="kt">VerifiableCredentialType</span><span class="o">.</span><span class="nf">string</span><span class="p">([</span><span class="s">"eyJhbGciOiJFUzI1NksiLCJ0eXAiOiJKV1QifQ.eyJ2YyI6eyJpZCI6ImRpZDppbmZyYTowMTpQVUJfSzFfNWt6TVA0ZVYzRDRRU0tLNWhoWWpYWW53aVJBVjVzaGsyam5oclFCWnFUQndHUzZ5VTciLCJAY29udGV4dCI6WyJodHRwczovL3d3dy53My5vcmcvMjAxOC9jcmVkZW50aWFscy92MSIsImh0dHBzOi8vY29vdi5pby9kb2NzL3YxL3ZjL3BlcnNvbmFsIl0sInR5cGUiOlsiVmVyaWZpYWJsZUNyZWRlbnRpYWwiLCJQZXJzb25hbCJdLCJjcmVkZW50aWFsU3ViamVjdCI6eyJuYW1lIjoi6rmA7KSA7ZiVIn19LCJzdWIiOiJkaWQ6aW5mcmE6MDE6UFVCX0sxXzZEOUhXaXFTcXVxdE1tVlU4UHJpdUQ1NjJQeEE0Y2ZNM251N1RtVUU5VVg5ODRmam9zIiwibmJmIjoxNjI3NTM3MjAyLCJpc3MiOiJkaWQ6aW5mcmE6MDE6UFVCX0sxXzZXR3J2bnVHN3hGeENGQTRkUHJlZmg5M0hVZEc3ZDFmalVRTnNaWFE2SmZSQzZHM1pDIn0.vOS-JvMZOQAxsnd8-IeIuwGtK5q0QEHEFxF2hUuLpBIE24M8TQZgp3E0Hgniy2bI6_ZfIa5jlG3_9r_ce-Fryw"</span><span class="p">]),</span> 
+    <span class="nv">holder</span><span class="p">:</span> <span class="n">did</span><span class="p">,</span> <span class="nv">id</span><span class="p">:</span> <span class="kc">nil</span><span class="p">,</span> <span class="nv">verifier</span><span class="p">:</span> <span class="p">[</span><span class="s">"did:infra:01:PUB_K1_5TaEgpVur391dimVnFCDHB122DXYBbwWdKUpEJCNv3ko1KMYwz"</span><span class="p">],</span> <span class="nv">issuanceDate</span><span class="p">:</span> <span class="n">formatter</span><span class="o">.</span><span class="nf">string</span><span class="p">(</span><span class="nv">from</span><span class="p">:</span> <span class="kt">Date</span><span class="o">.</span><span class="n">now</span><span class="p">),</span>         <span class="nv">expirationDate</span><span class="p">:</span> <span class="n">formatter</span><span class="o">.</span><span class="nf">string</span><span class="p">(</span><span class="nv">from</span><span class="p">:</span> <span class="kt">Date</span><span class="p">(</span><span class="nv">timeIntervalSince1970</span><span class="p">:</span> <span class="p">(</span><span class="kt">Double</span><span class="p">(</span><span class="kt">Date</span><span class="o">.</span><span class="n">now</span><span class="o">.</span><span class="n">timeIntervalSince1970</span><span class="p">)</span> <span class="o">+</span> <span class="mf">10*60*</span><span class="mi">1000</span><span class="p">))))</span>
+
+    <span class="kt">DispatchQueue</span><span class="o">.</span><span class="nf">global</span><span class="p">()</span><span class="o">.</span><span class="k">async</span> <span class="p">{</span>
+      <span class="k">let</span> <span class="nv">vp</span> <span class="o">=</span> <span class="nf">createVerifiablePresentationJwt</span><span class="p">(</span><span class="nv">payload</span><span class="p">:</span> <span class="n">payload</span><span class="p">,</span> <span class="nv">holder</span><span class="p">:</span> <span class="n">holder</span><span class="p">)</span>
+
+      <span class="k">let</span> <span class="nv">vpVerified</span> <span class="o">=</span> <span class="nf">verifyPresentation</span><span class="p">(</span><span class="nv">presentation</span><span class="p">:</span> <span class="n">vp</span><span class="p">,</span> <span class="nv">resolver</span><span class="p">:</span> <span class="n">didResolver</span><span class="p">,</span> <span class="nv">options</span><span class="p">:</span> 
+    <span class="kt">PresentationOptions</span><span class="p">(</span><span class="nv">audience</span><span class="p">:</span>                                                                                                                               <span class="s">"did:infra:01:PUB_K1_5TaEgpVur391dimVnFCDHB122DXYBbwWdKUpEJCNv3ko1KMYwz"</span><span class="p">,</span> <span class="nv">vcValidateFlag</span><span class="p">:</span> <span class="kc">true</span><span class="p">))</span>
+    <span class="p">}</span>
+
+
+    <span class="nf">print</span><span class="p">(</span><span class="n">vpVerified</span><span class="p">)</span>
+</code></pre>
+
+<p>Verified Presentation Result</p>
+<pre class="highlight swift"><code>   <span class="p">{</span>
+  <span class="s">"verifiable_credentials"</span> <span class="p">:</span> <span class="p">[</span>
+    <span class="p">{</span>
+      <span class="s">"verifiable_credential"</span> <span class="p">:</span> <span class="p">{</span>
+        <span class="s">"@context"</span> <span class="p">:</span> <span class="p">[</span>
+          <span class="s">"https:</span><span class="err">\</span><span class="s">/</span><span class="err">\</span><span class="s">/www.w3.org</span><span class="err">\</span><span class="s">/2018</span><span class="err">\</span><span class="s">/credentials</span><span class="err">\</span><span class="s">/v1"</span><span class="p">,</span>
+          <span class="s">"https:</span><span class="err">\</span><span class="s">/</span><span class="err">\</span><span class="s">/coov.io</span><span class="err">\</span><span class="s">/docs</span><span class="err">\</span><span class="s">/v1</span><span class="err">\</span><span class="s">/vc</span><span class="err">\</span><span class="s">/personal"</span>
+        <span class="p">],</span>
+        <span class="s">"credential_status"</span> <span class="p">:</span> <span class="p">{</span>
+          <span class="s">"id"</span> <span class="p">:</span> <span class="s">""</span><span class="p">,</span>
+          <span class="s">"type"</span> <span class="p">:</span> <span class="s">""</span>
+        <span class="p">},</span>
+        <span class="s">"credential_subject"</span> <span class="p">:</span> <span class="p">{</span>
+          <span class="s">"name"</span> <span class="p">:</span> <span class="s">"김준형"</span>
+        <span class="p">},</span>
+        <span class="s">"issuance_date"</span> <span class="p">:</span> <span class="s">"2021-07-29T05:40:02Z"</span><span class="p">,</span>
+        <span class="s">"issuer"</span> <span class="p">:</span> <span class="p">{</span>
+          <span class="s">"id"</span> <span class="p">:</span> <span class="s">"did:infra:01:PUB_K1_6WGrvnuG7xFxCFA4dPrefh93HUdG7d1fjUQNsZXQ6JfRC6G3ZC"</span>
+        <span class="p">},</span>
+        <span class="s">"proof"</span> <span class="p">:</span> <span class="p">{</span>
+          <span class="s">"jwt"</span> <span class="p">:</span> <span class="s">"eyJhbGciOiJFUzI1NksiLCJ0eXAiOiJKV1QifQ.eyJ2YyI6eyJpZCI6ImRpZDppbmZyYTowMTpQVUJfSzFfNWt6TVA0ZVYzRDRRU0tLNWhoWWpYWW53aVJBVjVzaGsyam5oclFCWnFUQndHUzZ5VTciLCJAY29udGV4dCI6WyJodHRwczovL3d3dy53My5vcmcvMjAxOC9jcmVkZW50aWFscy92MSIsImh0dHBzOi8vY29vdi5pby9kb2NzL3YxL3ZjL3BlcnNvbmFsIl0sInR5cGUiOlsiVmVyaWZpYWJsZUNyZWRlbnRpYWwiLCJQZXJzb25hbCJdLCJjcmVkZW50aWFsU3ViamVjdCI6eyJuYW1lIjoi6rmA7KSA7ZiVIn19LCJzdWIiOiJkaWQ6aW5mcmE6MDE6UFVCX0sxXzZEOUhXaXFTcXVxdE1tVlU4UHJpdUQ1NjJQeEE0Y2ZNM251N1RtVUU5VVg5ODRmam9zIiwibmJmIjoxNjI3NTM3MjAyLCJpc3MiOiJkaWQ6aW5mcmE6MDE6UFVCX0sxXzZXR3J2bnVHN3hGeENGQTRkUHJlZmg5M0hVZEc3ZDFmalVRTnNaWFE2SmZSQzZHM1pDIn0.vOS-JvMZOQAxsnd8-IeIuwGtK5q0QEHEFxF2hUuLpBIE24M8TQZgp3E0Hgniy2bI6_ZfIa5jlG3_9r_ce-Fryw"</span><span class="p">,</span>
+          <span class="s">"type"</span> <span class="p">:</span> <span class="s">"JwtProof2020"</span>
+        <span class="p">},</span>
+        <span class="s">"type"</span> <span class="p">:</span> <span class="p">[</span>
+          <span class="s">"VerifiableCredential"</span><span class="p">,</span>
+          <span class="s">"Personal"</span>
+        <span class="p">]</span>
+      <span class="p">},</span>
+      <span class="s">"verified_jwt"</span> <span class="p">:</span> <span class="p">{</span>
+        <span class="s">"did_resolution_result"</span> <span class="p">:</span> <span class="p">{</span>
+          <span class="s">"did_document"</span> <span class="p">:</span> <span class="p">{</span>
+            <span class="s">"@context"</span> <span class="p">:</span> <span class="p">[</span>
+              <span class="s">"https:</span><span class="err">\</span><span class="s">/</span><span class="err">\</span><span class="s">/www.w3.org</span><span class="err">\</span><span class="s">/ns</span><span class="err">\</span><span class="s">/did</span><span class="err">\</span><span class="s">/v1"</span>
+            <span class="p">],</span>
+            <span class="s">"assertion_method"</span> <span class="p">:</span> <span class="p">[</span>
+
+            <span class="p">],</span>
+            <span class="s">"authentication"</span> <span class="p">:</span> <span class="p">[</span>
+              <span class="s">"did:infra:01:PUB_K1_6WGrvnuG7xFxCFA4dPrefh93HUdG7d1fjUQNsZXQ6JfRC6G3ZC#controller"</span>
+            <span class="p">],</span>
+            <span class="s">"capability_delegation"</span> <span class="p">:</span> <span class="p">[</span>
+
+            <span class="p">],</span>
+            <span class="s">"capability_invocation"</span> <span class="p">:</span> <span class="p">[</span>
+
+            <span class="p">],</span>
+            <span class="s">"id"</span> <span class="p">:</span> <span class="s">"did:infra:01:PUB_K1_6WGrvnuG7xFxCFA4dPrefh93HUdG7d1fjUQNsZXQ6JfRC6G3ZC"</span><span class="p">,</span>
+            <span class="s">"verification_method"</span> <span class="p">:</span> <span class="p">[</span>
+              <span class="p">{</span>
+                <span class="s">"controller"</span> <span class="p">:</span> <span class="s">"did:infra:01:PUB_K1_6WGrvnuG7xFxCFA4dPrefh93HUdG7d1fjUQNsZXQ6JfRC6G3ZC"</span><span class="p">,</span>
+                <span class="s">"id"</span> <span class="p">:</span> <span class="s">"did:infra:01:PUB_K1_6WGrvnuG7xFxCFA4dPrefh93HUdG7d1fjUQNsZXQ6JfRC6G3ZC#controller"</span><span class="p">,</span>
+                <span class="s">"public_key_hex"</span> <span class="p">:</span> <span class="s">"02d4f30f6b31a7eb007642cf5e7d7eb12a3db7234cab7da2e84ee78726eb4e3aee"</span><span class="p">,</span>
+                <span class="s">"type"</span> <span class="p">:</span> <span class="s">"EcdsaSecp256k1VerificationKey2019"</span>
+              <span class="p">}</span>
+            <span class="p">]</span>
+          <span class="p">},</span>
+          <span class="s">"did_document_metadata"</span> <span class="p">:</span> <span class="p">{</span>
+            <span class="s">"deactivated"</span> <span class="p">:</span> <span class="kc">true</span>
+          <span class="p">},</span>
+          <span class="s">"did_resolution_metadata"</span> <span class="p">:</span> <span class="p">{</span>
+            <span class="s">"content_type"</span> <span class="p">:</span> <span class="s">"application</span><span class="err">\</span><span class="s">/did+ld+json"</span>
+          <span class="p">}</span>
+        <span class="p">},</span>
+        <span class="s">"issuer"</span> <span class="p">:</span> <span class="s">"did:infra:01:PUB_K1_6WGrvnuG7xFxCFA4dPrefh93HUdG7d1fjUQNsZXQ6JfRC6G3ZC"</span><span class="p">,</span>
+        <span class="s">"jwt"</span> <span class="p">:</span> <span class="s">"eyJhbGciOiJFUzI1NksiLCJ0eXAiOiJKV1QifQ.eyJ2YyI6eyJpZCI6ImRpZDppbmZyYTowMTpQVUJfSzFfNWt6TVA0ZVYzRDRRU0tLNWhoWWpYWW53aVJBVjVzaGsyam5oclFCWnFUQndHUzZ5VTciLCJAY29udGV4dCI6WyJodHRwczovL3d3dy53My5vcmcvMjAxOC9jcmVkZW50aWFscy92MSIsImh0dHBzOi8vY29vdi5pby9kb2NzL3YxL3ZjL3BlcnNvbmFsIl0sInR5cGUiOlsiVmVyaWZpYWJsZUNyZWRlbnRpYWwiLCJQZXJzb25hbCJdLCJjcmVkZW50aWFsU3ViamVjdCI6eyJuYW1lIjoi6rmA7KSA7ZiVIn19LCJzdWIiOiJkaWQ6aW5mcmE6MDE6UFVCX0sxXzZEOUhXaXFTcXVxdE1tVlU4UHJpdUQ1NjJQeEE0Y2ZNM251N1RtVUU5VVg5ODRmam9zIiwibmJmIjoxNjI3NTM3MjAyLCJpc3MiOiJkaWQ6aW5mcmE6MDE6UFVCX0sxXzZXR3J2bnVHN3hGeENGQTRkUHJlZmg5M0hVZEc3ZDFmalVRTnNaWFE2SmZSQzZHM1pDIn0.vOS-JvMZOQAxsnd8-IeIuwGtK5q0QEHEFxF2hUuLpBIE24M8TQZgp3E0Hgniy2bI6_ZfIa5jlG3_9r_ce-Fryw"</span><span class="p">,</span>
+        <span class="s">"payload"</span> <span class="p">:</span> <span class="p">{</span>
+          <span class="s">"iss"</span> <span class="p">:</span> <span class="s">"did:infra:01:PUB_K1_6WGrvnuG7xFxCFA4dPrefh93HUdG7d1fjUQNsZXQ6JfRC6G3ZC"</span><span class="p">,</span>
+          <span class="s">"nbf"</span> <span class="p">:</span> <span class="s">"2021-07-29T05:40:02.000"</span><span class="p">,</span>
+          <span class="s">"sub"</span> <span class="p">:</span> <span class="s">"did:infra:01:PUB_K1_6D9HWiqSquqtMmVU8PriuD562PxA4cfM3nu7TmUE9UX984fjos"</span><span class="p">,</span>
+          <span class="s">"vc"</span> <span class="p">:</span> <span class="p">{</span>
+            <span class="s">"@context"</span> <span class="p">:</span> <span class="p">[</span>
+              <span class="s">"https:</span><span class="err">\</span><span class="s">/</span><span class="err">\</span><span class="s">/www.w3.org</span><span class="err">\</span><span class="s">/2018</span><span class="err">\</span><span class="s">/credentials</span><span class="err">\</span><span class="s">/v1"</span><span class="p">,</span>
+              <span class="s">"https:</span><span class="err">\</span><span class="s">/</span><span class="err">\</span><span class="s">/coov.io</span><span class="err">\</span><span class="s">/docs</span><span class="err">\</span><span class="s">/v1</span><span class="err">\</span><span class="s">/vc</span><span class="err">\</span><span class="s">/personal"</span>
+            <span class="p">],</span>
+            <span class="s">"credential_subject"</span> <span class="p">:</span> <span class="p">{</span>
+              <span class="s">"name"</span> <span class="p">:</span> <span class="s">"김준형"</span>
+            <span class="p">},</span>
+            <span class="s">"type"</span> <span class="p">:</span> <span class="p">[</span>
+              <span class="s">"VerifiableCredential"</span><span class="p">,</span>
+              <span class="s">"Personal"</span>
+            <span class="p">]</span>
+          <span class="p">}</span>
+        <span class="p">},</span>
+        <span class="s">"signer"</span> <span class="p">:</span> <span class="p">{</span>
+          <span class="s">"controller"</span> <span class="p">:</span> <span class="s">"did:infra:01:PUB_K1_6WGrvnuG7xFxCFA4dPrefh93HUdG7d1fjUQNsZXQ6JfRC6G3ZC"</span><span class="p">,</span>
+          <span class="s">"id"</span> <span class="p">:</span> <span class="s">"did:infra:01:PUB_K1_6WGrvnuG7xFxCFA4dPrefh93HUdG7d1fjUQNsZXQ6JfRC6G3ZC#controller"</span><span class="p">,</span>
+          <span class="s">"public_key_hex"</span> <span class="p">:</span> <span class="s">"02d4f30f6b31a7eb007642cf5e7d7eb12a3db7234cab7da2e84ee78726eb4e3aee"</span><span class="p">,</span>
+          <span class="s">"type"</span> <span class="p">:</span> <span class="s">"EcdsaSecp256k1VerificationKey2019"</span>
+        <span class="p">}</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+  <span class="p">],</span>
+  <span class="s">"verifiable_presentation"</span> <span class="p">:</span> <span class="p">{</span>
+    <span class="s">"context"</span> <span class="p">:</span> <span class="p">[</span>
+      <span class="s">"https:</span><span class="err">\</span><span class="s">/</span><span class="err">\</span><span class="s">/www.w3.org</span><span class="err">\</span><span class="s">/2018</span><span class="err">\</span><span class="s">/credentials</span><span class="err">\</span><span class="s">/v1"</span>
+    <span class="p">],</span>
+    <span class="s">"expiration_date"</span> <span class="p">:</span> <span class="s">"2021-12-30T02:52:13Z"</span><span class="p">,</span>
+    <span class="s">"holder"</span> <span class="p">:</span> <span class="s">"did:infra:01:PUB_K1_8emfyTuZvjpCCpsfuzaLZgDvSyvcycoe29EEDH8B8Y6AAU6AV9"</span><span class="p">,</span>
+    <span class="s">"issuance_date"</span> <span class="p">:</span> <span class="s">"2021-12-30T02:42:13Z"</span><span class="p">,</span>
+    <span class="s">"proof"</span> <span class="p">:</span> <span class="p">{</span>
+      <span class="s">"jwt"</span> <span class="p">:</span> <span class="s">"eyJhbGciOiJFUzI1NksiLCJ0eXAiOiJKV1QifQ.eyJuYmYiOjE2NDA4MzIxMzMsImV4cCI6MTY0MDgzMjczMywiaXNzIjoiZGlkOmluZnJhOjAxOlBVQl9LMV84ZW1meVR1WnZqcENDcHNmdXphTFpnRHZTeXZjeWNvZTI5RUVESDhCOFk2QUFVNkFWOSIsInZwIjp7IkBjb250ZXh0IjpbImh0dHBzOlwvXC93d3cudzMub3JnXC8yMDE4XC9jcmVkZW50aWFsc1wvdjEiXSwidHlwZSI6WyJWZXJpZmlhYmxlUHJlc2VudGF0aW9uIl0sInZlcmlmaWFibGVDcmVkZW50aWFsIjpbImV5SmhiR2NpT2lKRlV6STFOa3NpTENKMGVYQWlPaUpLVjFRaWZRLmV5SjJZeUk2ZXlKcFpDSTZJbVJwWkRwcGJtWnlZVG93TVRwUVZVSmZTekZmTld0NlRWQTBaVll6UkRSUlUwdExOV2hvV1dwWVdXNTNhVkpCVmpWemFHc3lhbTVvY2xGQ1duRlVRbmRIVXpaNVZUY2lMQ0pBWTI5dWRHVjRkQ0k2V3lKb2RIUndjem92TDNkM2R5NTNNeTV2Y21jdk1qQXhPQzlqY21Wa1pXNTBhV0ZzY3k5Mk1TSXNJbWgwZEhCek9pOHZZMjl2ZGk1cGJ5OWtiMk56TDNZeEwzWmpMM0JsY25OdmJtRnNJbDBzSW5SNWNHVWlPbHNpVm1WeWFXWnBZV0pzWlVOeVpXUmxiblJwWVd3aUxDSlFaWEp6YjI1aGJDSmRMQ0pqY21Wa1pXNTBhV0ZzVTNWaWFtVmpkQ0k2ZXlKdVlXMWxJam9pNnJtQTdLU0E3WmlWSW4xOUxDSnpkV0lpT2lKa2FXUTZhVzVtY21FNk1ERTZVRlZDWDBzeFh6WkVPVWhYYVhGVGNYVnhkRTF0VmxVNFVISnBkVVExTmpKUWVFRTBZMlpOTTI1MU4xUnRWVVU1VlZnNU9EUm1hbTl6SWl3aWJtSm1Jam94TmpJM05UTTNNakF5TENKcGMzTWlPaUprYVdRNmFXNW1jbUU2TURFNlVGVkNYMHN4WHpaWFIzSjJiblZITjNoR2VFTkdRVFJrVUhKbFptZzVNMGhWWkVjM1pERm1hbFZSVG5OYVdGRTJTbVpTUXpaSE0xcERJbjAudk9TLUp2TVpPUUF4c25kOC1JZUl1d0d0SzVxMFFFSEVGeEYyaFV1THBCSUUyNE04VFFaZ3AzRTBIZ25peTJiSTZfWmZJYTVqbEczXzlyX2NlLUZyeXciXX0sImF1ZCI6WyJkaWQ6aW5mcmE6MDE6UFVCX0sxXzVUYUVncFZ1cjM5MWRpbVZuRkNESEIxMjJEWFlCYndXZEtVcEVKQ052M2tvMUtNWXd6Il0sImlhdCI6MTY0MDgzMjEzNC4wMzE4MjUxfQ.Km4Qck2hr-z_j8kKJEqE0mfrpn4dMZEQKQHmbroNwfRsbpe7oOnWz3o1gwCzhqiwsZWCS65xRYx2JPfshUFU_g"</span><span class="p">,</span>
+      <span class="s">"type"</span> <span class="p">:</span> <span class="s">"JwtProof2020"</span>
+    <span class="p">},</span>
+    <span class="s">"type"</span> <span class="p">:</span> <span class="p">[</span>
+      <span class="s">"VerifiablePresentation"</span>
+    <span class="p">],</span>
+    <span class="s">"verifiable_credential"</span> <span class="p">:</span> <span class="p">[</span>
+      <span class="p">{</span>
+        <span class="s">"@context"</span> <span class="p">:</span> <span class="p">[</span>
+          <span class="s">"https:</span><span class="err">\</span><span class="s">/</span><span class="err">\</span><span class="s">/www.w3.org</span><span class="err">\</span><span class="s">/2018</span><span class="err">\</span><span class="s">/credentials</span><span class="err">\</span><span class="s">/v1"</span><span class="p">,</span>
+          <span class="s">"https:</span><span class="err">\</span><span class="s">/</span><span class="err">\</span><span class="s">/coov.io</span><span class="err">\</span><span class="s">/docs</span><span class="err">\</span><span class="s">/v1</span><span class="err">\</span><span class="s">/vc</span><span class="err">\</span><span class="s">/personal"</span>
+        <span class="p">],</span>
+        <span class="s">"credential_status"</span> <span class="p">:</span> <span class="p">{</span>
+          <span class="s">"id"</span> <span class="p">:</span> <span class="s">""</span><span class="p">,</span>
+          <span class="s">"type"</span> <span class="p">:</span> <span class="s">""</span>
+        <span class="p">},</span>
+        <span class="s">"credential_subject"</span> <span class="p">:</span> <span class="p">{</span>
+          <span class="s">"name"</span> <span class="p">:</span> <span class="s">"김준형"</span>
+        <span class="p">},</span>
+        <span class="s">"issuance_date"</span> <span class="p">:</span> <span class="s">"2021-07-29T05:40:02Z"</span><span class="p">,</span>
+        <span class="s">"issuer"</span> <span class="p">:</span> <span class="p">{</span>
+          <span class="s">"id"</span> <span class="p">:</span> <span class="s">"did:infra:01:PUB_K1_6WGrvnuG7xFxCFA4dPrefh93HUdG7d1fjUQNsZXQ6JfRC6G3ZC"</span>
+        <span class="p">},</span>
+        <span class="s">"proof"</span> <span class="p">:</span> <span class="p">{</span>
+          <span class="s">"jwt"</span> <span class="p">:</span> <span class="s">"eyJhbGciOiJFUzI1NksiLCJ0eXAiOiJKV1QifQ.eyJ2YyI6eyJpZCI6ImRpZDppbmZyYTowMTpQVUJfSzFfNWt6TVA0ZVYzRDRRU0tLNWhoWWpYWW53aVJBVjVzaGsyam5oclFCWnFUQndHUzZ5VTciLCJAY29udGV4dCI6WyJodHRwczovL3d3dy53My5vcmcvMjAxOC9jcmVkZW50aWFscy92MSIsImh0dHBzOi8vY29vdi5pby9kb2NzL3YxL3ZjL3BlcnNvbmFsIl0sInR5cGUiOlsiVmVyaWZpYWJsZUNyZWRlbnRpYWwiLCJQZXJzb25hbCJdLCJjcmVkZW50aWFsU3ViamVjdCI6eyJuYW1lIjoi6rmA7KSA7ZiVIn19LCJzdWIiOiJkaWQ6aW5mcmE6MDE6UFVCX0sxXzZEOUhXaXFTcXVxdE1tVlU4UHJpdUQ1NjJQeEE0Y2ZNM251N1RtVUU5VVg5ODRmam9zIiwibmJmIjoxNjI3NTM3MjAyLCJpc3MiOiJkaWQ6aW5mcmE6MDE6UFVCX0sxXzZXR3J2bnVHN3hGeENGQTRkUHJlZmg5M0hVZEc3ZDFmalVRTnNaWFE2SmZSQzZHM1pDIn0.vOS-JvMZOQAxsnd8-IeIuwGtK5q0QEHEFxF2hUuLpBIE24M8TQZgp3E0Hgniy2bI6_ZfIa5jlG3_9r_ce-Fryw"</span><span class="p">,</span>
+          <span class="s">"type"</span> <span class="p">:</span> <span class="s">"JwtProof2020"</span>
+        <span class="p">},</span>
+        <span class="s">"type"</span> <span class="p">:</span> <span class="p">[</span>
+          <span class="s">"VerifiableCredential"</span><span class="p">,</span>
+          <span class="s">"Personal"</span>
+        <span class="p">]</span>
+      <span class="p">}</span>
+    <span class="p">],</span>
+    <span class="s">"verifier"</span> <span class="p">:</span> <span class="p">[</span>
+      <span class="s">"did:infra:01:PUB_K1_5TaEgpVur391dimVnFCDHB122DXYBbwWdKUpEJCNv3ko1KMYwz"</span>
+    <span class="p">]</span>
+  <span class="p">},</span>
+  <span class="s">"verified_jwt"</span> <span class="p">:</span> <span class="p">{</span>
+    <span class="s">"did_resolution_result"</span> <span class="p">:</span> <span class="p">{</span>
+      <span class="s">"did_document"</span> <span class="p">:</span> <span class="p">{</span>
+        <span class="s">"@context"</span> <span class="p">:</span> <span class="p">[</span>
+          <span class="s">"https:</span><span class="err">\</span><span class="s">/</span><span class="err">\</span><span class="s">/www.w3.org</span><span class="err">\</span><span class="s">/ns</span><span class="err">\</span><span class="s">/did</span><span class="err">\</span><span class="s">/v1"</span>
+        <span class="p">],</span>
+        <span class="s">"assertion_method"</span> <span class="p">:</span> <span class="p">[</span>
+
+        <span class="p">],</span>
+        <span class="s">"authentication"</span> <span class="p">:</span> <span class="p">[</span>
+          <span class="s">"did:infra:01:PUB_K1_8emfyTuZvjpCCpsfuzaLZgDvSyvcycoe29EEDH8B8Y6AAU6AV9#controller"</span>
+        <span class="p">],</span>
+        <span class="s">"capability_delegation"</span> <span class="p">:</span> <span class="p">[</span>
+
+        <span class="p">],</span>
+        <span class="s">"capability_invocation"</span> <span class="p">:</span> <span class="p">[</span>
+
+        <span class="p">],</span>
+        <span class="s">"id"</span> <span class="p">:</span> <span class="s">"did:infra:01:PUB_K1_8emfyTuZvjpCCpsfuzaLZgDvSyvcycoe29EEDH8B8Y6AAU6AV9"</span><span class="p">,</span>
+        <span class="s">"verification_method"</span> <span class="p">:</span> <span class="p">[</span>
+          <span class="p">{</span>
+            <span class="s">"controller"</span> <span class="p">:</span> <span class="s">"did:infra:01:PUB_K1_8emfyTuZvjpCCpsfuzaLZgDvSyvcycoe29EEDH8B8Y6AAU6AV9"</span><span class="p">,</span>
+            <span class="s">"id"</span> <span class="p">:</span> <span class="s">"did:infra:01:PUB_K1_8emfyTuZvjpCCpsfuzaLZgDvSyvcycoe29EEDH8B8Y6AAU6AV9#controller"</span><span class="p">,</span>
+            <span class="s">"public_key_hex"</span> <span class="p">:</span> <span class="s">"03efa27144baf407514597efda0a3b56e607e79a5c2a314a66ec88764fc3655c7a"</span><span class="p">,</span>
+            <span class="s">"type"</span> <span class="p">:</span> <span class="s">"EcdsaSecp256k1VerificationKey2019"</span>
+          <span class="p">}</span>
+        <span class="p">]</span>
+      <span class="p">},</span>
+      <span class="s">"did_document_metadata"</span> <span class="p">:</span> <span class="p">{</span>
+        <span class="s">"deactivated"</span> <span class="p">:</span> <span class="kc">false</span>
+      <span class="p">},</span>
+      <span class="s">"did_resolution_metadata"</span> <span class="p">:</span> <span class="p">{</span>
+        <span class="s">"content_type"</span> <span class="p">:</span> <span class="s">"application</span><span class="err">\</span><span class="s">/did+ld+json"</span>
+      <span class="p">}</span>
+    <span class="p">},</span>
+    <span class="s">"issuer"</span> <span class="p">:</span> <span class="s">"did:infra:01:PUB_K1_8emfyTuZvjpCCpsfuzaLZgDvSyvcycoe29EEDH8B8Y6AAU6AV9"</span><span class="p">,</span>
+    <span class="s">"jwt"</span> <span class="p">:</span> <span class="s">"eyJhbGciOiJFUzI1NksiLCJ0eXAiOiJKV1QifQ.eyJuYmYiOjE2NDA4MzIxMzMsImV4cCI6MTY0MDgzMjczMywiaXNzIjoiZGlkOmluZnJhOjAxOlBVQl9LMV84ZW1meVR1WnZqcENDcHNmdXphTFpnRHZTeXZjeWNvZTI5RUVESDhCOFk2QUFVNkFWOSIsInZwIjp7IkBjb250ZXh0IjpbImh0dHBzOlwvXC93d3cudzMub3JnXC8yMDE4XC9jcmVkZW50aWFsc1wvdjEiXSwidHlwZSI6WyJWZXJpZmlhYmxlUHJlc2VudGF0aW9uIl0sInZlcmlmaWFibGVDcmVkZW50aWFsIjpbImV5SmhiR2NpT2lKRlV6STFOa3NpTENKMGVYQWlPaUpLVjFRaWZRLmV5SjJZeUk2ZXlKcFpDSTZJbVJwWkRwcGJtWnlZVG93TVRwUVZVSmZTekZmTld0NlRWQTBaVll6UkRSUlUwdExOV2hvV1dwWVdXNTNhVkpCVmpWemFHc3lhbTVvY2xGQ1duRlVRbmRIVXpaNVZUY2lMQ0pBWTI5dWRHVjRkQ0k2V3lKb2RIUndjem92TDNkM2R5NTNNeTV2Y21jdk1qQXhPQzlqY21Wa1pXNTBhV0ZzY3k5Mk1TSXNJbWgwZEhCek9pOHZZMjl2ZGk1cGJ5OWtiMk56TDNZeEwzWmpMM0JsY25OdmJtRnNJbDBzSW5SNWNHVWlPbHNpVm1WeWFXWnBZV0pzWlVOeVpXUmxiblJwWVd3aUxDSlFaWEp6YjI1aGJDSmRMQ0pqY21Wa1pXNTBhV0ZzVTNWaWFtVmpkQ0k2ZXlKdVlXMWxJam9pNnJtQTdLU0E3WmlWSW4xOUxDSnpkV0lpT2lKa2FXUTZhVzVtY21FNk1ERTZVRlZDWDBzeFh6WkVPVWhYYVhGVGNYVnhkRTF0VmxVNFVISnBkVVExTmpKUWVFRTBZMlpOTTI1MU4xUnRWVVU1VlZnNU9EUm1hbTl6SWl3aWJtSm1Jam94TmpJM05UTTNNakF5TENKcGMzTWlPaUprYVdRNmFXNW1jbUU2TURFNlVGVkNYMHN4WHpaWFIzSjJiblZITjNoR2VFTkdRVFJrVUhKbFptZzVNMGhWWkVjM1pERm1hbFZSVG5OYVdGRTJTbVpTUXpaSE0xcERJbjAudk9TLUp2TVpPUUF4c25kOC1JZUl1d0d0SzVxMFFFSEVGeEYyaFV1THBCSUUyNE04VFFaZ3AzRTBIZ25peTJiSTZfWmZJYTVqbEczXzlyX2NlLUZyeXciXX0sImF1ZCI6WyJkaWQ6aW5mcmE6MDE6UFVCX0sxXzVUYUVncFZ1cjM5MWRpbVZuRkNESEIxMjJEWFlCYndXZEtVcEVKQ052M2tvMUtNWXd6Il0sImlhdCI6MTY0MDgzMjEzNC4wMzE4MjUxfQ.Km4Qck2hr-z_j8kKJEqE0mfrpn4dMZEQKQHmbroNwfRsbpe7oOnWz3o1gwCzhqiwsZWCS65xRYx2JPfshUFU_g"</span><span class="p">,</span>
+    <span class="s">"payload"</span> <span class="p">:</span> <span class="p">{</span>
+      <span class="s">"aud"</span> <span class="p">:</span> <span class="p">[</span>
+        <span class="s">"did:infra:01:PUB_K1_5TaEgpVur391dimVnFCDHB122DXYBbwWdKUpEJCNv3ko1KMYwz"</span>
+      <span class="p">],</span>
+      <span class="s">"exp"</span> <span class="p">:</span> <span class="s">"2021-12-30T02:52:13.000"</span><span class="p">,</span>
+      <span class="s">"iat"</span> <span class="p">:</span> <span class="s">"2021-12-30T02:42:14.032"</span><span class="p">,</span>
+      <span class="s">"iss"</span> <span class="p">:</span> <span class="s">"did:infra:01:PUB_K1_8emfyTuZvjpCCpsfuzaLZgDvSyvcycoe29EEDH8B8Y6AAU6AV9"</span><span class="p">,</span>
+      <span class="s">"nbf"</span> <span class="p">:</span> <span class="s">"2021-12-30T02:42:13.000"</span><span class="p">,</span>
+      <span class="s">"vp"</span> <span class="p">:</span> <span class="p">{</span>
+        <span class="s">"@context"</span> <span class="p">:</span> <span class="p">[</span>
+          <span class="s">"https:</span><span class="err">\</span><span class="s">/</span><span class="err">\</span><span class="s">/www.w3.org</span><span class="err">\</span><span class="s">/2018</span><span class="err">\</span><span class="s">/credentials</span><span class="err">\</span><span class="s">/v1"</span>
+        <span class="p">],</span>
+        <span class="s">"type"</span> <span class="p">:</span> <span class="p">[</span>
+          <span class="s">"VerifiablePresentation"</span>
+        <span class="p">],</span>
+        <span class="s">"verifiable_credential"</span> <span class="p">:</span> <span class="p">[</span>
+          <span class="s">"eyJhbGciOiJFUzI1NksiLCJ0eXAiOiJKV1QifQ.eyJ2YyI6eyJpZCI6ImRpZDppbmZyYTowMTpQVUJfSzFfNWt6TVA0ZVYzRDRRU0tLNWhoWWpYWW53aVJBVjVzaGsyam5oclFCWnFUQndHUzZ5VTciLCJAY29udGV4dCI6WyJodHRwczovL3d3dy53My5vcmcvMjAxOC9jcmVkZW50aWFscy92MSIsImh0dHBzOi8vY29vdi5pby9kb2NzL3YxL3ZjL3BlcnNvbmFsIl0sInR5cGUiOlsiVmVyaWZpYWJsZUNyZWRlbnRpYWwiLCJQZXJzb25hbCJdLCJjcmVkZW50aWFsU3ViamVjdCI6eyJuYW1lIjoi6rmA7KSA7ZiVIn19LCJzdWIiOiJkaWQ6aW5mcmE6MDE6UFVCX0sxXzZEOUhXaXFTcXVxdE1tVlU4UHJpdUQ1NjJQeEE0Y2ZNM251N1RtVUU5VVg5ODRmam9zIiwibmJmIjoxNjI3NTM3MjAyLCJpc3MiOiJkaWQ6aW5mcmE6MDE6UFVCX0sxXzZXR3J2bnVHN3hGeENGQTRkUHJlZmg5M0hVZEc3ZDFmalVRTnNaWFE2SmZSQzZHM1pDIn0.vOS-JvMZOQAxsnd8-IeIuwGtK5q0QEHEFxF2hUuLpBIE24M8TQZgp3E0Hgniy2bI6_ZfIa5jlG3_9r_ce-Fryw"</span>
+        <span class="p">]</span>
+      <span class="p">}</span>
+    <span class="p">},</span>
+    <span class="s">"signer"</span> <span class="p">:</span> <span class="p">{</span>
+      <span class="s">"controller"</span> <span class="p">:</span> <span class="s">"did:infra:01:PUB_K1_8emfyTuZvjpCCpsfuzaLZgDvSyvcycoe29EEDH8B8Y6AAU6AV9"</span><span class="p">,</span>
+      <span class="s">"id"</span> <span class="p">:</span> <span class="s">"did:infra:01:PUB_K1_8emfyTuZvjpCCpsfuzaLZgDvSyvcycoe29EEDH8B8Y6AAU6AV9#controller"</span><span class="p">,</span>
+      <span class="s">"public_key_hex"</span> <span class="p">:</span> <span class="s">"03efa27144baf407514597efda0a3b56e607e79a5c2a314a66ec88764fc3655c7a"</span><span class="p">,</span>
+      <span class="s">"type"</span> <span class="p">:</span> <span class="s">"EcdsaSecp256k1VerificationKey2019"</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre>
+<h2 id='installation' class='heading'>Installation</h2>
+
+<!-- - **Using  [CocoaPods](https://cocoapods.org)**:
+
+    ```ruby
+    pod 'Then'
+    ```
+ -->
+
+<ul>
+<li><p><strong>Using <a href="https://swift.org/package-manager">Swift Package Manager</a></strong>:</p>
+<pre class="highlight swift"><code><span class="kd">import</span> <span class="kt">PackageDescription</span>
+
+<span class="k">let</span> <span class="nv">package</span> <span class="o">=</span> <span class="kt">Package</span><span class="p">(</span>
+  <span class="nv">name</span><span class="p">:</span> <span class="s">"MyAwesomeApp"</span><span class="p">,</span>
+  <span class="nv">dependencies</span><span class="p">:</span> <span class="p">[</span>
+    <span class="o">.</span><span class="kt">Package</span><span class="p">(</span><span class="nv">url</span><span class="p">:</span> <span class="s">"https://github.com/InfraBlockchain/Infra-DID-Swift"</span><span class="p">,</span> <span class="nv">branch</span><span class="p">:</span> <span class="s">"master"</span><span class="p">)</span>
+  <span class="p">]</span>
+<span class="p">)</span>
+</code></pre></li>
+</ul>
+<h2 id='api-documentation' class='heading'>API Documentation</h2>
+
+<p>For more information visit our [API reference].</p>
+<h2 id='license' class='heading'>License</h2>
+
+<p><strong>Infra-DID-Swift</strong> is under MIT license. See the <a href="LICENSE">LICENSE</a> file for more info.</p>
 
           </section>
         </section>
