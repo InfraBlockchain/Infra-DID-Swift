@@ -71,24 +71,34 @@ let idConfig: IdConfiguration =
 Set Pub-Key DID Attribute
 ```swift
    let didApi = InfraDIDConstructor(config: idConfig)
-   didApi.actionPubKeyDID(actionName: .set, key: "svc/MessagingService", value: "https://infradid.com/pk/3/mysvcr90", newKey: "")
+   DispatchQueue.global().async {
+      didApi.actionPubKeyDID(actionName: .set, key: "svc/MessagingService", value: "https://infradid.com/pk/3/mysvcr90", newKey: "")
+   }
+   
 ```
 Revoke Pub-Key DID Attribute
 ```swift
    let didApi = InfraDIDConstructor(config: idConfig)
-   didApi.actionPubKeyDID(actionName: .revoke)
+   DispatchQueue.global().async {
+      didApi.actionPubKeyDID(actionName: .revoke)
+   }
+   
 ```
 
 Clear Pub-Key DID Attribute
 ```swift
    let didApi = InfraDIDConstructor(config: idConfig)
-   didApi.actionPubKeyDID(actionName: .clear)
+   DispatchQueue.global().async {
+      didApi.actionPubKeyDID(actionName: .clear)
+   }
 ```
 
 Change Pub-Key DID Owner Key
 ```swift
    let didApi = InfraDIDConstructor(config: idConfig)
-   didApi.actionPubKeyDID(actionName: .changeOwner, key: "", value: "", newKey: "PUB_K1_584qGNgteYFppoisbDz6vBFArrw3As8qeeRCekLepG4pJVrhJt")
+   DispatchQueue.global().async {
+      didApi.actionPubKeyDID(actionName: .changeOwner, key: "", value: "", newKey: "PUB_K1_584qGNgteYFppoisbDz6vBFArrw3As8qeeRCekLepG4pJVrhJt")
+   }
 ```
 
 Set Account-based DID Owner Key
@@ -104,7 +114,9 @@ Set Account-based DID Owner Key
       txfeePayerPrivateKey:"TXFEE_PAYER_PRIVATE_KEY", pubKeyDidSignDataPrefix: nil)
 
    let didApi = InfraDIDConstructor(config: idConfig)
-   didApi.actionPubKeyDID(actionName: .setAccount, key: "svc/MessagingService", value: "https://infradid.com/acc/1/mysvcr7", newKey: "")
+   DispatchQueue.global().async {
+     didApi.actionPubKeyDID(actionName: .setAccount, key: "svc/MessagingService", value: "https://infradid.com/acc/1/mysvcr7", newKey: "")
+   }
 ```
 
 ### DID Resolver Getting
