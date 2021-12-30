@@ -33,19 +33,15 @@ class ECSigner: SignerAlgorithm {
     self.curve = curve
   }
   
-  /** Method sign
+  /**
    
-   - Parameter with:
-      - header
-      - claims
+   send utf8 encoded `header.claims` to BlueECC for signing
    
-   - Throws:
-      1) JWTError.invalidJWTString
-   
-   - Returns: Signed JwtString
+   - Parameter header - JWT Header
+   - Parameter claims - JWT Claims
    
    */
-  func sign(header: String, claims: String) async throws -> String {
+  func sign(header: String, claims: String) throws -> String {
     
     let unsignedJWT = header + "." + claims
     guard let unsignedData = unsignedJWT.data(using: .utf8) else {
@@ -57,21 +53,6 @@ class ECSigner: SignerAlgorithm {
   }
   
   
-  /** Method sign
-   
-  send utf8 encoded `header.claims` to BlueECC for signing
-   
-   - Parameter with:
-      - header
-      - claims
-   
-   - Throws:
-      1) JWTError.invalidJWTString
-   
-   - Returns: Signed JwtString
-   
-   */
-  ///
   private func sign(_ data: Data) -> Data {
     
     let privateKey = try! secp256k1.Signing.PrivateKey.init(rawRepresentation: key)
@@ -101,15 +82,12 @@ class ECVerifier: VerifierAlgorithm {
     self.curve = curve
   }
   
-  /** Method Verify a signed JWT String
+  /**
+   Method Verify a signed JWT String
    
-   - Parameter with:
+   - Parameter JwtString
    
-      - JwtString
-   
-   - Throws: None
-   
-   - Returns: isVerified
+   - Returns: `isVerified`
    
    */
   func verify(jwt: String) -> Bool {
@@ -129,26 +107,23 @@ class ECVerifier: VerifierAlgorithm {
   }
   
   
-  /** Method Verify Signature
+  /**
+   Method Verify Signature
    
    Send the base64URLencoded signature and `header.claims` to ECC for verification.
    
-   - Parameter with:
+   - Parameter signature
+   - Parameter data is message
    
-      - signature
-      - data(ex.. message)
+   - Throws: `Base address of publicKey is nil`
+   - Throws: `Cannot set curve on key`
+   - Throws: `Cannot load private key and create public key`
+   - Throws: `Base address of digest is nil`
+   - Throws: `signature is Not valid`
    
-   - Throws:
-      1) Base address of publicKey is nil
-      2) Cannot set curve on key
-      3) Cannot load private key and create public key
-      4) Base address of digest is nil
-      5) signature is Not valid
-   
-   - Returns: isVerified
+   - Returns: `isVerified`
    
    */
-  //
   private func verify(signature: Data, for data: Data) throws -> Bool {
     do {
       
@@ -229,14 +204,6 @@ class ECVerifier: VerifierAlgorithm {
   
 }
 
-/** Struct JWTSigner
- 
- - Property with:
- 
-    - name
-    - signerAlgorithm
- 
- */
 public struct JWTSigner {
   
   /// The name of the algorithm that will be set in the "alg" header
@@ -249,8 +216,8 @@ public struct JWTSigner {
     self.signerAlgorithm = signerAlgorithm
   }
   
-  func sign(header: String, claims: String) async throws -> String {
-    return try await signerAlgorithm.sign(header: header, claims: claims)
+  func sign(header: String, claims: String) throws -> String {
+    return try signerAlgorithm.sign(header: header, claims: claims)
   }
   
   /// Initialize a JWTSigner using the ECDSA SHA256 algorithm and the provided privateKey.
@@ -262,13 +229,6 @@ public struct JWTSigner {
   
 }
 
-/** Struct JWTVerifier
- 
- - Property with:
- 
-    - verifierAlgorithm
- 
- */
 public struct JWTVerifier {
   let verifierAlgorithm: VerifierAlgorithm
   
@@ -296,7 +256,7 @@ struct NoneAlgorithm: VerifierAlgorithm, SignerAlgorithm {
   
   let name: String = "none"
   
-  func sign(header: String, claims: String) async -> String {
+  func sign(header: String, claims: String) -> String {
     return "\(header).\(claims)"
   }
   

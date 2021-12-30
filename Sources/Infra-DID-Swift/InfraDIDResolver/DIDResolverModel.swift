@@ -27,7 +27,7 @@ public struct DIDResolutionResultSet: Decodable {
 /**
  DID Resolve Result
  
- - Property with:
+ - **Property with**
  
     - didResolutionMetadata
     - didDocument
@@ -36,9 +36,9 @@ public struct DIDResolutionResultSet: Decodable {
  */
 public struct DIDResolutionResult: Codable {
   
-  var didResolutionMetadata: DIDResolutionMetadata
-  var didDocument: DIDDocument?
-  var didDocumentMetadata: DIDDocumentMetaData
+  public var didResolutionMetadata: DIDResolutionMetadata
+  public var didDocument: DIDDocument?
+  public var didDocumentMetadata: DIDDocumentMetaData
   
   public enum CodingKeys: CodingKey {
     case didResolutionMetadata
@@ -86,9 +86,9 @@ public enum ErrorType: String, Codable {
 }
 
 public struct DIDResolutionMetadata: Codable {
-  var contentType: String?
-  var errorDescription: ErrorType?
-  var message: String?
+  public var contentType: String?
+  public var errorDescription: ErrorType?
+  public var message: String?
   
   public enum CodingKeys: CodingKey {
     case contentType
@@ -105,14 +105,14 @@ public struct DIDResolutionMetadata: Codable {
 
 
 public struct DIDDocumentMetaData: Codable {
-  var created: String?
-  var updated: String?
-  var deactivated: Bool?
-  var versionId: String?
-  var nextUpdate: String?
-  var nextVersionId: String?
-  var equivalentId: String?
-  var canonicalId: String?
+  public var created: String?
+  public var updated: String?
+  public var deactivated: Bool?
+  public var versionId: String?
+  public var nextUpdate: String?
+  public var nextVersionId: String?
+  public var equivalentId: String?
+  public var canonicalId: String?
   
   
   public enum CodingKeys: CodingKey {
@@ -183,37 +183,18 @@ public enum controllerType: Codable {
   }
 }
 
-// MARK: DIDDocument
-/**
- DID Document
- 
- - Property with:
- 
-    - context
-    - id
-    - alsoKnownAs
-    - controller
-    - verificationMethod
-    - service
-    - publicKey
-    - authentication
-    - capabilityInvocation
-    - assertionMethod
-    - capabilityDelegation
- 
- */
 public struct DIDDocument: Encodable {
-  var context: [String] //string or [string]
-  var id: String
-  var alsoKnownAs: [String]?
-  var controller: controllerType?
-  var verificationMethod: [VerificationMethod]?
-  var service: [ServiceEndpoint]?
-  var publicKey: [VerificationMethod]?
-  var authentication: [String]
-  var capabilityInvocation: [String]
-  var assertionMethod: [String]
-  var capabilityDelegation: [String]
+  public var context: [String] //string or [string]
+  public var id: String
+  public var alsoKnownAs: [String]?
+  public var controller: controllerType?
+  public var verificationMethod: [VerificationMethod]?
+  public var service: [ServiceEndpoint]?
+  public var publicKey: [VerificationMethod]?
+  public var authentication: [String]
+  public var capabilityInvocation: [String]
+  public var assertionMethod: [String]
+  public var capabilityDelegation: [String]
   
   enum CodingKeys: String, CodingKey {
     case context = "@context"

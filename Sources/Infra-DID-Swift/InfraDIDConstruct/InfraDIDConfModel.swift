@@ -29,31 +29,16 @@ public enum TransactionAction: String {
   case setAccount = "accsetattr"
 }
 
-/** Struct IdConfiguration
- 
- - Property with:
- 
-    - did
-    - didOwnerPrivateKey
-    - networkId
-    - registryContract
-    - rpcEndpoint
-    - jwtSigner
-    - txfeePayerAccount
-    - txfeePayerPrivateKey
-    - pubKeyDidSignDataPrefix
- 
- */
 public struct IdConfiguration{
-  var did: String
-  var didOwnerPrivateKey: String // Contoller Key
-  var networkId: String
-  var registryContract: String
-  var rpcEndpoint: String
-  var jwtSigner: JWTSigner?
-  var txfeePayerAccount: String?
-  var txfeePayerPrivateKey: String?
-  var pubKeyDidSignDataPrefix: String?
+  public var did: String
+  public var didOwnerPrivateKey: String // Contoller Key
+  public var networkId: String
+  public var registryContract: String
+  public var rpcEndpoint: String
+  public var jwtSigner: JWTSigner?
+  public var txfeePayerAccount: String?
+  public var txfeePayerPrivateKey: String?
+  public var pubKeyDidSignDataPrefix: String?
   
   public init(did: String = "", didOwnerPrivateKey: String = "", networkId: String = "",
        registryContract: String = "", rpcEndpoint: String = "", jwtSigner: JWTSigner? = nil,
@@ -71,19 +56,11 @@ public struct IdConfiguration{
   }
 }
 
-/** Struct JwtIssuer
- 
- - Property with:
- 
-    - did
-    - JwtSigner
-    - signAlgorithm
- 
- */
+
 public struct JwtIssuer {
-  var did: String
-  var signer: JWTSigner
-  var alg: String?
+  public var did: String
+  public var signer: JWTSigner
+  public var alg: String?
   
   public init(did: String = "", alg: String? = nil, signer: JWTSigner = JWTSigner.es256(privateKey: Data.init())) {
     self.did = did

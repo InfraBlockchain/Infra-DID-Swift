@@ -13,6 +13,15 @@ let emptyResult: Promise<DIDResolutionResult> = Promise<DIDResolutionResult>.val
 let emptyDocument: Promise<DIDDocument> = Promise<DIDDocument>.value(DIDDocument())
 let emptyResolvedDocument: Promise<ResolvedDIDDocument> = Promise<ResolvedDIDDocument>.value(ResolvedDIDDocument())
 
+
+/**
+ Method Generate Secure Random Bytes
+ 
+ - Parameter bytes is 32 Byte
+ 
+ - Returns: `Byte Data`
+ 
+ */
 public func generateRandomBytes(bytes: Int) -> Data? {
 
     var keyData = Data(count: bytes)

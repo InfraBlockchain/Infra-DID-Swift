@@ -36,7 +36,7 @@ extension EosioTransaction {
     }
   }
   
-  public func signWithGetBlock(prompt: String = "Sign Transaction", completion: @escaping (EosioResult<Bool, EosioError>) -> Void) {
+  fileprivate func signWithGetBlock(prompt: String = "Sign Transaction", completion: @escaping (EosioResult<Bool, EosioError>) -> Void) {
     guard let signatureProvider = signatureProvider else {
       return completion(.failure(EosioError(.signatureProviderError, reason: "No signature provider available")))
     }
@@ -51,7 +51,7 @@ extension EosioTransaction {
     }
   }
   
-  public func signWithGetBlock(availableKeys: [String], prompt: String = "Sign Transaction", completion: @escaping (EosioResult<Bool, EosioError>) -> Void) {
+  fileprivate func signWithGetBlock(availableKeys: [String], prompt: String = "Sign Transaction", completion: @escaping (EosioResult<Bool, EosioError>) -> Void) {
     
     prepareWithGetBlock{ [weak self] (result) in
       guard let strongSelf = self else {
@@ -66,7 +66,7 @@ extension EosioTransaction {
     }
   }
   
-  private func signPreparedTransactionWithGetBlock(availableKeys: [String], prompt: String, completion: @escaping (EosioResult<Bool, EosioError>) -> Void) {
+  fileprivate func signPreparedTransactionWithGetBlock(availableKeys: [String], prompt: String, completion: @escaping (EosioResult<Bool, EosioError>) -> Void) {
     guard let rpcProvider = rpcProvider else {
       return completion(.failure(EosioError(.signatureProviderError, reason: "No rpc provider available")))
     }
@@ -82,7 +82,7 @@ extension EosioTransaction {
     }
   }
   
-  private func prepareWithGetBlock(completion: @escaping (EosioResult<Bool, EosioError>) -> Void) {
+  fileprivate func prepareWithGetBlock(completion: @escaping (EosioResult<Bool, EosioError>) -> Void) {
     getInfoAndSetValuesWithGetBlock{ [weak self] (taposResult) in
       switch taposResult {
       case .failure(let error):
@@ -96,7 +96,7 @@ extension EosioTransaction {
     }
   }
   
-  private func getInfoAndSetValuesWithGetBlock(completion: @escaping (EosioResult<Bool, EosioError>) -> Void) {
+  fileprivate func getInfoAndSetValuesWithGetBlock(completion: @escaping (EosioResult<Bool, EosioError>) -> Void) {
     // if all the data is set, just return true
     if refBlockNum > 0 && refBlockPrefix > 0  && chainId != "" && expiration > Date(timeIntervalSince1970: 0) {
       return completion(.success(true))
@@ -147,7 +147,7 @@ extension EosioTransaction {
     }
   }
   
-  public func getBlockAndSetTaposWithGetBlock(rpcProvider: EosioRpcProvider?, blockNum: UInt64, completion: @escaping (EosioResult<Bool, EosioError>) -> Void) {
+  fileprivate func getBlockAndSetTaposWithGetBlock(rpcProvider: EosioRpcProvider?, blockNum: UInt64, completion: @escaping (EosioResult<Bool, EosioError>) -> Void) {
     
     // if the only data needed was the chainId, return now
     if self.refBlockPrefix > 0 && self.refBlockNum > 0 {

@@ -1,0 +1,818 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Functions  Reference</title>
+    <link rel="stylesheet" type="text/css" href="css/jazzy.css" />
+    <link rel="stylesheet" type="text/css" href="css/highlight.css" />
+    <meta charset='utf-8'>
+    <script src="js/jquery.min.js" defer></script>
+    <script src="js/jazzy.js" defer></script>
+    
+    <script src="js/lunr.min.js" defer></script>
+    <script src="js/typeahead.jquery.js" defer></script>
+    <script src="js/jazzy.search.js" defer></script>
+  </head>
+  <body>
+    <a name="//apple_ref/swift/Section/Functions" class="dashAnchor"></a>
+    <a title="Functions  Reference"></a>
+    <header>
+      <div class="content-wrapper">
+        <p><a href="index.html"> Docs</a> (25% documented)</p>
+        <div class="header-right">
+          <form role="search" action="search.json">
+            <input type="text" placeholder="Search documentation" data-typeahead>
+          </form>
+        </div>
+      </div>
+    </header>
+    <div class="content-wrapper">
+      <p id="breadcrumbs">
+        <a href="index.html"> Reference</a>
+        <img id="carat" src="img/carat.png" alt=""/>
+        Functions  Reference
+      </p>
+    </div>
+    <div class="content-wrapper">
+      <nav class="sidebar">
+        <ul class="nav-groups">
+          <li class="nav-group-name">
+            <a href="Classes.html">Classes</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="Classes/ECSigner.html">ECSigner</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Classes/InfraDIDConstructor.html">InfraDIDConstructor</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Classes/InfraDIDResolver.html">InfraDIDResolver</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Classes/Resolver.html">Resolver</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a href="Enums.html">Enumerations</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="Enums/SubjectValue.html">SubjectValue</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Enums.html#/s:15Infra_DID_Swift17TransactionActionO">TransactionAction</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Enums/VerifiableCredentialType.html">VerifiableCredentialType</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a href="Functions.html">Functions</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="Functions.html#/s:15Infra_DID_Swift9createJws33_002A22147D540209CC240E4530C06ABALL7payload6signer6headerSSAA10JwtPayloadV_AA9JWTSignerVAA6HeaderVSgtF">createJws(payload:signer:header:)</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Functions.html#/s:15Infra_DID_Swift9createJwt7payload10jwtOptions6headerSSAA0E7PayloadV_AA0eH0VAA6HeaderVtF">createJwt(payload:jwtOptions:header:)</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Functions.html#/s:15Infra_DID_Swift29createVerifiableCredentialJwt7payload6issuerSSAA0F7PayloadV_AA0G6IssuerVtF">createVerifiableCredentialJwt(payload:issuer:)</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Functions.html#/s:15Infra_DID_Swift31createVerifiablePresentationJwt7payload6holder7optionsSSAA0F7PayloadV_AA0G6IssuerVAA0F7OptionsVtF">createVerifiablePresentationJwt(payload:holder:options:)</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Functions.html#/s:15Infra_DID_Swift9decodeJwt3jwtAA0E7DecodedVSS_tF">decodeJwt(jwt:)</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Functions.html#/s:15Infra_DID_Swift19generateRandomBytes5bytes10Foundation4DataVSgSi_tF">generateRandomBytes(bytes:)</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Functions.html#/s:15Infra_DID_Swift19normalizeCredential33_20CC542EDF2D1A12F419348D65438BC3LL5input3jwtAA0E7PayloadVAA03JwtO0V_SStF">normalizeCredential(input:jwt:)</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Functions.html#/s:15Infra_DID_Swift22normalizedPresentation33_20CC542EDF2D1A12F419348D65438BC3LL3jwt20removeOriginalFieldsAA0E7PayloadVSS_SbtKF">normalizedPresentation(jwt:removeOriginalFields:)</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Functions.html#/s:15Infra_DID_Swift20resolveAuthenticator33_002A22147D540209CC240E4530C06ABALL8resolver3alg6issuer12proofPurposeAA16DIDAuthenticatorVAA10Resolvable_p_S2SAA05ProofP5TypesOtKF">resolveAuthenticator(resolver:alg:issuer:proofPurpose:)</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Functions.html#/s:15Infra_DID_Swift15resolveVerified33_002A22147D540209CC240E4530C06ABALL13authenticator3jwt0M7Decoded7optionsAA03JwtE0VAA16DIDAuthenticatorV_SSAA0pN0VAA0P13VerifyOptionsVtKF">resolveVerified(authenticator:jwt:jwtDecoded:options:)</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Functions.html#/s:15Infra_DID_Swift24transformCredentialInput5inputAA03JwtE7PayloadVAA0eI0V_tF">transformCredentialInput(input:)</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Functions.html#/s:15Infra_DID_Swift26transformPresentationInput5input20removeOriginalFieldsAA03JwtE7PayloadVAA0eL0V_SbtF">transformPresentationInput(input:removeOriginalFields:)</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Functions.html#/s:15Infra_DID_Swift16verifyCredential10credential8resolver7optionsAA08VerifiedE0VSS_AA10Resolvable_pAA0E7OptionsVtF">verifyCredential(credential:resolver:options:)</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Functions.html#/s:15Infra_DID_Swift9verifyJwt3jwt7optionsAA0E8VerifiedVSS_AA0E13VerifyOptionsVtKF">verifyJwt(jwt:options:)</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Functions.html#/s:15Infra_DID_Swift18verifyPresentation12presentation8resolver7optionsAA08VerifiedE0VSS_AA10Resolvable_pAA0E7OptionsVtF">verifyPresentation(presentation:resolver:options:)</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Functions.html#/s:15Infra_DID_Swift32verifyPresentationPayloadOptions33_20CC542EDF2D1A12F419348D65438BC3LL7payload7optionsyAA03JwtF0V_AA0eG0VtKF">verifyPresentationPayloadOptions(payload:options:)</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a href="Protocols.html">Protocols</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="Protocols/Claims.html">Claims</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a href="Structs.html">Structures</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="Structs.html#/s:15Infra_DID_Swift17CredentialOptionsV">CredentialOptions</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Structs/CredentialPayload.html">CredentialPayload</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Structs.html#/s:15Infra_DID_Swift19DIDResolutionResultV">DIDResolutionResult</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Structs/Header.html">Header</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Structs/JWT.html">JWT</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Structs.html#/s:15Infra_DID_Swift20JwtCredentialPayloadV">JwtCredentialPayload</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Structs.html#/s:15Infra_DID_Swift22JwtPresentationPayloadV">JwtPresentationPayload</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Structs.html#/s:15Infra_DID_Swift19PresentationOptionsV">PresentationOptions</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Structs/PresentationPayload.html">PresentationPayload</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Structs.html#/s:15Infra_DID_Swift18VerifiedCredentialV">VerifiedCredential</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Structs/VerifiedPresentation.html">VerifiedPresentation</a>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </nav>
+      <article class="main-content">
+        <section>
+          <section class="section">
+            <h1>Functions</h1>
+            <p>The following functions are available globally.</p>
+
+          </section>
+          <section class="section task-group-section">
+            <div class="task-group">
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:15Infra_DID_Swift29createVerifiableCredentialJwt7payload6issuerSSAA0F7PayloadV_AA0G6IssuerVtF"></a>
+                    <a name="//apple_ref/swift/Function/createVerifiableCredentialJwt(payload:issuer:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:15Infra_DID_Swift29createVerifiableCredentialJwt7payload6issuerSSAA0F7PayloadV_AA0G6IssuerVtF">createVerifiableCredentialJwt(payload:<wbr>issuer:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Creates a VerifiableCredential given a CredentialPayload or JwtCredentialPayload and an Issuer.</p>
+
+<p>This method transforms the payload into the JWT encoding  described in the W3C VC spec  and then validated to conform to the minimum spec required spec.</p>
+
+<p>The issuer is then used to assign an algorithm, override the iss field of the payload and then sign the JWT.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">createVerifiableCredentialJwt</span><span class="p">(</span><span class="nv">payload</span><span class="p">:</span> <span class="kt"><a href="Structs/CredentialPayload.html">CredentialPayload</a></span><span class="p">,</span> <span class="nv">issuer</span><span class="p">:</span> <span class="kt">JwtIssuer</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">String</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>a Promise that resolves to the JWT encoded verifiable credential or rejects with TypeError if the payload is not W3C compliant</p>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:15Infra_DID_Swift31createVerifiablePresentationJwt7payload6holder7optionsSSAA0F7PayloadV_AA0G6IssuerVAA0F7OptionsVtF"></a>
+                    <a name="//apple_ref/swift/Function/createVerifiablePresentationJwt(payload:holder:options:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:15Infra_DID_Swift31createVerifiablePresentationJwt7payload6holder7optionsSSAA0F7PayloadV_AA0G6IssuerVAA0F7OptionsVtF">createVerifiablePresentationJwt(payload:<wbr>holder:<wbr>options:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Creates a VerifiablePresentation JWT given a PresentationPayload or JwtPresentationPayload and an Issuer.</p>
+
+<p>This method transforms the payload into the JWT encoding  described in the W3C VC spec  and then validated to conform to the minimum spec required spec.</p>
+
+<p>The holder is then used to assign an algorithm, override the iss field of the payload and then sign the JWT.</p>
+<div class="aside aside-throws">
+    <p class="aside-title">Throws</p>
+    <p>None</p>
+
+</div>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">createVerifiablePresentationJwt</span><span class="p">(</span><span class="nv">payload</span><span class="p">:</span> <span class="kt"><a href="Structs/PresentationPayload.html">PresentationPayload</a></span><span class="p">,</span> <span class="nv">holder</span><span class="p">:</span> <span class="kt">JwtIssuer</span><span class="p">,</span> <span class="nv">options</span><span class="p">:</span> <span class="kt"><a href="Structs.html#/s:15Infra_DID_Swift19PresentationOptionsV">PresentationOptions</a></span> <span class="o">=</span> <span class="kt"><a href="Structs.html#/s:15Infra_DID_Swift19PresentationOptionsV">PresentationOptions</a></span><span class="p">())</span> <span class="o">-&gt;</span> <span class="kt">String</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>a Promise that resolves to the JWT encoded verifiable presentation or rejects with TypeError if the payload is not W3C compliant</p>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:15Infra_DID_Swift32verifyPresentationPayloadOptions33_20CC542EDF2D1A12F419348D65438BC3LL7payload7optionsyAA03JwtF0V_AA0eG0VtKF"></a>
+                    <a name="//apple_ref/swift/Function/verifyPresentationPayloadOptions(payload:options:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:15Infra_DID_Swift32verifyPresentationPayloadOptions33_20CC542EDF2D1A12F419348D65438BC3LL7payload7optionsyAA03JwtF0V_AA0eG0VtKF">verifyPresentationPayloadOptions(payload:<wbr>options:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Method Verifies that the given JwtPresentationPayload contains the appropriate options from VerifyPresentationOption</p>
+<div class="aside aside-throws">
+    <p class="aside-title">Throws</p>
+    <p>Error – If VerifyPresentationOptions are not satisfied</p>
+
+</div>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">private</span> <span class="kd">func</span> <span class="nf">verifyPresentationPayloadOptions</span><span class="p">(</span><span class="nv">payload</span><span class="p">:</span> <span class="kt">JwtPayload</span><span class="p">,</span> <span class="nv">options</span><span class="p">:</span> <span class="kt"><a href="Structs.html#/s:15Infra_DID_Swift19PresentationOptionsV">PresentationOptions</a></span><span class="p">)</span> <span class="k">throws</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:15Infra_DID_Swift22normalizedPresentation33_20CC542EDF2D1A12F419348D65438BC3LL3jwt20removeOriginalFieldsAA0E7PayloadVSS_SbtKF"></a>
+                    <a name="//apple_ref/swift/Function/normalizedPresentation(jwt:removeOriginalFields:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:15Infra_DID_Swift22normalizedPresentation33_20CC542EDF2D1A12F419348D65438BC3LL3jwt20removeOriginalFieldsAA0E7PayloadVSS_SbtKF">normalizedPresentation(jwt:<wbr>removeOriginalFields:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Normalizes a presentation payload into an unambiguous W3C Presentation data type</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">private</span> <span class="kd">func</span> <span class="nf">normalizedPresentation</span><span class="p">(</span><span class="nv">jwt</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span> <span class="nv">removeOriginalFields</span><span class="p">:</span> <span class="kt">Bool</span> <span class="o">=</span> <span class="kc">true</span><span class="p">)</span> <span class="k">throws</span> <span class="o">-&gt;</span> <span class="kt"><a href="Structs/PresentationPayload.html">PresentationPayload</a></span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:15Infra_DID_Swift19normalizeCredential33_20CC542EDF2D1A12F419348D65438BC3LL5input3jwtAA0E7PayloadVAA03JwtO0V_SStF"></a>
+                    <a name="//apple_ref/swift/Function/normalizeCredential(input:jwt:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:15Infra_DID_Swift19normalizeCredential33_20CC542EDF2D1A12F419348D65438BC3LL5input3jwtAA0E7PayloadVAA03JwtO0V_SStF">normalizeCredential(input:<wbr>jwt:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Method Normalizes a credential payload into an unambiguous W3C credential data type In case of conflict, Existing W3C Credential specific properties take precedence, except for arrays and object types which get merged</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">private</span> <span class="kd">func</span> <span class="nf">normalizeCredential</span><span class="p">(</span><span class="nv">input</span><span class="p">:</span> <span class="kt">JwtPayload</span><span class="p">,</span> <span class="nv">jwt</span><span class="p">:</span> <span class="kt">String</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt"><a href="Structs/CredentialPayload.html">CredentialPayload</a></span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:15Infra_DID_Swift18verifyPresentation12presentation8resolver7optionsAA08VerifiedE0VSS_AA10Resolvable_pAA0E7OptionsVtF"></a>
+                    <a name="//apple_ref/swift/Function/verifyPresentation(presentation:resolver:options:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:15Infra_DID_Swift18verifyPresentation12presentation8resolver7optionsAA08VerifiedE0VSS_AA10Resolvable_pAA0E7OptionsVtF">verifyPresentation(presentation:<wbr>resolver:<wbr>options:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Method Verifies and validates a VerifiablePresentation that is encoded as a JWT according to the W3C spec.</p>
+<div class="aside aside-throws">
+    <p class="aside-title">Throws</p>
+    <p>None</p>
+
+</div>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">verifyPresentation</span><span class="p">(</span><span class="nv">presentation</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span> <span class="nv">resolver</span><span class="p">:</span> <span class="kt">Resolvable</span><span class="p">,</span> <span class="nv">options</span><span class="p">:</span> <span class="kt"><a href="Structs.html#/s:15Infra_DID_Swift19PresentationOptionsV">PresentationOptions</a></span> <span class="o">=</span> <span class="kt"><a href="Structs.html#/s:15Infra_DID_Swift19PresentationOptionsV">PresentationOptions</a></span><span class="p">())</span> <span class="o">-&gt;</span> <span class="kt"><a href="Structs/VerifiedPresentation.html">VerifiedPresentation</a></span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>a Promise that resolves to a VerifiedPresentation or rejects with TypeError if the input is
+       not W3C compliant or the VerifyPresentationOptions are not satisfied</p>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:15Infra_DID_Swift16verifyCredential10credential8resolver7optionsAA08VerifiedE0VSS_AA10Resolvable_pAA0E7OptionsVtF"></a>
+                    <a name="//apple_ref/swift/Function/verifyCredential(credential:resolver:options:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:15Infra_DID_Swift16verifyCredential10credential8resolver7optionsAA08VerifiedE0VSS_AA10Resolvable_pAA0E7OptionsVtF">verifyCredential(credential:<wbr>resolver:<wbr>options:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Method Verifies and validates a VerifiableCredential that is encoded as a JWT according to the W3C spec.</p>
+<div class="aside aside-throws">
+    <p class="aside-title">Throws</p>
+    <p>None</p>
+
+</div>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">verifyCredential</span><span class="p">(</span><span class="nv">credential</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span> <span class="nv">resolver</span><span class="p">:</span> <span class="kt">Resolvable</span><span class="p">,</span> <span class="nv">options</span><span class="p">:</span> <span class="kt"><a href="Structs.html#/s:15Infra_DID_Swift17CredentialOptionsV">CredentialOptions</a></span> <span class="o">=</span> <span class="kt"><a href="Structs.html#/s:15Infra_DID_Swift17CredentialOptionsV">CredentialOptions</a></span><span class="p">())</span> <span class="o">-&gt;</span> <span class="kt"><a href="Structs.html#/s:15Infra_DID_Swift18VerifiedCredentialV">VerifiedCredential</a></span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>a Promise that resolves to a VerifiedCredential or rejects with TypeError if the input is not W3C compliant</p>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:15Infra_DID_Swift26transformPresentationInput5input20removeOriginalFieldsAA03JwtE7PayloadVAA0eL0V_SbtF"></a>
+                    <a name="//apple_ref/swift/Function/transformPresentationInput(input:removeOriginalFields:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:15Infra_DID_Swift26transformPresentationInput5input20removeOriginalFieldsAA03JwtE7PayloadVAA0eL0V_SbtF">transformPresentationInput(input:<wbr>removeOriginalFields:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Method Transforms a W3C Presentation payload into a JWT compatible encoding. The method accepts app specific fields and in case of collision, existing JWT properties will take precedence. Also, nbf, exp and jti properties can be explicitly set to undefined and they will be kept intact.</p>
+<div class="aside aside-throws">
+    <p class="aside-title">Throws</p>
+    <p>None</p>
+
+</div>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">transformPresentationInput</span><span class="p">(</span><span class="nv">input</span><span class="p">:</span> <span class="kt"><a href="Structs/PresentationPayload.html">PresentationPayload</a></span><span class="p">,</span> <span class="nv">removeOriginalFields</span><span class="p">:</span> <span class="kt">Bool</span> <span class="o">=</span> <span class="kc">true</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt"><a href="Structs.html#/s:15Infra_DID_Swift22JwtPresentationPayloadV">JwtPresentationPayload</a></span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>JwtPresentationPayload</p>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:15Infra_DID_Swift24transformCredentialInput5inputAA03JwtE7PayloadVAA0eI0V_tF"></a>
+                    <a name="//apple_ref/swift/Function/transformCredentialInput(input:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:15Infra_DID_Swift24transformCredentialInput5inputAA03JwtE7PayloadVAA0eI0V_tF">transformCredentialInput(input:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Method Transforms a W3C Credential payload into a JWT compatible encoding. The method accepts app specific fields and in case of collision, existing JWT properties will take precedence. Also, nbf, exp and jti properties can be explicitly set to undefined and they will be kept intact.</p>
+<div class="aside aside-throws">
+    <p class="aside-title">Throws</p>
+    <p>None</p>
+
+</div>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">transformCredentialInput</span><span class="p">(</span><span class="nv">input</span><span class="p">:</span> <span class="kt"><a href="Structs/CredentialPayload.html">CredentialPayload</a></span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt"><a href="Structs.html#/s:15Infra_DID_Swift20JwtCredentialPayloadV">JwtCredentialPayload</a></span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>JwtCredentialPayload</p>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:15Infra_DID_Swift9decodeJwt3jwtAA0E7DecodedVSS_tF"></a>
+                    <a name="//apple_ref/swift/Function/decodeJwt(jwt:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:15Infra_DID_Swift9decodeJwt3jwtAA0E7DecodedVSS_tF">decodeJwt(jwt:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Decodes a JWT and returns an object representing the payload</p>
+<div class="aside aside-throws">
+    <p class="aside-title">Throws</p>
+    <p>None</p>
+
+</div>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">decodeJwt</span><span class="p">(</span><span class="nv">jwt</span><span class="p">:</span> <span class="kt">String</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">JwtDecoded</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p><code>JwtDecoded Struct</code> Object a JS object representing the decoded JWT</p>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:15Infra_DID_Swift9createJws33_002A22147D540209CC240E4530C06ABALL7payload6signer6headerSSAA10JwtPayloadV_AA9JWTSignerVAA6HeaderVSgtF"></a>
+                    <a name="//apple_ref/swift/Function/createJws(payload:signer:header:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:15Infra_DID_Swift9createJws33_002A22147D540209CC240E4530C06ABALL7payload6signer6headerSSAA10JwtPayloadV_AA9JWTSignerVAA6HeaderVSgtF">createJws(payload:<wbr>signer:<wbr>header:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Creates a signed JWS given a payload, a signer, and an optional header.</p>
+<div class="aside aside-throws">
+    <p class="aside-title">Throws</p>
+    <p>None</p>
+
+</div>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">private</span> <span class="kd">func</span> <span class="nf">createJws</span><span class="p">(</span><span class="nv">payload</span><span class="p">:</span> <span class="kt">JwtPayload</span><span class="p">,</span> <span class="nv">signer</span><span class="p">:</span> <span class="kt">JWTSigner</span><span class="p">,</span> <span class="nv">header</span><span class="p">:</span> <span class="kt"><a href="Structs/Header.html">Header</a></span><span class="p">?)</span> <span class="o">-&gt;</span> <span class="kt">String</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p><code>JwsString</code> resolves with a JWS string or rejects with an error</p>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:15Infra_DID_Swift9createJwt7payload10jwtOptions6headerSSAA0E7PayloadV_AA0eH0VAA6HeaderVtF"></a>
+                    <a name="//apple_ref/swift/Function/createJwt(payload:jwtOptions:header:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:15Infra_DID_Swift9createJwt7payload10jwtOptions6headerSSAA0E7PayloadV_AA0eH0VAA6HeaderVtF">createJwt(payload:<wbr>jwtOptions:<wbr>header:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Creates a signed JWT given an address which becomes the issuer, a signer, and a payload for which the signature is over.</p>
+<div class="aside aside-throws">
+    <p class="aside-title">Throws</p>
+    <p>None</p>
+
+</div>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">createJwt</span><span class="p">(</span><span class="nv">payload</span><span class="p">:</span> <span class="kt">JwtPayload</span><span class="p">,</span> <span class="nv">jwtOptions</span><span class="p">:</span> <span class="kt">JwtOptions</span><span class="p">,</span> <span class="nv">header</span><span class="p">:</span> <span class="kt"><a href="Structs/Header.html">Header</a></span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">String</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p><code>JwtString</code> a promise which resolves with a signed JSON Web Token</p>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:15Infra_DID_Swift9verifyJwt3jwt7optionsAA0E8VerifiedVSS_AA0E13VerifyOptionsVtKF"></a>
+                    <a name="//apple_ref/swift/Function/verifyJwt(jwt:options:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:15Infra_DID_Swift9verifyJwt3jwt7optionsAA0E8VerifiedVSS_AA0E13VerifyOptionsVtKF">verifyJwt(jwt:<wbr>options:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Verifies given JWT. If the JWT is valid, the promise returns an object including the JWT, the payload of the JWT, and the did doc of the issuer of the JWT.</p>
+<div class="aside aside-throws">
+    <p class="aside-title">Throws</p>
+    <p><code>resolver error</code></p>
+
+</div><div class="aside aside-throws">
+    <p class="aside-title">Throws</p>
+    <p><code>invalid_jwt: JWT iss is required</code></p>
+
+</div><div class="aside aside-throws">
+    <p class="aside-title">Throws</p>
+    <p><code>invalid_jwt: JWT sub is required</code></p>
+
+</div><div class="aside aside-throws">
+    <p class="aside-title">Throws</p>
+    <p><code>invalid_jwt: JWT did is required</code></p>
+
+</div><div class="aside aside-throws">
+    <p class="aside-title">Throws</p>
+    <p><code>invalid_jwt: No DID has been found in the JWT</code></p>
+
+</div>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">verifyJwt</span><span class="p">(</span><span class="nv">jwt</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span> <span class="nv">options</span><span class="p">:</span> <span class="kt">JwtVerifyOptions</span><span class="p">)</span> <span class="k">throws</span> <span class="o">-&gt;</span> <span class="kt">JwtVerified</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p><code>JwtVerified</code> resolves with a response object or rejects with an error</p>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <div class="task-name-container">
+                <a name="/resolveVerified"></a>
+                <a name="//apple_ref/swift/Section/resolveVerified" class="dashAnchor"></a>
+                <div class="section-name-container">
+                  <a class="section-name-link" href="#/resolveVerified"></a>
+                  <h3 class="section-name"><span>resolveVerified</span>
+</h3>
+                </div>
+              </div>
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:15Infra_DID_Swift15resolveVerified33_002A22147D540209CC240E4530C06ABALL13authenticator3jwt0M7Decoded7optionsAA03JwtE0VAA16DIDAuthenticatorV_SSAA0pN0VAA0P13VerifyOptionsVtKF"></a>
+                    <a name="//apple_ref/swift/Function/resolveVerified(authenticator:jwt:jwtDecoded:options:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:15Infra_DID_Swift15resolveVerified33_002A22147D540209CC240E4530C06ABALL13authenticator3jwt0M7Decoded7optionsAA03JwtE0VAA16DIDAuthenticatorV_SSAA0pN0VAA0P13VerifyOptionsVtKF">resolveVerified(authenticator:<wbr>jwt:<wbr>jwtDecoded:<wbr>options:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Resolves DID Authenticator</p>
+<div class="aside aside-throws">
+    <p class="aside-title">Throws</p>
+    <p><code>not Found Key</code></p>
+
+</div><div class="aside aside-throws">
+    <p class="aside-title">Throws</p>
+    <p><code>not Verified Jwt</code></p>
+
+</div><div class="aside aside-throws">
+    <p class="aside-title">Throws</p>
+    <p><code>Nil Error</code></p>
+
+</div><div class="aside aside-throws">
+    <p class="aside-title">Throws</p>
+    <p><code>invalid_jwt: JWT not valid before nbf: \(nbf)</code></p>
+
+</div><div class="aside aside-throws">
+    <p class="aside-title">Throws</p>
+    <p><code>invalid_jwt: JWT not valid before iat: \(iat)</code></p>
+
+</div><div class="aside aside-throws">
+    <p class="aside-title">Throws</p>
+    <p><code>invalid_jwt: JWT not valid before exp: \(exp)</code></p>
+
+</div><div class="aside aside-throws">
+    <p class="aside-title">Throws</p>
+    <p><code>invalid_config: JWT audience is required but your app address has not been configured</code></p>
+
+</div>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">private</span> <span class="kd">func</span> <span class="nf">resolveVerified</span><span class="p">(</span><span class="nv">authenticator</span><span class="p">:</span> <span class="kt">DIDAuthenticator</span><span class="p">,</span> <span class="nv">jwt</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span> <span class="nv">jwtDecoded</span><span class="p">:</span> <span class="kt">JwtDecoded</span><span class="p">,</span> <span class="nv">options</span><span class="p">:</span> <span class="kt">JwtVerifyOptions</span><span class="p">)</span> <span class="k">throws</span> <span class="o">-&gt;</span> <span class="kt">JwtVerified</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p><code>JwtVerified</code></p>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <div class="task-name-container">
+                <a name="/resolveAuthenticator"></a>
+                <a name="//apple_ref/swift/Section/resolveAuthenticator" class="dashAnchor"></a>
+                <div class="section-name-container">
+                  <a class="section-name-link" href="#/resolveAuthenticator"></a>
+                  <h3 class="section-name"><span>resolveAuthenticator</span>
+</h3>
+                </div>
+              </div>
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:15Infra_DID_Swift20resolveAuthenticator33_002A22147D540209CC240E4530C06ABALL8resolver3alg6issuer12proofPurposeAA16DIDAuthenticatorVAA10Resolvable_p_S2SAA05ProofP5TypesOtKF"></a>
+                    <a name="//apple_ref/swift/Function/resolveAuthenticator(resolver:alg:issuer:proofPurpose:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:15Infra_DID_Swift20resolveAuthenticator33_002A22147D540209CC240E4530C06ABALL8resolver3alg6issuer12proofPurposeAA16DIDAuthenticatorVAA10Resolvable_p_S2SAA05ProofP5TypesOtKF">resolveAuthenticator(resolver:<wbr>alg:<wbr>issuer:<wbr>proofPurpose:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Resolves relevant public keys or other authenticating material used to verify signature from the DID document of provided DID</p>
+<div class="aside aside-throws">
+    <p class="aside-title">Throws</p>
+    <p><code>not_supported: No supported signature types for algorithm</code></p>
+
+</div><div class="aside aside-throws">
+    <p class="aside-title">Throws</p>
+    <p><code>resolver_error: Unable to resolve DID document for \(issuer)</code></p>
+
+</div><div class="aside aside-throws">
+    <p class="aside-title">Throws</p>
+    <p><code>no_suitable_keys: DID document for \(issuer) does not have public keys suitable for \(alg) with \(proofPurpose.rawValue) purpose</code></p>
+
+</div>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">private</span> <span class="kd">func</span> <span class="nf">resolveAuthenticator</span><span class="p">(</span><span class="nv">resolver</span><span class="p">:</span> <span class="kt">Resolvable</span><span class="p">,</span> <span class="nv">alg</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span> <span class="nv">issuer</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span> <span class="nv">proofPurpose</span><span class="p">:</span> <span class="kt">ProofPurposeTypes</span><span class="p">)</span> <span class="k">throws</span> <span class="o">-&gt;</span> <span class="kt">DIDAuthenticator</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p><code>DIDAuthenticator</code> resolves with a response object containing an array of authenticators or if non exist rejects with an error</p>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:15Infra_DID_Swift19generateRandomBytes5bytes10Foundation4DataVSgSi_tF"></a>
+                    <a name="//apple_ref/swift/Function/generateRandomBytes(bytes:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:15Infra_DID_Swift19generateRandomBytes5bytes10Foundation4DataVSgSi_tF">generateRandomBytes(bytes:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Method Generate Secure Random Bytes</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">generateRandomBytes</span><span class="p">(</span><span class="nv">bytes</span><span class="p">:</span> <span class="kt">Int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Data</span><span class="p">?</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p><code>Byte Data</code></p>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </section>
+        </section>
+        <section id="footer">
+          <p>&copy; 2021 <a class="link" href="" target="_blank" rel="external noopener">CentLeeWithInfraBlockChain</a>. All rights reserved. (Last updated: 2021-12-30)</p>
+          <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external noopener">jazzy ♪♫ v0.14.1</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external noopener">Realm</a> project.</p>
+        </section>
+      </article>
+    </div>
+  </body>
+</html>
