@@ -511,4 +511,4 @@ Verified Presentation Result
 
 ## License
 
-**Infra-DID-Swift** is under MIT license. See the [LICENSE](LICENSE) file for more info.
+**Infra-DID-Swift** is under MIT license. See the [LICENSE](https://github.com/InfraBlockchain/Infra-DID-Swift/blob/master/LICENSE) file for more info.
