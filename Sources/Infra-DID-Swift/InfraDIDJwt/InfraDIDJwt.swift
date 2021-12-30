@@ -9,7 +9,6 @@ import Foundation
 import PromiseKit
 import EosioSwiftEcc
 
-///default Property
 public let selfIssuedV2 = "https://self-issued.me/v2"
 public let selfIssuedV1 = "https://self-issued.me"
 fileprivate let defaultAlg = "ES256K"
@@ -17,19 +16,6 @@ fileprivate let didJson = "application/did+json"
 public let nbfSkew: Double = 300
 
 
-  // MARK: decodeJws
-  /**
-   Method Decode JWS
-   
-   - Parameter with:
-   
-      - JwsString
-   
-   - Throws: None
-   
-   - Returns: JwsDecoded
-   
-   */
 private func decodeJws(jws: String) -> JwsDecoded {
   let pattern = "([a-zA-Z0-9_-]+)"
   let part = jws.matchingStrings(regex: "^\(pattern).\(pattern).\(pattern)$")[0]
@@ -43,17 +29,14 @@ private func decodeJws(jws: String) -> JwsDecoded {
   return decodeJws
 }
 
-// MARK: decodeJwt
 /**
  Decodes a JWT and returns an object representing the payload
  
- - Parameter with:
- 
-    - JwtString
- 
+ - Parameter JwtString a JSON Web Token to verify
+
  - Throws: None
  
- - Returns: JwtDecoded
+ - Returns: `JwtDecoded Struct` Object a JS object representing the decoded JWT
  
  */
 public func decodeJwt(jwt: String) -> JwtDecoded {
@@ -77,47 +60,40 @@ public func decodeJwt(jwt: String) -> JwtDecoded {
   return decodeJwt
 }
 
-// MARK: createJws
 /**
  Creates a signed JWS given a payload, a signer, and an optional header.
  
- - Parameter with:
- 
-    - JwtPayload
-    - JWTSigner
-    - Header
-    - JwsCreationOptions
+ - Parameter JwtPayload payload object
+ - Parameter JWTSigner a signer, see `ES256KSigner`
+ - Parameter Header optional object to specify or customize the JWS header
  
  - Throws: None
  
- - Returns: JwsString
+ - Returns: `JwsString` resolves with a JWS string or rejects with an error
  
  */
-private func createJws(payload: JwtPayload, signer: JWTSigner, header: Header?, options: JwsCreationOptions) async -> String {
+private func createJws(payload: JwtPayload, signer: JWTSigner, header: Header?) -> String {
   guard let header = header else { return ""}
   
   var jwt = JWT(header: header, claims: payload)
-  guard let signedJwt: String = try? await jwt.sign(using: signer) else { return "" }
+  guard let signedJwt: String = try? jwt.sign(using: signer) else { return "" }
   return signedJwt
 }
 
 
-// MARK: createJwt
 /**
  Creates a signed JWT given an address which becomes the issuer, a signer, and a payload for which the signature is over.
  
- - Parameter with:
- 
-    - JwtPayload
-    - JwtOptions
-    - Header
- 
+ - Parameter JwtPayload payload object
+ - Parameter JwtOptions an unsigned credential object
+ - Parameter Header optional object to specify or customize the JWT header
+
  - Throws: None
  
- - Returns: JwtString
+ - Returns: `JwtString` a promise which resolves with a signed JSON Web Token
  
  */
-public func createJwt(payload: JwtPayload, jwtOptions: JwtOptions, header: Header) async -> String {
+public func createJwt(payload: JwtPayload, jwtOptions: JwtOptions, header: Header) -> String {
   var fullPayload: JwtPayload = payload
   fullPayload.iat = Date.now
   
@@ -134,27 +110,27 @@ public func createJwt(payload: JwtPayload, jwtOptions: JwtOptions, header: Heade
   var header = header
   
   if header.alg == "" { header.alg = defaultAlg }
-  return await createJws(payload: fullPayload, signer: signer, header: header, options: JwsCreationOptions(canonicalize: jwtOptions.canonicalize))
+  return createJws(payload: fullPayload, signer: signer, header: header)
 }
 
 
-// MARK: verifyJwt
+
 /**
  Verifies given JWT. If the JWT is valid, the promise returns an object including the JWT, the payload of the JWT, and the did doc of the issuer of the JWT.
  
- - Parameter with:
+ - Parameter JwtString a JSON Web Token to verify
+ - Parameter JwtVerifyOptions an unsigned credential object
+ - Parameter `options.auth`  Require signer to be listed in the authentication section of the DID document (for Authentication purposes)
+ - Parameter `options.audience` DID of the recipient of the JWT
+ - Parameter `options.callbackUrl` callback url in JWT
  
-    - JwtString
-    - JwtVerifyOptions
- 
- - Throws:
-    1) resolver error
-    2) invalid_jwt: JWT iss is required
-    3) invalid_jwt: JWT sub is required
-    4) invalid_jwt: JWT did is required
-    5) invalid_jwt: No DID has been found in the JWT
- 
- - Returns: JwtVerified
+ - Throws: `resolver error`
+ - Throws: `invalid_jwt: JWT iss is required`
+ - Throws: `invalid_jwt: JWT sub is required`
+ - Throws: `invalid_jwt: JWT did is required`
+ - Throws: `invalid_jwt: No DID has been found in the JWT`
+
+ - Returns: `JwtVerified` resolves with a response object or rejects with an error
  
  */
 public func verifyJwt(jwt: String, options: JwtVerifyOptions) throws -> JwtVerified {
@@ -208,23 +184,20 @@ public func verifyJwt(jwt: String, options: JwtVerifyOptions) throws -> JwtVerif
 /**
  Resolves DID Authenticator
  
- - Parameter with:
+ - Parameter DIDAuthenticator
+ - Parameter JwtString
+ - Parameter JwtDecoded
+ - Parameter JwtVerifyOptions
  
-    - DIDAuthenticator
-    - JwtString
-    - JwtDecoded
-    - JwtVerifyOptions
+ - Throws: `not Found Key`
+ - Throws: `not Verified Jwt`
+ - Throws: `Nil Error`
+ - Throws: `invalid_jwt: JWT not valid before nbf: \(nbf)`
+ - Throws: `invalid_jwt: JWT not valid before iat: \(iat)`
+ - Throws: `invalid_jwt: JWT not valid before exp: \(exp)`
+ - Throws: `invalid_config: JWT audience is required but your app address has not been configured`
  
- - Throws:
-    1) not Found Key
-    2) not Verified Jwt
-    3) Nil Error
-    4) invalid_jwt: JWT not valid before nbf: \(nbf)
-    5) invalid_jwt: JWT not valid before iat: \(iat)
-    6) invalid_jwt: JWT not valid before exp: \(exp)
-    7) invalid_config: JWT audience is required but your app address has not been configured
- 
- - Returns: JwtVerified
+ - Returns: `JwtVerified`
  
  */
 private func resolveVerified(authenticator: DIDAuthenticator, jwt: String, jwtDecoded: JwtDecoded, options: JwtVerifyOptions) throws -> JwtVerified {
@@ -289,21 +262,16 @@ private func resolveVerified(authenticator: DIDAuthenticator, jwt: String, jwtDe
 /**
  Resolves relevant public keys or other authenticating material used to verify signature from the DID document of provided DID
  
- - Parameter with:
+ - Parameter Resolver
+ - Parameter algorithm a JWT algorithm
+ - Parameter issuer
+ - Parameter ProofPurposeTypes
+
+ - Throws: `not_supported: No supported signature types for algorithm`
+ - Throws: `resolver_error: Unable to resolve DID document for \(issuer)`
+ - Throws: `no_suitable_keys: DID document for \(issuer) does not have public keys suitable for \(alg) with \(proofPurpose.rawValue) purpose`
  
-    - Resolver
-    - algorithm
-    - issuer
-    - ProofPurposeTypes
- 
- - Throws:
-    1) resolver error
-    2) invalid_jwt: JWT iss is required
-    3) invalid_jwt: JWT sub is required
-    4) invalid_jwt: JWT did is required
-    5) invalid_jwt: No DID has been found in the JWT
- 
- - Returns: DIDAuthenticator
+ - Returns: `DIDAuthenticator` resolves with a response object containing an array of authenticators or if non exist rejects with an error
  
  */
 private func resolveAuthenticator(resolver: Resolvable, alg: String, issuer: String, proofPurpose: ProofPurposeTypes) throws -> DIDAuthenticator {

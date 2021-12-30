@@ -8,12 +8,11 @@
 import Foundation
 import PromiseKit
 
-// MARK: JWT
 
 /**
  A struct representing the `Header` and `Claims` of a JSON Web Token.
  
- - Property with:
+ - **Property with**
  
     - header
     - claims
@@ -78,13 +77,13 @@ public struct JWT<T: Claims>: Codable {
     /// - Throws: An EncodingError if the JSONEncoder throws an error while encoding the JWT.
     /// - Throws: `JWTError.osVersionToLow` if not using macOS 10.12.0 (Sierra) or iOS 10.0 or higher.
     /// - Throws: A Signing error if the jwtSigner is unable to sign the JWT with the provided key.
-    public mutating func sign(using jwtSigner: JWTSigner) async throws -> String {
+    public mutating func sign(using jwtSigner: JWTSigner) throws -> String {
         var tempHeader = header
         tempHeader.alg = jwtSigner.name
         let headerString = try tempHeader.encode()
         let claimsString = try claims.encode()
         header.alg = tempHeader.alg
-        return try await jwtSigner.sign(header: headerString, claims: claimsString)
+        return try jwtSigner.sign(header: headerString, claims: claimsString)
     }
 
     /// Verify the signature of the encoded JWT using the given algorithm.

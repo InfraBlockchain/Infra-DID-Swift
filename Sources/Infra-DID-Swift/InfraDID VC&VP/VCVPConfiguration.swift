@@ -7,15 +7,6 @@
 
 import Foundation
 
-
-/** Struct CredentialStatus
- 
- - Property with:
- 
-    - id
-    - type
- 
- */
 public struct CredentialStatus: Codable {
   var id: String
   var type: String
@@ -26,14 +17,6 @@ public struct CredentialStatus: Codable {
   }
 }
 
-/** Enum EvidenceType For UnionType
- 
- - Case with:
- 
-    - String
-    - Dictionary
- 
- */
 public enum EvidenceType: Codable {
   case string(String)
   case dic([String:String])
@@ -111,7 +94,7 @@ public enum SubjectValue: Codable {
   }
   
   ///Get Property Value
-  var credentialValue: Any {
+  public var credentialValue: Any {
     switch self {
     case .object(let payoad):
       return payoad
@@ -129,24 +112,10 @@ public enum SubjectValue: Codable {
   }
 }
 
-
-/** Struct VerifiableCredentialObject
- 
- - Property with:
- 
-    - Context
-    - Type
-    - CredentialSubject
- 
- ### Usage Example: ###
- ```swift
- credentialSubject = SubjectValue.array([])
- ```
- */
 public struct VerifiableCredentialObject: Codable {
-  var context: [String]
-  var type: [String]
-  var credentialSubject: SubjectValue
+  public var context: [String]
+  public var type: [String]
+  public var credentialSubject: SubjectValue
   
   public enum CodingKeys: String, CodingKey {
     case context = "@context"
@@ -172,20 +141,21 @@ public struct VerifiableCredentialObject: Codable {
 }
 
 
-/** Struct VerifiedCredential
+/**
  
  Represents the result of a Credential verification. It includes the properties produced by did-jwt and a W3C compliant representation of the Credential that was just verified.
+ 
  This is usually the result of a verification method and not meant to be created by generic code.
  
- - Property with:
+ - **Property with**
  
     - verifiedJwt
     - verifiableCredential
  
  */
 public struct VerifiedCredential: Codable {
-  var verifiedJwt: JwtVerified
-  var verifiableCredential: CredentialPayload
+  public var verifiedJwt: JwtVerified
+  public var verifiableCredential: CredentialPayload
   
   public init(verifiedJwt: JwtVerified = JwtVerified(), verifiableCredential: CredentialPayload = CredentialPayload()) {
     self.verifiedJwt = verifiedJwt
@@ -193,12 +163,12 @@ public struct VerifiedCredential: Codable {
   }
 }
 
-/** Struct VerifiedPresentation
+/**
  
  Represents the result of a Presentation verification. It includes the properties produced by did-jwt and a W3C compliant representation of the Presentation that was just verified.
  This is usually the result of a verification method and not meant to be created by generic code.
  
- - Property with:
+ - **Property with**
  
     - verifiedJwt
     - verifiablePresentation
@@ -206,9 +176,9 @@ public struct VerifiedCredential: Codable {
  
  */
 public struct VerifiedPresentation: Codable {
-  var verifiedJwt: JwtVerified
-  var verifiablePresentation: PresentationPayload
-  var verifiableCredentials: [VerifiedCredential] // Verified Result vc in vp
+  public var verifiedJwt: JwtVerified
+  public var verifiablePresentation: PresentationPayload
+  public var verifiableCredentials: [VerifiedCredential] // Verified Result vc in vp
   
   public enum CodingKeys: CodingKey {
     case verifiedJwt, verifiablePresentation, verifiableCredentials
@@ -240,19 +210,10 @@ public struct VerifiedPresentation: Codable {
 }
 
 
-/** Struct VerifiablePresentationObject
- 
- - Property with:
- 
-    - context
-    - type
-    - verifiableCredential
- 
- */
 public struct VerifiablePresentationObject: Codable {
-  var context: [String]
-  var type: [String]
-  var verifiableCredential: [String]
+  public var context: [String]
+  public var type: [String]
+  public var verifiableCredential: [String]
   
   public enum CodingKeys: String, CodingKey {
     case context = "@context"
@@ -306,7 +267,7 @@ public enum VerifiableCredentialType: Codable {
     }
   }
   
-  var credentialValue: Any {
+  public var credentialValue: Any {
     switch self {
     case .string(let s):
       return s
@@ -318,14 +279,14 @@ public enum VerifiableCredentialType: Codable {
   }
 }
 
-/** Struct JwtPresentationPayload
+/**
  
  A JWT payload representation of a Presentation
  
  See also:
  https://www.w3.org/TR/vc-data-model/#jwt-encoding
  
- - Property with:
+ - **Property with**
  
     - vp
     - iss
@@ -348,14 +309,14 @@ public struct JwtPresentationPayload: Codable {
   var iat: Date?
 }
 
-/** Struct JwtCredentialPayload
+/**
  
  A JWT payload representation of a Credential
  
  See also:
  https://www.w3.org/TR/vc-data-model/#jwt-encoding
  
- - Property with:
+ - **Property with**
  
     - vc
     - iss
@@ -380,11 +341,11 @@ public struct JwtCredentialPayload: Codable {
   var sub: String?
 }
 
-/** Struct PresentationPayload
+/**
  
  used as input when creating Verifiable Presentations
  
- - Property with:
+ - **Property with**
  
     - context
     - type
@@ -398,15 +359,15 @@ public struct JwtCredentialPayload: Codable {
  
  */
 public struct PresentationPayload: Codable {
-  var context: [String]
-  var type: [String]
-  var id: String?
-  var verifiableCredential: VerifiableCredentialType // [credentialPayload] or credentialPayload
-  var holder: String
-  var verifier: [String]?
-  var issuanceDate: String?
-  var expirationDate: String?
-  var proof: [String:String]
+ public var context: [String]
+ public var type: [String]
+ public var id: String?
+ public var verifiableCredential: VerifiableCredentialType
+ public var holder: String
+ public var verifier: [String]?
+ public var issuanceDate: String?
+ public var expirationDate: String?
+ public var proof: [String:String]
   
   public init(context: [String] = [], type: [String] = [], verifiableCredential: VerifiableCredentialType = VerifiableCredentialType.string([]), holder: String = "", proof: [String:String] = [:], id: String? = nil,
               verifier: [String]? = nil, issuanceDate: String? = nil, expirationDate: String? = nil) {
@@ -451,10 +412,10 @@ public struct PresentationPayload: Codable {
 }
 
 
-/** Struct CredentialPayload
+/**
  - Used as input when creating Verifiable Credentials
  
- - Property with:
+ - **Property with**
  
     - context
     - id
@@ -469,17 +430,17 @@ public struct PresentationPayload: Codable {
  
  */
 public struct CredentialPayload: Codable {
-  var context: [String]
-  var id: String?
-  var type: [String]
-  var issuer: [String:String]
-  var issuanceDate: String?
-  var expirationDate: String?
-  var credentialSubject: SubjectValue
-  var credentialStatus: CredentialStatus
-  var evidence: EvidenceType?
-  var termsOfUse: EvidenceType?
-  var proof = [String:String]()
+  public var context: [String]
+  public var id: String?
+  public var type: [String]
+  public var issuer: [String:String]
+  public var issuanceDate: String?
+  public var expirationDate: String?
+  public var credentialSubject: SubjectValue
+  public var credentialStatus: CredentialStatus
+  public var evidence: EvidenceType?
+  public var termsOfUse: EvidenceType?
+  public var proof = [String:String]()
   
   public enum CodingKeys: String, CodingKey {
     case context = "@context"
@@ -534,12 +495,12 @@ public struct CredentialPayload: Codable {
   }
 }
 
-/** Struct CredentialOptions
+/**
  
  Represents the Verification Options that can be passed to the verifyCredential method.
  These options are forwarded to the lower level verification code
  
- - Property with:
+ - **Property with**
  
     - domain
     - challenge
@@ -556,12 +517,12 @@ public struct CredentialOptions {
   }
 }
 
-/** Struct PresentationOptions
+/**
  
  Represents the Verification Options that can be passed to the verifyPresentation And CreateVPJWT method.
  The verification will fail if given options are NOT satisfied.
  
- - Property with:
+ - **Property with**
  
     - domain
     - challenge
@@ -582,13 +543,14 @@ public struct PresentationOptions {
 }
 
 
-/** Method Transforms a W3C Presentation payload into a JWT compatible encoding. The method accepts app specific fields and in case of collision, existing JWT properties will take precedence. Also, nbf, exp and jti properties can be explicitly set to undefined and they will be kept intact.
+/**
+ Method Transforms a W3C Presentation payload into a JWT compatible encoding. The method accepts app specific fields and in case of collision, existing JWT properties will take precedence. Also, nbf, exp and jti properties can be explicitly set to undefined and they will be kept intact.
  
- - Parameter with: CredentialPayload And JwtVcIssuer
+ - Parameter PresentationPayload
  
  - Throws: None
  
- - Returns: VerifiableCredential Jwt String
+ - Returns: JwtPresentationPayload
  
  */
 public func transformPresentationInput(input: PresentationPayload, removeOriginalFields: Bool = true) -> JwtPresentationPayload {
@@ -621,13 +583,14 @@ public func transformPresentationInput(input: PresentationPayload, removeOrigina
 }
 
 
-/** Method Transforms a W3C Credential payload into a JWT compatible encoding. The method accepts app specific fields and in case of collision, existing JWT properties will take precedence. Also, nbf, exp and jti properties can be explicitly set to undefined and they will be kept intact.
+/**
+ Method Transforms a W3C Credential payload into a JWT compatible encoding. The method accepts app specific fields and in case of collision, existing JWT properties will take precedence. Also, nbf, exp and jti properties can be explicitly set to undefined and they will be kept intact.
  
- - Parameter with: CredentialPayload And JwtVcIssuer
+ - Parameter CredentialPayload
  
  - Throws: None
  
- - Returns: VerifiableCredential Jwt String
+ - Returns: JwtCredentialPayload
  
  */
 public func transformCredentialInput(input: CredentialPayload) -> JwtCredentialPayload {

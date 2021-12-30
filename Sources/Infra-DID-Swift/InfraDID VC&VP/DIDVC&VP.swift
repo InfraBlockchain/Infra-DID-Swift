@@ -9,24 +9,26 @@ import Foundation
 import PromiseKit
 
 
-/** Method Creates a VerifiableCredential given a CredentialPayload or JwtCredentialPayload and an Issuer.
+/**
+ Creates a VerifiableCredential given a CredentialPayload or JwtCredentialPayload and an Issuer.
  
- - Parameter with:
-    - CredentialPayload
-    - JwtVcIssuer
+ This method transforms the payload into the JWT encoding  described in the W3C VC spec  and then validated to conform to the minimum spec required spec.
  
- - Throws: None
+ The issuer is then used to assign an algorithm, override the iss field of the payload and then sign the JWT.
  
- - Returns: VerifiableCredential Jwt String
+ - Parameter CredentialPayload
+ - Parameter Issuer the DID, signer and algorithm that will sign the token
+ 
+ - Returns: a Promise that resolves to the JWT encoded verifiable credential or rejects with TypeError if the payload is not W3C compliant
  
  */
-public func createVerifiableCredentialJwt(payload: CredentialPayload, issuer: JwtIssuer) async -> String {
+public func createVerifiableCredentialJwt(payload: CredentialPayload, issuer: JwtIssuer) -> String {
   
   ///CredentialPayload Convert to JwtCredentialPayload
   let jwtPayload: JwtCredentialPayload = transformCredentialInput(input: payload)
   
   ///Jwt String Validation
-  guard let bool = try? await validateJwtCredentialPayload(payload: jwtPayload), bool else { return "" }
+  guard let bool = try? validateJwtCredentialPayload(payload: jwtPayload), bool else { return "" }
   
   ///JwtCredentialPayload Convert to JwtPayload
   let jsonData = try! JSONEncoder().encode(jwtPayload)
@@ -35,24 +37,28 @@ public func createVerifiableCredentialJwt(payload: CredentialPayload, issuer: Jw
   }
   
   ///Creation Jwt
-  return try! await createJwt(payload: json, jwtOptions: JwtOptions(issuer: issuer.did != "" ? issuer.did : jwtPayload.iss ?? "", canonicalize: false, signer: issuer.signer, alg: nil, expiresIn: nil), header: Header())
+  return createJwt(payload: json, jwtOptions: JwtOptions(issuer: issuer.did != "" ? issuer.did : jwtPayload.iss ?? "", canonicalize: false, signer: issuer.signer, alg: nil, expiresIn: nil), header: Header())
 }
 
 
-/** Method Creates a VerifiablePresentation JWT given a PresentationPayload or JwtPresentationPayload and an Issuer.
+/**
+ Creates a VerifiablePresentation JWT given a PresentationPayload or JwtPresentationPayload and an Issuer.
  
- - Parameter with:
-    - PresentationPayload
-    - JwtVcIssuer(Issuer)
-    - PresentationOptions
+ This method transforms the payload into the JWT encoding  described in the W3C VC spec  and then validated to conform to the minimum spec required spec.
+ 
+ The holder is then used to assign an algorithm, override the iss field of the payload and then sign the JWT.
+ 
+ - Parameter PresentationPayload
+ - Parameter holder – Issuer of the Presentation JWT (holder of the VC), signer and algorithm that will sign the token
+ - Parameter options – CreatePresentationOptions allows to pass additional values to the resulting JWT payload
  
  - Throws: None
  
- - Returns: VerifiablePresentation Jwt String
+ - Returns: a Promise that resolves to the JWT encoded verifiable presentation or rejects with TypeError if the payload is not W3C compliant
  
  */
 
-public func createVerifiablePresentationJwt(payload: PresentationPayload, holder: JwtIssuer, options: PresentationOptions = PresentationOptions()) async -> String {
+public func createVerifiablePresentationJwt(payload: PresentationPayload, holder: JwtIssuer, options: PresentationOptions = PresentationOptions()) -> String {
   
   ///CredentialPayload Convert to JwtCredentialPayload
   var jwtPayload: JwtPresentationPayload = transformPresentationInput(input: payload)
@@ -68,7 +74,7 @@ public func createVerifiablePresentationJwt(payload: PresentationPayload, holder
   }
   
   ///Jwt String Validation
-  guard let bool = try? await validateJwtPresentationPayload(payload: jwtPayload), bool else { return "" }
+  guard let bool = try? validateJwtPresentationPayload(payload: jwtPayload), bool else { return "" }
   
   ///JwtCredentialPayload Convert to JwtPayload
   let jsonData = try! JSONEncoder().encode(jwtPayload)
@@ -77,22 +83,11 @@ public func createVerifiablePresentationJwt(payload: PresentationPayload, holder
   }
   
   ///Creation Jwt
-  return try! await createJwt(payload: json, jwtOptions: JwtOptions(issuer: holder.did != "" ? holder.did : jwtPayload.iss ?? "", canonicalize: false, signer: holder.signer, alg: nil, expiresIn: nil), header: Header())
+  return createJwt(payload: json, jwtOptions: JwtOptions(issuer: holder.did != "" ? holder.did : jwtPayload.iss ?? "", canonicalize: false, signer: holder.signer, alg: nil, expiresIn: nil), header: Header())
 }
 
 
-/** Method Validate JwtPresentationPayload
- 
- - Parameter with:
-    - JwtPresentationPayload
- 
- - Throws: 1) Jwt Format Error
-           2) Not Exists verifiableCredential
- 
- - Returns: isValidate Boolean
- 
- */
-public func validateJwtPresentationPayload(payload: JwtPresentationPayload) async throws -> Bool  {
+private func validateJwtPresentationPayload(payload: JwtPresentationPayload) throws -> Bool  {
   
   ///Validate Configuration Payload
   guard let vp = payload.vp, vp.type.count != 0, vp.context.count != 0, vp.verifiableCredential.count != 0 else { throw JWTError(localizedDescription: "@context is missing default context")}
@@ -111,19 +106,7 @@ public func validateJwtPresentationPayload(payload: JwtPresentationPayload) asyn
   return true
 }
 
-
-/** Method Validate JwtCredentialPayload
- 
- - Parameter with:
-    - JwtCredentialPayload
- 
- - Throws: 1) Verifiable Credential Not Found
-           2) Payload Configuration Error
- 
- - Returns: isValidate Boolean
- 
- */
-public func validateJwtCredentialPayload(payload: JwtCredentialPayload) async throws -> Bool {
+private func validateJwtCredentialPayload(payload: JwtCredentialPayload) throws -> Bool {
 
   ///Validate Configuration Payload
   guard let vc = payload.vc, vc.type.count != 0 , vc.context.count != 0, let _ = vc.credentialSubject.credentialValue as? [String:Any]  else {
@@ -136,19 +119,7 @@ public func validateJwtCredentialPayload(payload: JwtCredentialPayload) async th
   return true
 }
 
-
-/** Method Validate CredentialPayload
- 
- - Parameter with:
-    - CredentialPayload
- 
- - Throws: 1) Verifiable Credential Not Found
-           2) Payload Configuration Error
- 
- - Returns: isValidate Boolean
- 
- */
-public func validateCredentialPayload(payload: CredentialPayload) throws -> Bool {
+private func validateCredentialPayload(payload: CredentialPayload) throws -> Bool {
   
   ///Validate Configuration Payload
   guard payload.context.count != 0, payload.type.count != 0, let _ = payload.credentialSubject.credentialValue as? [String:Any]  else {
@@ -162,21 +133,17 @@ public func validateCredentialPayload(payload: CredentialPayload) throws -> Bool
   return true
 }
 
-
 /** Method Verifies that the given JwtPresentationPayload contains the appropriate options from VerifyPresentationOption
  
- - Parameter with:
-    - JwtPayload
-    - JwtIssuer
- 
- - Throws:
-    1) Presentation does not contain the mandatory challenge And
-    2) Presentation does not contain the mandatory domain (JWT: aud)
- 
- - Returns: None
+ - Parameter JwtPayload to verify against
+ - Parameter PresentationOptions that contain the optional values to verify.
+
+ - Throws: Error – If VerifyPresentationOptions are not satisfied
+
+ - Returns None
  
  */
-public func verifyPresentationPayloadOptions(payload: JwtPayload, options: PresentationOptions) async throws  {
+private func verifyPresentationPayloadOptions(payload: JwtPayload, options: PresentationOptions) throws  {
   if options.challenge != nil && payload.nonce != options.challenge {
     throw JWTError(localizedDescription: "Presentation does not contain the mandatory challenge")
   }
@@ -195,46 +162,26 @@ public func verifyPresentationPayloadOptions(payload: JwtPayload, options: Prese
 }
 
 
-/** Method Normalizes a presentation payload into an unambiguous W3C Presentation data type
+/**
+ Normalizes a presentation payload into an unambiguous W3C Presentation data type
  
- - Parameter with:
-    - JwtString
-    - removeOriginalFields
- 
- - Throws:
-    1) Jwt Format Error
-    2) Jwt not is String
- 
- - Returns: PresentationPayload
+ - Parameter jwt - JWT payload
  
  */
-public func normalizedPresentation(jwt: String, removeOriginalFields: Bool = true) async throws -> PresentationPayload {
+private func normalizedPresentation(jwt: String, removeOriginalFields: Bool = true) throws -> PresentationPayload {
   if jwt != "" {
     let a = "[a-zA-Z0-9_-]+"
     let part = jwt.matchingStrings(regex: "^\(a).\(a).?\(a)$")
     
     guard part[0].count != 0 else { throw JWTError(localizedDescription: "Jwt Format Error")}
     
-    return try! await normalizeJwtPresentation(input: jwt)
+    return try! normalizeJwtPresentation(input: jwt)
   } else {
     throw JWTError(localizedDescription: "Jwt not is String")
   }
 }
 
-
-
-/** Method Normalizes JwtString to JwtPresentationPayload
- 
- - Parameter with:
-    - JwtString
- 
- - Throws:
-    1) Not Found DID
- 
- - Returns: PresentationPayload
- 
- */
-public func normalizeJwtPresentation(input: String) async throws -> PresentationPayload {
+private func normalizeJwtPresentation(input: String) throws -> PresentationPayload {
   
   ///jwtDecoded
   let decoded = decodeJwt(jwt: input)
@@ -259,17 +206,7 @@ public func normalizeJwtPresentation(input: String) async throws -> Presentation
   
 }
 
-
-/** Method Normalizes JwtPayload to PresentationPayload
- 
- - Parameter with: CredentialPayload And JwtVcIssuer
- 
- - Throws: None
- 
- - Returns: PresentationPayloade
- 
- */
-public func normalizeJwtPresentationPayload(input: JwtPayload) -> PresentationPayload {
+private func normalizeJwtPresentationPayload(input: JwtPayload) -> PresentationPayload {
   let formatter = ISO8601DateFormatter()
   
   var payload: PresentationPayload = PresentationPayload() //initialized
@@ -309,18 +246,14 @@ public func normalizeJwtPresentationPayload(input: JwtPayload) -> PresentationPa
 }
 
 
-/** Method Normalizes a credential payload into an unambiguous W3C credential data type In case of conflict, Existing W3C Credential specific properties take precedence, except for arrays and object types which get merged
+/**
+ Method Normalizes a credential payload into an unambiguous W3C credential data type In case of conflict, Existing W3C Credential specific properties take precedence, except for arrays and object types which get merged
  
- - Parameter with:
-    - JwtPayload
-    - JwtString
- 
- - Throws: None
- 
- - Returns: CredentialPayload
+ - Parameter input – JWT payload
+ - Parameter jwt - JWT String
  
  */
-public func normalizeCredential(input: JwtPayload, jwt: String) -> CredentialPayload {
+private func normalizeCredential(input: JwtPayload, jwt: String) -> CredentialPayload {
   
   var credentialPayload = CredentialPayload()
   
@@ -345,17 +278,6 @@ public func normalizeCredential(input: JwtPayload, jwt: String) -> CredentialPay
   return credentialPayload
 }
 
-
-/** Method Validates PresentationPayload
- 
- - Parameter with:
-    - PresentationPayload
- 
- - Throws: None
- 
- - Returns: isValidate Boolean
- 
- */
 private func validatePresentationPayload(payload: PresentationPayload) -> Bool {
   let formatter = ISO8601DateFormatter()
   let expDate = formatter.date(from: payload.expirationDate ?? "")
@@ -366,27 +288,28 @@ private func validatePresentationPayload(payload: PresentationPayload) -> Bool {
 }
 
 
-/** Method Verifies and validates a VerifiablePresentation that is encoded as a JWT according to the W3C spec.
+/**
+ Method Verifies and validates a VerifiablePresentation that is encoded as a JWT according to the W3C spec.
  
- - Parameter with:
-    - PresentationJwtString
-    - Resolver
-    - PresentationOptions
+ - Parameter presentation – the presentation to be verified. Currently only the JWT encoding is supported by this library
+ - Parameter resolver – a configured Resolver or an implementation of Resolvable that can provide the DID document of the JWT issuer (presentation holder)
+ - Parameter options – optional verification options that need to be satisfied
  
  - Throws: None
  
- - Returns: VerifiedPresentation
+ - Returns: a Promise that resolves to a VerifiedPresentation or rejects with TypeError if the input is
+            not W3C compliant or the VerifyPresentationOptions are not satisfied
  
  */
-public func verifyPresentation(presentation: String, resolver: Resolvable, options: PresentationOptions = PresentationOptions()) async -> VerifiedPresentation {
+public func verifyPresentation(presentation: String, resolver: Resolvable, options: PresentationOptions = PresentationOptions()) -> VerifiedPresentation {
   
   guard let verified = try? verifyJwt(jwt: presentation, options: JwtVerifyOptions(proofPurpose: nil, audience: options.audience ?? nil, resolver: resolver)) else { return VerifiedPresentation()} // VerifyVpJwt
 
   var verifiedPresentation = VerifiedPresentation(verifiedJwt: verified, verifiablePresentation: PresentationPayload())
 
-  try? await verifyPresentationPayloadOptions(payload: verified.payload!, options: options)
+  try? verifyPresentationPayloadOptions(payload: verified.payload!, options: options)
   
-  guard let presentationPayload = try? await normalizedPresentation(jwt: verified.jwt) else { return VerifiedPresentation() }
+  guard let presentationPayload = try? normalizedPresentation(jwt: verified.jwt) else { return VerifiedPresentation() }
   
   verifiedPresentation.verifiablePresentation = presentationPayload
   
@@ -405,16 +328,15 @@ public func verifyPresentation(presentation: String, resolver: Resolvable, optio
 }
 
 
-/** Method Verifies and validates a VerifiableCredential that is encoded as a JWT according to the W3C spec.
+/**
+ Method Verifies and validates a VerifiableCredential that is encoded as a JWT according to the W3C spec.
  
- - Parameter with:
-    - CredentialJwtString
-    - Resolver
-    - CredentialOptions
+ - Parameter vc – the credential to be verified. Currently only the JWT encoding is supported by this library
+ - Parameter resolver – a configured Resolver (or an implementation of Resolvable) that can provide the DID document of the JWT issuer
  
  - Throws: None
  
- - Returns: VerifiedCredential
+ - Returns: a Promise that resolves to a VerifiedCredential or rejects with TypeError if the input is not W3C compliant
  
  */
 public func verifyCredential(credential: String, resolver: Resolvable, options: CredentialOptions = CredentialOptions()) -> VerifiedCredential {

@@ -17,16 +17,6 @@ public enum ProofPurposeTypes: String {
   case capabilityInvocation = "capabilityInvocation"
 }
 
-//public enum SignerInputData {
-//  case string(String)
-//  case array([UInt8])
-//}
-//
-//public enum SignerResult {
-//  case signature(EcdsaSignature)
-//  case string(String)
-//}
-
 public struct JwtOptions {
   var issuer: String
   var signer: JWTSigner?
@@ -60,26 +50,10 @@ public struct JwtVerifyOptions {
   }
 }
 
-
-public struct JwsCreationOptions {
-  var canonicalize: Bool?
-}
-
-// MARK: DIDAuthenticator
-/**
- 
- 
- - Property with:
- 
-    - authenticators
-    - issuer
-    - didResolutionResult
- 
- */
 public struct DIDAuthenticator {
-  var authenticators: [VerificationMethod]
-  var issuer: String
-  var didResolutionResult: DIDResolutionResult
+  public var authenticators: [VerificationMethod]
+  public var issuer: String
+  public var didResolutionResult: DIDResolutionResult
   
   public init(authenticators: [VerificationMethod] = [], issuer: String = "", didResolutionResult: DIDResolutionResult = DIDResolutionResult()) {
     
@@ -89,44 +63,22 @@ public struct DIDAuthenticator {
   }
 }
 
-// MARK: JwtPayload
-/**
- 
- Payload with both credential and Presentation, inherit Claims
- 
- - Property with:
- 
-    - iss
-    - sub
-    - aud
-    - iat
-    - nbf
-    - exp
-    - rexp
-    - did
-    - jti
-    - jti
-    - vc
-    - vp
-    - nonce
- 
- */
 public struct JwtPayload: Claims {
-  var iss: String?
-  var sub: String?
-  var aud: [String]?
+  public var iss: String?
+  public var sub: String?
+  public var aud: [String]?
   public var iat: Date?
   public var nbf: Date?
   public var exp: Date?
-  var rexp: Double?
+  public var rexp: Double?
   //var requested: [String]
   //var subJwk: [String:Any]?
-  var did: String?
+  public var did: String?
   //var claim: T
-  var jti: String?
-  var vc: VerifiableCredentialObject?
-  var vp: VerifiablePresentationObject?
-  var nonce: String?
+  public var jti: String?
+  public var vc: VerifiableCredentialObject?
+  public var vp: VerifiablePresentationObject?
+  public var nonce: String?
   
   enum CodingKeys:  String, CodingKey {
     case iss, sub, aud, iat, nbf, exp, rexp, did, vc, vp, nonce
@@ -180,20 +132,11 @@ public struct JwtPayload: Claims {
   }
 }
 
-// MARK: decodeJws
-/** Struct CredentialStatus
- 
- - Property with:
- 
-    - id
-    - type
- 
- */
 public struct JwtDecoded {
-  var header: Header
-  var payload: JwtPayload
-  var signature: String
-  var data: String
+  public var header: Header
+  public var payload: JwtPayload
+  public var signature: String
+  public var data: String
   
   public init(header: Header = Header(), payload: JwtPayload = JwtPayload(), signature: String = "", data: String = "") {
     self.header = header
@@ -204,17 +147,6 @@ public struct JwtDecoded {
 }
 
 
-// MARK: JwsDecoded
-/**
- 
- - Property with:
- 
-    - header
-    - payload
-    - signature
-    - data
- 
- */
 public struct JwsDecoded {
   var header: Header
   var payload: String
@@ -229,18 +161,6 @@ public struct JwsDecoded {
   }
 }
 
-// MARK: JwtVerified
-/**
- 
- - Property with:
- 
-    - payload
-    - didResolutionResult
-    - issuer
-    - signer
-    - jwt
- 
- */
 public struct JwtVerified: Codable {
   var payload: JwtPayload?
   var didResolutionResult: DIDResolutionResult

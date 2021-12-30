@@ -17,10 +17,8 @@ public protocol Resolvable {
   /**
    DID Resolver Class bound to the infradidresolver class
    
-   - Parameter with:
-   
-      - resolverRegistry
-      - cache
+   - Parameter resolverRegistry
+   - Parameter cache
    
    */
 public class Resolver: Resolvable {
@@ -33,7 +31,8 @@ public class Resolver: Resolvable {
     /**
      DID Parsing And Caching
      
-     - Parameter with:
+     - Parameter didUrl
+     - Parameter DIDResolutionOptions
      
         - didUrl
         - DIDResolutionOptions

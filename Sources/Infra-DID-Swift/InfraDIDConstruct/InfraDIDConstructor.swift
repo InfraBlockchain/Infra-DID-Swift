@@ -15,38 +15,15 @@ import EosioSwiftSoftkeySignatureProvider
 import EosioSwiftAbieosSerializationProvider
 
 
-/** Protocol InfraDIDConfApiDependency
- 
- - Method actionPubKeyDID
- 
- - Parameter with:
- 
-    - actionName
-    - key
-    - value
-    - newKey
- 
- */
 protocol InfraDIDConfApiDependency {
   
   func actionPubKeyDID(actionName: TransactionAction, key: String,
                        value: String, newKey: String)
 }
 
-/** Struct InfraDIDConstructor
- 
- - Property with:
- 
-    - idConfig
-    - defaultPubKeyDidSignDataPrefix
-    - didPubKey
-    - didAccount
-    - did
-    - jsonRpc
-    - rpcGroup
-    - didOwnerPrivateKeyObjc
-    - sigProviderPrivKeys
- 
+
+/**
+ DID Constructor
  */
 public class InfraDIDConstructor {
   
@@ -110,14 +87,21 @@ public class InfraDIDConstructor {
     }
   }
   
-  /** Method to Create DID based on Secp256k1
+  /**
+   Method to Create DID based on Secp256k1
    
-   - Parameter with: NetworkID for DID creation
+   - Parameter NetworkID for DID creation
    
    - Throws: None
    
    - Returns: DID Parsing Dictionary
    
+   ###Return Example###
+   ```swift
+   ["privateKey": "PVT_K1_5KSvrttdrp3GbTcCuwcx4Nr9H2qkKwjYfABnDFe3Q7PEj3BUe5B",
+    "did": "did:infra:01:PUB_K1_6UY4G4ZBd27AssbniQ5513LkyVZnM2hYz2Rc7GUjjo8wDAja9r",
+    "publicKey": "PUB_K1_6UY4G4ZBd27AssbniQ5513LkyVZnM2hYz2Rc7GUjjo8wDAja9r"]
+   ```
    */
 
   static public func createPubKeyDID(networkID: String) -> [String: String] {
@@ -137,13 +121,13 @@ public class InfraDIDConstructor {
 
 extension InfraDIDConstructor: InfraDIDConfApiDependency {
   
-  /** Method Get Nonce from the table of the corresponding did in the blockchain
+  /**
    
-   - Parameter with: NetworkID for DID creation
+   Method Get Nonce from the table of the corresponding did in the blockchain
    
    - Throws: None
    
-   - Returns: DID Parsing Dictionary
+   - Returns: Nonce
    
    */
   private func getNonceForPubKeyDid() -> Promise<Double> {
@@ -184,6 +168,16 @@ extension InfraDIDConstructor: InfraDIDConfApiDependency {
     
   }
   
+  
+  /**
+   Method Transaction to Blockchain based on PubKeyDID
+   
+   - Parameter ActionName is TransactionActionName
+   - Parameter key
+   - Parameter value
+   - Parameter newKey is changeOwnerKey
+   
+   */
   public func actionPubKeyDID(actionName: TransactionAction, key: String = "",
                               value: String = "", newKey: String = "") {
     var bufArray: [UInt8] = [] //digest buffer initialize
@@ -247,15 +241,6 @@ extension InfraDIDConstructor: InfraDIDConfApiDependency {
     self.actionTransaction(action: transactionAction)
   }
   
-  /** Method ActionTransaction
-   
-   - Parameter with: ActionName
-   
-   - Throws: None
-   
-   - Returns: None
-   
-   */
   private func actionTransaction(action: EosioTransaction.Action)  {
     let transaction = EosioTransaction.init()
     
@@ -281,11 +266,8 @@ extension InfraDIDConstructor: InfraDIDConfApiDependency {
     self.rpcGroup.wait()
   }
   
-  /** Method Get Issuer
-   
-   - Parameter with: None
-   
-   - Throws: None
+  /**
+   Method Get Issuer
    
    - Returns: JwtIssuer
    

@@ -1,0 +1,1531 @@
+{
+  "warnings": [
+    {
+      "file": "/Users/ichanghwa/Desktop/Infra-DID-Swift/Sources/Infra-DID-Swift/InfraDID VC&VP/DIDVC&VP.swift",
+      "line": 90,
+      "symbol": "validateJwtPresentationPayload(payload:)",
+      "symbol_kind": "source.lang.swift.decl.function.free",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/ichanghwa/Desktop/Infra-DID-Swift/Sources/Infra-DID-Swift/InfraDID VC&VP/DIDVC&VP.swift",
+      "line": 109,
+      "symbol": "validateJwtCredentialPayload(payload:)",
+      "symbol_kind": "source.lang.swift.decl.function.free",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/ichanghwa/Desktop/Infra-DID-Swift/Sources/Infra-DID-Swift/InfraDID VC&VP/DIDVC&VP.swift",
+      "line": 122,
+      "symbol": "validateCredentialPayload(payload:)",
+      "symbol_kind": "source.lang.swift.decl.function.free",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/ichanghwa/Desktop/Infra-DID-Swift/Sources/Infra-DID-Swift/InfraDID VC&VP/DIDVC&VP.swift",
+      "line": 184,
+      "symbol": "normalizeJwtPresentation(input:)",
+      "symbol_kind": "source.lang.swift.decl.function.free",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/ichanghwa/Desktop/Infra-DID-Swift/Sources/Infra-DID-Swift/InfraDID VC&VP/DIDVC&VP.swift",
+      "line": 209,
+      "symbol": "normalizeJwtPresentationPayload(input:)",
+      "symbol_kind": "source.lang.swift.decl.function.free",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/ichanghwa/Desktop/Infra-DID-Swift/Sources/Infra-DID-Swift/InfraDID VC&VP/DIDVC&VP.swift",
+      "line": 281,
+      "symbol": "validatePresentationPayload(payload:)",
+      "symbol_kind": "source.lang.swift.decl.function.free",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/ichanghwa/Desktop/Infra-DID-Swift/Sources/Infra-DID-Swift/InfraDID VC&VP/VCVPConfiguration.swift",
+      "line": 10,
+      "symbol": "CredentialStatus",
+      "symbol_kind": "source.lang.swift.decl.struct",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/ichanghwa/Desktop/Infra-DID-Swift/Sources/Infra-DID-Swift/InfraDID VC&VP/VCVPConfiguration.swift",
+      "line": 20,
+      "symbol": "EvidenceType",
+      "symbol_kind": "source.lang.swift.decl.enum",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/ichanghwa/Desktop/Infra-DID-Swift/Sources/Infra-DID-Swift/InfraDID VC&VP/VCVPConfiguration.swift",
+      "line": 52,
+      "symbol": "SubjectValue.string(_:)",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/ichanghwa/Desktop/Infra-DID-Swift/Sources/Infra-DID-Swift/InfraDID VC&VP/VCVPConfiguration.swift",
+      "line": 53,
+      "symbol": "SubjectValue.int(_:)",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/ichanghwa/Desktop/Infra-DID-Swift/Sources/Infra-DID-Swift/InfraDID VC&VP/VCVPConfiguration.swift",
+      "line": 54,
+      "symbol": "SubjectValue.double(_:)",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/ichanghwa/Desktop/Infra-DID-Swift/Sources/Infra-DID-Swift/InfraDID VC&VP/VCVPConfiguration.swift",
+      "line": 55,
+      "symbol": "SubjectValue.bool(_:)",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/ichanghwa/Desktop/Infra-DID-Swift/Sources/Infra-DID-Swift/InfraDID VC&VP/VCVPConfiguration.swift",
+      "line": 56,
+      "symbol": "SubjectValue.object(_:)",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/ichanghwa/Desktop/Infra-DID-Swift/Sources/Infra-DID-Swift/InfraDID VC&VP/VCVPConfiguration.swift",
+      "line": 57,
+      "symbol": "SubjectValue.array(_:)",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/ichanghwa/Desktop/Infra-DID-Swift/Sources/Infra-DID-Swift/InfraDID VC&VP/VCVPConfiguration.swift",
+      "line": 115,
+      "symbol": "VerifiableCredentialObject",
+      "symbol_kind": "source.lang.swift.decl.struct",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/ichanghwa/Desktop/Infra-DID-Swift/Sources/Infra-DID-Swift/InfraDID VC&VP/VCVPConfiguration.swift",
+      "line": 157,
+      "symbol": "VerifiedCredential.verifiedJwt",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/ichanghwa/Desktop/Infra-DID-Swift/Sources/Infra-DID-Swift/InfraDID VC&VP/VCVPConfiguration.swift",
+      "line": 158,
+      "symbol": "VerifiedCredential.verifiableCredential",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/ichanghwa/Desktop/Infra-DID-Swift/Sources/Infra-DID-Swift/InfraDID VC&VP/VCVPConfiguration.swift",
+      "line": 160,
+      "symbol": "VerifiedCredential.init(verifiedJwt:verifiableCredential:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/ichanghwa/Desktop/Infra-DID-Swift/Sources/Infra-DID-Swift/InfraDID VC&VP/VCVPConfiguration.swift",
+      "line": 179,
+      "symbol": "VerifiedPresentation.verifiedJwt",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/ichanghwa/Desktop/Infra-DID-Swift/Sources/Infra-DID-Swift/InfraDID VC&VP/VCVPConfiguration.swift",
+      "line": 180,
+      "symbol": "VerifiedPresentation.verifiablePresentation",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/ichanghwa/Desktop/Infra-DID-Swift/Sources/Infra-DID-Swift/InfraDID VC&VP/VCVPConfiguration.swift",
+      "line": 181,
+      "symbol": "VerifiedPresentation.verifiableCredentials",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/ichanghwa/Desktop/Infra-DID-Swift/Sources/Infra-DID-Swift/InfraDID VC&VP/VCVPConfiguration.swift",
+      "line": 183,
+      "symbol": "VerifiedPresentation.CodingKeys",
+      "symbol_kind": "source.lang.swift.decl.enum",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/ichanghwa/Desktop/Infra-DID-Swift/Sources/Infra-DID-Swift/InfraDID VC&VP/VCVPConfiguration.swift",
+      "line": 187,
+      "symbol": "VerifiedPresentation.init(verifiedJwt:verifiablePresentation:verifiableCredentials:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/ichanghwa/Desktop/Infra-DID-Swift/Sources/Infra-DID-Swift/InfraDID VC&VP/VCVPConfiguration.swift",
+      "line": 203,
+      "symbol": "VerifiedPresentation.encode(from:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/ichanghwa/Desktop/Infra-DID-Swift/Sources/Infra-DID-Swift/InfraDID VC&VP/VCVPConfiguration.swift",
+      "line": 213,
+      "symbol": "VerifiablePresentationObject",
+      "symbol_kind": "source.lang.swift.decl.struct",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/ichanghwa/Desktop/Infra-DID-Swift/Sources/Infra-DID-Swift/InfraDID VC&VP/VCVPConfiguration.swift",
+      "line": 236,
+      "symbol": "VerifiableCredentialType.string(_:)",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/ichanghwa/Desktop/Infra-DID-Swift/Sources/Infra-DID-Swift/InfraDID VC&VP/VCVPConfiguration.swift",
+      "line": 237,
+      "symbol": "VerifiableCredentialType.credential(_:)",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/ichanghwa/Desktop/Infra-DID-Swift/Sources/Infra-DID-Swift/InfraDID VC&VP/VCVPConfiguration.swift",
+      "line": 238,
+      "symbol": "VerifiableCredentialType.credentialArray(_:)",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/ichanghwa/Desktop/Infra-DID-Swift/Sources/Infra-DID-Swift/InfraDID VC&VP/VCVPConfiguration.swift",
+      "line": 270,
+      "symbol": "VerifiableCredentialType.credentialValue",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/ichanghwa/Desktop/Infra-DID-Swift/Sources/Infra-DID-Swift/InfraDID VC&VP/VCVPConfiguration.swift",
+      "line": 302,
+      "symbol": "JwtPresentationPayload.vp",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/ichanghwa/Desktop/Infra-DID-Swift/Sources/Infra-DID-Swift/InfraDID VC&VP/VCVPConfiguration.swift",
+      "line": 303,
+      "symbol": "JwtPresentationPayload.iss",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/ichanghwa/Desktop/Infra-DID-Swift/Sources/Infra-DID-Swift/InfraDID VC&VP/VCVPConfiguration.swift",
+      "line": 304,
+      "symbol": "JwtPresentationPayload.aud",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/ichanghwa/Desktop/Infra-DID-Swift/Sources/Infra-DID-Swift/InfraDID VC&VP/VCVPConfiguration.swift",
+      "line": 305,
+      "symbol": "JwtPresentationPayload.nbf",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/ichanghwa/Desktop/Infra-DID-Swift/Sources/Infra-DID-Swift/InfraDID VC&VP/VCVPConfiguration.swift",
+      "line": 306,
+      "symbol": "JwtPresentationPayload.exp",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/ichanghwa/Desktop/Infra-DID-Swift/Sources/Infra-DID-Swift/InfraDID VC&VP/VCVPConfiguration.swift",
+      "line": 307,
+      "symbol": "JwtPresentationPayload.jti",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/ichanghwa/Desktop/Infra-DID-Swift/Sources/Infra-DID-Swift/InfraDID VC&VP/VCVPConfiguration.swift",
+      "line": 308,
+      "symbol": "JwtPresentationPayload.nonce",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/ichanghwa/Desktop/Infra-DID-Swift/Sources/Infra-DID-Swift/InfraDID VC&VP/VCVPConfiguration.swift",
+      "line": 309,
+      "symbol": "JwtPresentationPayload.iat",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/ichanghwa/Desktop/Infra-DID-Swift/Sources/Infra-DID-Swift/InfraDID VC&VP/VCVPConfiguration.swift",
+      "line": 333,
+      "symbol": "JwtCredentialPayload.vc",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/ichanghwa/Desktop/Infra-DID-Swift/Sources/Infra-DID-Swift/InfraDID VC&VP/VCVPConfiguration.swift",
+      "line": 334,
+      "symbol": "JwtCredentialPayload.iss",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/ichanghwa/Desktop/Infra-DID-Swift/Sources/Infra-DID-Swift/InfraDID VC&VP/VCVPConfiguration.swift",
+      "line": 335,
+      "symbol": "JwtCredentialPayload.aud",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/ichanghwa/Desktop/Infra-DID-Swift/Sources/Infra-DID-Swift/InfraDID VC&VP/VCVPConfiguration.swift",
+      "line": 336,
+      "symbol": "JwtCredentialPayload.nbf",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/ichanghwa/Desktop/Infra-DID-Swift/Sources/Infra-DID-Swift/InfraDID VC&VP/VCVPConfiguration.swift",
+      "line": 337,
+      "symbol": "JwtCredentialPayload.exp",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/ichanghwa/Desktop/Infra-DID-Swift/Sources/Infra-DID-Swift/InfraDID VC&VP/VCVPConfiguration.swift",
+      "line": 338,
+      "symbol": "JwtCredentialPayload.jti",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/ichanghwa/Desktop/Infra-DID-Swift/Sources/Infra-DID-Swift/InfraDID VC&VP/VCVPConfiguration.swift",
+      "line": 339,
+      "symbol": "JwtCredentialPayload.nonce",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/ichanghwa/Desktop/Infra-DID-Swift/Sources/Infra-DID-Swift/InfraDID VC&VP/VCVPConfiguration.swift",
+      "line": 340,
+      "symbol": "JwtCredentialPayload.iat",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/ichanghwa/Desktop/Infra-DID-Swift/Sources/Infra-DID-Swift/InfraDID VC&VP/VCVPConfiguration.swift",
+      "line": 341,
+      "symbol": "JwtCredentialPayload.sub",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/ichanghwa/Desktop/Infra-DID-Swift/Sources/Infra-DID-Swift/InfraDID VC&VP/VCVPConfiguration.swift",
+      "line": 362,
+      "symbol": "PresentationPayload.context",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/ichanghwa/Desktop/Infra-DID-Swift/Sources/Infra-DID-Swift/InfraDID VC&VP/VCVPConfiguration.swift",
+      "line": 363,
+      "symbol": "PresentationPayload.type",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/ichanghwa/Desktop/Infra-DID-Swift/Sources/Infra-DID-Swift/InfraDID VC&VP/VCVPConfiguration.swift",
+      "line": 364,
+      "symbol": "PresentationPayload.id",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/ichanghwa/Desktop/Infra-DID-Swift/Sources/Infra-DID-Swift/InfraDID VC&VP/VCVPConfiguration.swift",
+      "line": 365,
+      "symbol": "PresentationPayload.verifiableCredential",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/ichanghwa/Desktop/Infra-DID-Swift/Sources/Infra-DID-Swift/InfraDID VC&VP/VCVPConfiguration.swift",
+      "line": 366,
+      "symbol": "PresentationPayload.holder",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/ichanghwa/Desktop/Infra-DID-Swift/Sources/Infra-DID-Swift/InfraDID VC&VP/VCVPConfiguration.swift",
+      "line": 367,
+      "symbol": "PresentationPayload.verifier",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/ichanghwa/Desktop/Infra-DID-Swift/Sources/Infra-DID-Swift/InfraDID VC&VP/VCVPConfiguration.swift",
+      "line": 368,
+      "symbol": "PresentationPayload.issuanceDate",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/ichanghwa/Desktop/Infra-DID-Swift/Sources/Infra-DID-Swift/InfraDID VC&VP/VCVPConfiguration.swift",
+      "line": 369,
+      "symbol": "PresentationPayload.expirationDate",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/ichanghwa/Desktop/Infra-DID-Swift/Sources/Infra-DID-Swift/InfraDID VC&VP/VCVPConfiguration.swift",
+      "line": 370,
+      "symbol": "PresentationPayload.proof",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/ichanghwa/Desktop/Infra-DID-Swift/Sources/Infra-DID-Swift/InfraDID VC&VP/VCVPConfiguration.swift",
+      "line": 372,
+      "symbol": "PresentationPayload.init(context:type:verifiableCredential:holder:proof:id:verifier:issuanceDate:expirationDate:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/ichanghwa/Desktop/Infra-DID-Swift/Sources/Infra-DID-Swift/InfraDID VC&VP/VCVPConfiguration.swift",
+      "line": 400,
+      "symbol": "PresentationPayload.encode(from:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/ichanghwa/Desktop/Infra-DID-Swift/Sources/Infra-DID-Swift/InfraDID VC&VP/VCVPConfiguration.swift",
+      "line": 433,
+      "symbol": "CredentialPayload.context",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/ichanghwa/Desktop/Infra-DID-Swift/Sources/Infra-DID-Swift/InfraDID VC&VP/VCVPConfiguration.swift",
+      "line": 434,
+      "symbol": "CredentialPayload.id",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/ichanghwa/Desktop/Infra-DID-Swift/Sources/Infra-DID-Swift/InfraDID VC&VP/VCVPConfiguration.swift",
+      "line": 435,
+      "symbol": "CredentialPayload.type",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/ichanghwa/Desktop/Infra-DID-Swift/Sources/Infra-DID-Swift/InfraDID VC&VP/VCVPConfiguration.swift",
+      "line": 436,
+      "symbol": "CredentialPayload.issuer",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/ichanghwa/Desktop/Infra-DID-Swift/Sources/Infra-DID-Swift/InfraDID VC&VP/VCVPConfiguration.swift",
+      "line": 437,
+      "symbol": "CredentialPayload.issuanceDate",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/ichanghwa/Desktop/Infra-DID-Swift/Sources/Infra-DID-Swift/InfraDID VC&VP/VCVPConfiguration.swift",
+      "line": 438,
+      "symbol": "CredentialPayload.expirationDate",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/ichanghwa/Desktop/Infra-DID-Swift/Sources/Infra-DID-Swift/InfraDID VC&VP/VCVPConfiguration.swift",
+      "line": 439,
+      "symbol": "CredentialPayload.credentialSubject",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/ichanghwa/Desktop/Infra-DID-Swift/Sources/Infra-DID-Swift/InfraDID VC&VP/VCVPConfiguration.swift",
+      "line": 440,
+      "symbol": "CredentialPayload.credentialStatus",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/ichanghwa/Desktop/Infra-DID-Swift/Sources/Infra-DID-Swift/InfraDID VC&VP/VCVPConfiguration.swift",
+      "line": 441,
+      "symbol": "CredentialPayload.evidence",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/ichanghwa/Desktop/Infra-DID-Swift/Sources/Infra-DID-Swift/InfraDID VC&VP/VCVPConfiguration.swift",
+      "line": 442,
+      "symbol": "CredentialPayload.termsOfUse",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/ichanghwa/Desktop/Infra-DID-Swift/Sources/Infra-DID-Swift/InfraDID VC&VP/VCVPConfiguration.swift",
+      "line": 443,
+      "symbol": "CredentialPayload.proof",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/ichanghwa/Desktop/Infra-DID-Swift/Sources/Infra-DID-Swift/InfraDID VC&VP/VCVPConfiguration.swift",
+      "line": 445,
+      "symbol": "CredentialPayload.CodingKeys",
+      "symbol_kind": "source.lang.swift.decl.enum",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/ichanghwa/Desktop/Infra-DID-Swift/Sources/Infra-DID-Swift/InfraDID VC&VP/VCVPConfiguration.swift",
+      "line": 450,
+      "symbol": "CredentialPayload.init(context:id:type:issuer:issuanceDate:expirationDate:credentialSubject:credentialStatus:evidence:termsOfUse:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/ichanghwa/Desktop/Infra-DID-Swift/Sources/Infra-DID-Swift/InfraDID VC&VP/VCVPConfiguration.swift",
+      "line": 482,
+      "symbol": "CredentialPayload.encode(from:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/ichanghwa/Desktop/Infra-DID-Swift/Sources/Infra-DID-Swift/InfraDID VC&VP/VCVPConfiguration.swift",
+      "line": 511,
+      "symbol": "CredentialOptions.domain",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/ichanghwa/Desktop/Infra-DID-Swift/Sources/Infra-DID-Swift/InfraDID VC&VP/VCVPConfiguration.swift",
+      "line": 512,
+      "symbol": "CredentialOptions.challenge",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/ichanghwa/Desktop/Infra-DID-Swift/Sources/Infra-DID-Swift/InfraDID VC&VP/VCVPConfiguration.swift",
+      "line": 513,
+      "symbol": "CredentialOptions.audience",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/ichanghwa/Desktop/Infra-DID-Swift/Sources/Infra-DID-Swift/InfraDID VC&VP/VCVPConfiguration.swift",
+      "line": 515,
+      "symbol": "CredentialOptions.init(audience:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/ichanghwa/Desktop/Infra-DID-Swift/Sources/Infra-DID-Swift/InfraDID VC&VP/VCVPConfiguration.swift",
+      "line": 534,
+      "symbol": "PresentationOptions.domain",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/ichanghwa/Desktop/Infra-DID-Swift/Sources/Infra-DID-Swift/InfraDID VC&VP/VCVPConfiguration.swift",
+      "line": 535,
+      "symbol": "PresentationOptions.challenge",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/ichanghwa/Desktop/Infra-DID-Swift/Sources/Infra-DID-Swift/InfraDID VC&VP/VCVPConfiguration.swift",
+      "line": 536,
+      "symbol": "PresentationOptions.audience",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/ichanghwa/Desktop/Infra-DID-Swift/Sources/Infra-DID-Swift/InfraDID VC&VP/VCVPConfiguration.swift",
+      "line": 537,
+      "symbol": "PresentationOptions.vcValidateFlag",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/ichanghwa/Desktop/Infra-DID-Swift/Sources/Infra-DID-Swift/InfraDID VC&VP/VCVPConfiguration.swift",
+      "line": 539,
+      "symbol": "PresentationOptions.init(audience:vcValidateFlag:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/ichanghwa/Desktop/Infra-DID-Swift/Sources/Infra-DID-Swift/InfraDIDConstruct/InfraDIDConfModel.swift",
+      "line": 25,
+      "symbol": "TransactionAction.set",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/ichanghwa/Desktop/Infra-DID-Swift/Sources/Infra-DID-Swift/InfraDIDConstruct/InfraDIDConfModel.swift",
+      "line": 26,
+      "symbol": "TransactionAction.revoke",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/ichanghwa/Desktop/Infra-DID-Swift/Sources/Infra-DID-Swift/InfraDIDConstruct/InfraDIDConfModel.swift",
+      "line": 27,
+      "symbol": "TransactionAction.clear",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/ichanghwa/Desktop/Infra-DID-Swift/Sources/Infra-DID-Swift/InfraDIDConstruct/InfraDIDConfModel.swift",
+      "line": 28,
+      "symbol": "TransactionAction.changeOwner",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/ichanghwa/Desktop/Infra-DID-Swift/Sources/Infra-DID-Swift/InfraDIDConstruct/InfraDIDConfModel.swift",
+      "line": 29,
+      "symbol": "TransactionAction.setAccount",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/ichanghwa/Desktop/Infra-DID-Swift/Sources/Infra-DID-Swift/InfraDIDConstruct/InfraDIDConfModel.swift",
+      "line": 32,
+      "symbol": "IdConfiguration",
+      "symbol_kind": "source.lang.swift.decl.struct",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/ichanghwa/Desktop/Infra-DID-Swift/Sources/Infra-DID-Swift/InfraDIDConstruct/InfraDIDConfModel.swift",
+      "line": 60,
+      "symbol": "JwtIssuer",
+      "symbol_kind": "source.lang.swift.decl.struct",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/ichanghwa/Desktop/Infra-DID-Swift/Sources/Infra-DID-Swift/InfraDIDConstruct/InfraDIDConstructor.swift",
+      "line": 18,
+      "symbol": "InfraDIDConfApiDependency",
+      "symbol_kind": "source.lang.swift.decl.protocol",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/ichanghwa/Desktop/Infra-DID-Swift/Sources/Infra-DID-Swift/InfraDIDConstruct/InfraDIDConstructor.swift",
+      "line": 30,
+      "symbol": "InfraDIDConstructor.idConfig",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/ichanghwa/Desktop/Infra-DID-Swift/Sources/Infra-DID-Swift/InfraDIDConstruct/InfraDIDConstructor.swift",
+      "line": 32,
+      "symbol": "InfraDIDConstructor.defaultPubKeyDidSignDataPrefix",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/ichanghwa/Desktop/Infra-DID-Swift/Sources/Infra-DID-Swift/InfraDIDConstruct/InfraDIDConstructor.swift",
+      "line": 34,
+      "symbol": "InfraDIDConstructor.didPubKey",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/ichanghwa/Desktop/Infra-DID-Swift/Sources/Infra-DID-Swift/InfraDIDConstruct/InfraDIDConstructor.swift",
+      "line": 35,
+      "symbol": "InfraDIDConstructor.didAccount",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/ichanghwa/Desktop/Infra-DID-Swift/Sources/Infra-DID-Swift/InfraDIDConstruct/InfraDIDConstructor.swift",
+      "line": 36,
+      "symbol": "InfraDIDConstructor.did",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/ichanghwa/Desktop/Infra-DID-Swift/Sources/Infra-DID-Swift/InfraDIDConstruct/InfraDIDConstructor.swift",
+      "line": 37,
+      "symbol": "InfraDIDConstructor.jsonRpc",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/ichanghwa/Desktop/Infra-DID-Swift/Sources/Infra-DID-Swift/InfraDIDConstruct/InfraDIDConstructor.swift",
+      "line": 38,
+      "symbol": "InfraDIDConstructor.rpcGroup",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/ichanghwa/Desktop/Infra-DID-Swift/Sources/Infra-DID-Swift/InfraDIDConstruct/InfraDIDConstructor.swift",
+      "line": 40,
+      "symbol": "InfraDIDConstructor.didOwnerPrivateKeyObjc",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/ichanghwa/Desktop/Infra-DID-Swift/Sources/Infra-DID-Swift/InfraDIDConstruct/InfraDIDConstructor.swift",
+      "line": 41,
+      "symbol": "InfraDIDConstructor.sigProviderPrivKeys",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/ichanghwa/Desktop/Infra-DID-Swift/Sources/Infra-DID-Swift/InfraDIDConstruct/InfraDIDConstructor.swift",
+      "line": 44,
+      "symbol": "InfraDIDConstructor.init(config:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/ichanghwa/Desktop/Infra-DID-Swift/Sources/Infra-DID-Swift/InfraDIDConstruct/InfraDIDConstructor.swift",
+      "line": 244,
+      "symbol": "InfraDIDConstructor.actionTransaction(action:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/ichanghwa/Desktop/Infra-DID-Swift/Sources/Infra-DID-Swift/InfraDIDJwt/InfraDIDJwt.swift",
+      "line": 12,
+      "symbol": "selfIssuedV2",
+      "symbol_kind": "source.lang.swift.decl.var.global",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/ichanghwa/Desktop/Infra-DID-Swift/Sources/Infra-DID-Swift/InfraDIDJwt/InfraDIDJwt.swift",
+      "line": 13,
+      "symbol": "selfIssuedV1",
+      "symbol_kind": "source.lang.swift.decl.var.global",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/ichanghwa/Desktop/Infra-DID-Swift/Sources/Infra-DID-Swift/InfraDIDJwt/InfraDIDJwt.swift",
+      "line": 14,
+      "symbol": "defaultAlg",
+      "symbol_kind": "source.lang.swift.decl.var.global",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/ichanghwa/Desktop/Infra-DID-Swift/Sources/Infra-DID-Swift/InfraDIDJwt/InfraDIDJwt.swift",
+      "line": 15,
+      "symbol": "didJson",
+      "symbol_kind": "source.lang.swift.decl.var.global",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/ichanghwa/Desktop/Infra-DID-Swift/Sources/Infra-DID-Swift/InfraDIDJwt/InfraDIDJwt.swift",
+      "line": 16,
+      "symbol": "nbfSkew",
+      "symbol_kind": "source.lang.swift.decl.var.global",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/ichanghwa/Desktop/Infra-DID-Swift/Sources/Infra-DID-Swift/InfraDIDJwt/InfraDIDJwt.swift",
+      "line": 19,
+      "symbol": "decodeJws(jws:)",
+      "symbol_kind": "source.lang.swift.decl.function.free",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/ichanghwa/Desktop/Infra-DID-Swift/Sources/Infra-DID-Swift/InfraDIDJwt/InfraDIDJwt.swift",
+      "line": 335,
+      "symbol": "getPublicKeyById(verificationsMethods:pubid:)",
+      "symbol_kind": "source.lang.swift.decl.function.free",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/ichanghwa/Desktop/Infra-DID-Swift/Sources/Infra-DID-Swift/InfraDIDJwt/InfraDIDJwtModel.swift",
+      "line": 13,
+      "symbol": "ProofPurposeTypes",
+      "symbol_kind": "source.lang.swift.decl.enum",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/ichanghwa/Desktop/Infra-DID-Swift/Sources/Infra-DID-Swift/InfraDIDJwt/InfraDIDJwtModel.swift",
+      "line": 20,
+      "symbol": "JwtOptions",
+      "symbol_kind": "source.lang.swift.decl.struct",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/ichanghwa/Desktop/Infra-DID-Swift/Sources/Infra-DID-Swift/InfraDIDJwt/InfraDIDJwtModel.swift",
+      "line": 37,
+      "symbol": "JwtVerifyOptions",
+      "symbol_kind": "source.lang.swift.decl.struct",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/ichanghwa/Desktop/Infra-DID-Swift/Sources/Infra-DID-Swift/InfraDIDJwt/InfraDIDJwtModel.swift",
+      "line": 53,
+      "symbol": "DIDAuthenticator",
+      "symbol_kind": "source.lang.swift.decl.struct",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/ichanghwa/Desktop/Infra-DID-Swift/Sources/Infra-DID-Swift/InfraDIDJwt/InfraDIDJwtModel.swift",
+      "line": 66,
+      "symbol": "JwtPayload",
+      "symbol_kind": "source.lang.swift.decl.struct",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/ichanghwa/Desktop/Infra-DID-Swift/Sources/Infra-DID-Swift/InfraDIDJwt/InfraDIDJwtModel.swift",
+      "line": 135,
+      "symbol": "JwtDecoded",
+      "symbol_kind": "source.lang.swift.decl.struct",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/ichanghwa/Desktop/Infra-DID-Swift/Sources/Infra-DID-Swift/InfraDIDJwt/InfraDIDJwtModel.swift",
+      "line": 150,
+      "symbol": "JwsDecoded",
+      "symbol_kind": "source.lang.swift.decl.struct",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/ichanghwa/Desktop/Infra-DID-Swift/Sources/Infra-DID-Swift/InfraDIDJwt/InfraDIDJwtModel.swift",
+      "line": 164,
+      "symbol": "JwtVerified",
+      "symbol_kind": "source.lang.swift.decl.struct",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/ichanghwa/Desktop/Infra-DID-Swift/Sources/Infra-DID-Swift/InfraDIDJwt/InfraDIDJwtModel.swift",
+      "line": 202,
+      "symbol": "LegacyVerificationMethod",
+      "symbol_kind": "source.lang.swift.decl.struct",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/ichanghwa/Desktop/Infra-DID-Swift/Sources/Infra-DID-Swift/InfraDIDJwt/JWT Supportings /ECSigner.swift",
+      "line": 26,
+      "symbol": "ECSigner.name",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/ichanghwa/Desktop/Infra-DID-Swift/Sources/Infra-DID-Swift/InfraDIDJwt/JWT Supportings /ECSigner.swift",
+      "line": 28,
+      "symbol": "ECSigner.key",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/ichanghwa/Desktop/Infra-DID-Swift/Sources/Infra-DID-Swift/InfraDIDJwt/JWT Supportings /ECSigner.swift",
+      "line": 29,
+      "symbol": "ECSigner.curve",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/ichanghwa/Desktop/Infra-DID-Swift/Sources/Infra-DID-Swift/InfraDIDJwt/JWT Supportings /ECSigner.swift",
+      "line": 31,
+      "symbol": "ECSigner.init(key:curve:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/ichanghwa/Desktop/Infra-DID-Swift/Sources/Infra-DID-Swift/InfraDIDJwt/JWT Supportings /ECSigner.swift",
+      "line": 56,
+      "symbol": "ECSigner.sign(_:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/ichanghwa/Desktop/Infra-DID-Swift/Sources/Infra-DID-Swift/InfraDIDJwt/JWT Supportings /ECSigner.swift",
+      "line": 73,
+      "symbol": "ECVerifier",
+      "symbol_kind": "source.lang.swift.decl.class",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/ichanghwa/Desktop/Infra-DID-Swift/Sources/Infra-DID-Swift/InfraDIDJwt/JWT Supportings /ECSigner.swift",
+      "line": 207,
+      "symbol": "JWTSigner",
+      "symbol_kind": "source.lang.swift.decl.struct",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/ichanghwa/Desktop/Infra-DID-Swift/Sources/Infra-DID-Swift/InfraDIDJwt/JWT Supportings /ECSigner.swift",
+      "line": 232,
+      "symbol": "JWTVerifier",
+      "symbol_kind": "source.lang.swift.decl.struct",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/ichanghwa/Desktop/Infra-DID-Swift/Sources/Infra-DID-Swift/InfraDIDJwt/JWT Supportings /ECSigner.swift",
+      "line": 254,
+      "symbol": "NoneAlgorithm",
+      "symbol_kind": "source.lang.swift.decl.struct",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/ichanghwa/Desktop/Infra-DID-Swift/Sources/Infra-DID-Swift/InfraDIDJwt/JWT Supportings /Header.swift",
+      "line": 40,
+      "symbol": "Header.kid",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/ichanghwa/Desktop/Infra-DID-Swift/Sources/Infra-DID-Swift/InfraDIDJwt/JWT Supportings /Header.swift",
+      "line": 54,
+      "symbol": "Header.init(typ:alg:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/ichanghwa/Desktop/Infra-DID-Swift/Sources/Infra-DID-Swift/InfraDIDJwt/JWT Supportings /Header.swift",
+      "line": 62,
+      "symbol": "Header.encode()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/ichanghwa/Desktop/Infra-DID-Swift/Sources/Infra-DID-Swift/InfraDIDJwt/JWT Supportings /JWTError.swift",
+      "line": 24,
+      "symbol": "JWTError",
+      "symbol_kind": "source.lang.swift.decl.struct",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/ichanghwa/Desktop/Infra-DID-Swift/Sources/Infra-DID-Swift/InfraDIDJwt/JWT Supportings /SignerAlgorithm.swift",
+      "line": 11,
+      "symbol": "algorithms",
+      "symbol_kind": "source.lang.swift.decl.var.global",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/ichanghwa/Desktop/Infra-DID-Swift/Sources/Infra-DID-Swift/InfraDIDJwt/JWT Supportings /SignerAlgorithm.swift",
+      "line": 13,
+      "symbol": "SignerAlgorithm",
+      "symbol_kind": "source.lang.swift.decl.protocol",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/ichanghwa/Desktop/Infra-DID-Swift/Sources/Infra-DID-Swift/InfraDIDJwt/JWT Supportings /SignerAlgorithm.swift",
+      "line": 18,
+      "symbol": "VerifierAlgorithm",
+      "symbol_kind": "source.lang.swift.decl.protocol",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/ichanghwa/Desktop/Infra-DID-Swift/Sources/Infra-DID-Swift/InfraDIDResolver/DIDResolver.swift",
+      "line": 11,
+      "symbol": "Resolvable",
+      "symbol_kind": "source.lang.swift.decl.protocol",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/ichanghwa/Desktop/Infra-DID-Swift/Sources/Infra-DID-Swift/InfraDIDResolver/DIDResolver.swift",
+      "line": 26,
+      "symbol": "Resolver.resolverRegistry",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/ichanghwa/Desktop/Infra-DID-Swift/Sources/Infra-DID-Swift/InfraDIDResolver/DIDResolver.swift",
+      "line": 27,
+      "symbol": "Resolver.cache",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/ichanghwa/Desktop/Infra-DID-Swift/Sources/Infra-DID-Swift/InfraDIDResolver/DIDResolver.swift",
+      "line": 58,
+      "symbol": "Resolver.init(registry:options:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/ichanghwa/Desktop/Infra-DID-Swift/Sources/Infra-DID-Swift/InfraDIDResolver/DIDResolver.swift",
+      "line": 78,
+      "symbol": "noCache(parsed:resolve:)",
+      "symbol_kind": "source.lang.swift.decl.function.free",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/ichanghwa/Desktop/Infra-DID-Swift/Sources/Infra-DID-Swift/InfraDIDResolver/DIDResolverModel.swift",
+      "line": 13,
+      "symbol": "DIDResolutionResultSet",
+      "symbol_kind": "source.lang.swift.decl.struct",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/ichanghwa/Desktop/Infra-DID-Swift/Sources/Infra-DID-Swift/InfraDIDResolver/DIDResolverModel.swift",
+      "line": 39,
+      "symbol": "DIDResolutionResult.didResolutionMetadata",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/ichanghwa/Desktop/Infra-DID-Swift/Sources/Infra-DID-Swift/InfraDIDResolver/DIDResolverModel.swift",
+      "line": 40,
+      "symbol": "DIDResolutionResult.didDocument",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/ichanghwa/Desktop/Infra-DID-Swift/Sources/Infra-DID-Swift/InfraDIDResolver/DIDResolverModel.swift",
+      "line": 41,
+      "symbol": "DIDResolutionResult.didDocumentMetadata",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/ichanghwa/Desktop/Infra-DID-Swift/Sources/Infra-DID-Swift/InfraDIDResolver/DIDResolverModel.swift",
+      "line": 43,
+      "symbol": "DIDResolutionResult.CodingKeys",
+      "symbol_kind": "source.lang.swift.decl.enum",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/ichanghwa/Desktop/Infra-DID-Swift/Sources/Infra-DID-Swift/InfraDIDResolver/DIDResolverModel.swift",
+      "line": 49,
+      "symbol": "DIDResolutionResult.init(didResolutionMetadata:didDocument:didDocumentMetaData:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/ichanghwa/Desktop/Infra-DID-Swift/Sources/Infra-DID-Swift/InfraDIDResolver/DIDResolverModel.swift",
+      "line": 58,
+      "symbol": "DIDResolutionResult.encode(from:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/ichanghwa/Desktop/Infra-DID-Swift/Sources/Infra-DID-Swift/InfraDIDResolver/DIDResolverModel.swift",
+      "line": 68,
+      "symbol": "DIDResolutionOptions",
+      "symbol_kind": "source.lang.swift.decl.struct",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/ichanghwa/Desktop/Infra-DID-Swift/Sources/Infra-DID-Swift/InfraDIDResolver/DIDResolverModel.swift",
+      "line": 80,
+      "symbol": "ErrorType",
+      "symbol_kind": "source.lang.swift.decl.enum",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/ichanghwa/Desktop/Infra-DID-Swift/Sources/Infra-DID-Swift/InfraDIDResolver/DIDResolverModel.swift",
+      "line": 88,
+      "symbol": "DIDResolutionMetadata",
+      "symbol_kind": "source.lang.swift.decl.struct",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/ichanghwa/Desktop/Infra-DID-Swift/Sources/Infra-DID-Swift/InfraDIDResolver/DIDResolverModel.swift",
+      "line": 107,
+      "symbol": "DIDDocumentMetaData",
+      "symbol_kind": "source.lang.swift.decl.struct",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/ichanghwa/Desktop/Infra-DID-Swift/Sources/Infra-DID-Swift/InfraDIDResolver/DIDResolverModel.swift",
+      "line": 138,
+      "symbol": "KeyCapabilitySectionType",
+      "symbol_kind": "source.lang.swift.decl.enum",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/ichanghwa/Desktop/Infra-DID-Swift/Sources/Infra-DID-Swift/InfraDIDResolver/DIDResolverModel.swift",
+      "line": 146,
+      "symbol": "KeyCapabilitySection",
+      "symbol_kind": "source.lang.swift.decl.struct",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/ichanghwa/Desktop/Infra-DID-Swift/Sources/Infra-DID-Swift/InfraDIDResolver/DIDResolverModel.swift",
+      "line": 150,
+      "symbol": "contextType",
+      "symbol_kind": "source.lang.swift.decl.enum",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/ichanghwa/Desktop/Infra-DID-Swift/Sources/Infra-DID-Swift/InfraDIDResolver/DIDResolverModel.swift",
+      "line": 168,
+      "symbol": "controllerType",
+      "symbol_kind": "source.lang.swift.decl.enum",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/ichanghwa/Desktop/Infra-DID-Swift/Sources/Infra-DID-Swift/InfraDIDResolver/DIDResolverModel.swift",
+      "line": 186,
+      "symbol": "DIDDocument",
+      "symbol_kind": "source.lang.swift.decl.struct",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/ichanghwa/Desktop/Infra-DID-Swift/Sources/Infra-DID-Swift/InfraDIDResolver/DIDResolverModel.swift",
+      "line": 224,
+      "symbol": "DIDDocument",
+      "symbol_kind": "source.lang.swift.decl.extension",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/ichanghwa/Desktop/Infra-DID-Swift/Sources/Infra-DID-Swift/InfraDIDResolver/DIDResolverModel.swift",
+      "line": 241,
+      "symbol": "ServiceEndpoint",
+      "symbol_kind": "source.lang.swift.decl.struct",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/ichanghwa/Desktop/Infra-DID-Swift/Sources/Infra-DID-Swift/InfraDIDResolver/DIDResolverModel.swift",
+      "line": 259,
+      "symbol": "JsonWebKey",
+      "symbol_kind": "source.lang.swift.decl.struct",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/ichanghwa/Desktop/Infra-DID-Swift/Sources/Infra-DID-Swift/InfraDIDResolver/DIDResolverModel.swift",
+      "line": 293,
+      "symbol": "VerificationMethod",
+      "symbol_kind": "source.lang.swift.decl.struct",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/ichanghwa/Desktop/Infra-DID-Swift/Sources/Infra-DID-Swift/InfraDIDResolver/DIDResolverModel.swift",
+      "line": 326,
+      "symbol": "Params",
+      "symbol_kind": "source.lang.swift.decl.struct",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/ichanghwa/Desktop/Infra-DID-Swift/Sources/Infra-DID-Swift/InfraDIDResolver/DIDResolverModel.swift",
+      "line": 338,
+      "symbol": "ParsedDID",
+      "symbol_kind": "source.lang.swift.decl.struct",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/ichanghwa/Desktop/Infra-DID-Swift/Sources/Infra-DID-Swift/InfraDIDResolver/DIDResolverModel.swift",
+      "line": 370,
+      "symbol": "DIDResolverType",
+      "symbol_kind": "source.lang.swift.decl.typealias",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/ichanghwa/Desktop/Infra-DID-Swift/Sources/Infra-DID-Swift/InfraDIDResolver/DIDResolverModel.swift",
+      "line": 377,
+      "symbol": "wrappedResolverType",
+      "symbol_kind": "source.lang.swift.decl.typealias",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/ichanghwa/Desktop/Infra-DID-Swift/Sources/Infra-DID-Swift/InfraDIDResolver/DIDResolverModel.swift",
+      "line": 385,
+      "symbol": "DidCacheType",
+      "symbol_kind": "source.lang.swift.decl.typealias",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/ichanghwa/Desktop/Infra-DID-Swift/Sources/Infra-DID-Swift/InfraDIDResolver/DIDResolverModel.swift",
+      "line": 392,
+      "symbol": "LegacyDIDResolverType",
+      "symbol_kind": "source.lang.swift.decl.typealias",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/ichanghwa/Desktop/Infra-DID-Swift/Sources/Infra-DID-Swift/InfraDIDResolver/DIDResolverModel.swift",
+      "line": 396,
+      "symbol": "ResolverOptionsType",
+      "symbol_kind": "source.lang.swift.decl.enum",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/ichanghwa/Desktop/Infra-DID-Swift/Sources/Infra-DID-Swift/InfraDIDResolver/DIDResolverModel.swift",
+      "line": 401,
+      "symbol": "ResolverOptions",
+      "symbol_kind": "source.lang.swift.decl.struct",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/ichanghwa/Desktop/Infra-DID-Swift/Sources/Infra-DID-Swift/InfraDIDResolver/DIDResolverModel.swift",
+      "line": 411,
+      "symbol": "ResolverRegistry",
+      "symbol_kind": "source.lang.swift.decl.struct",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/ichanghwa/Desktop/Infra-DID-Swift/Sources/Infra-DID-Swift/InfraDIDResolver/DIDResolverModel.swift",
+      "line": 419,
+      "symbol": "currentParsedDID",
+      "symbol_kind": "source.lang.swift.decl.var.global",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/ichanghwa/Desktop/Infra-DID-Swift/Sources/Infra-DID-Swift/InfraDIDResolver/DIDResolverModel.swift",
+      "line": 420,
+      "symbol": "currentParsedDIDDocument",
+      "symbol_kind": "source.lang.swift.decl.var.global",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/ichanghwa/Desktop/Infra-DID-Swift/Sources/Infra-DID-Swift/InfraDIDResolver/DIDResolverModel.swift",
+      "line": 422,
+      "symbol": "inMemoryCache()",
+      "symbol_kind": "source.lang.swift.decl.function.free",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/ichanghwa/Desktop/Infra-DID-Swift/Sources/Infra-DID-Swift/InfraDIDResolver/DIDResolverModel.swift",
+      "line": 442,
+      "symbol": "pctEncoded",
+      "symbol_kind": "source.lang.swift.decl.var.global",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/ichanghwa/Desktop/Infra-DID-Swift/Sources/Infra-DID-Swift/InfraDIDResolver/DIDResolverModel.swift",
+      "line": 444,
+      "symbol": "idChar",
+      "symbol_kind": "source.lang.swift.decl.var.global",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/ichanghwa/Desktop/Infra-DID-Swift/Sources/Infra-DID-Swift/InfraDIDResolver/DIDResolverModel.swift",
+      "line": 445,
+      "symbol": "method",
+      "symbol_kind": "source.lang.swift.decl.var.global",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/ichanghwa/Desktop/Infra-DID-Swift/Sources/Infra-DID-Swift/InfraDIDResolver/DIDResolverModel.swift",
+      "line": 447,
+      "symbol": "methodId",
+      "symbol_kind": "source.lang.swift.decl.var.global",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/ichanghwa/Desktop/Infra-DID-Swift/Sources/Infra-DID-Swift/InfraDIDResolver/DIDResolverModel.swift",
+      "line": 448,
+      "symbol": "paramChar",
+      "symbol_kind": "source.lang.swift.decl.var.global",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/ichanghwa/Desktop/Infra-DID-Swift/Sources/Infra-DID-Swift/InfraDIDResolver/DIDResolverModel.swift",
+      "line": 449,
+      "symbol": "param",
+      "symbol_kind": "source.lang.swift.decl.var.global",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/ichanghwa/Desktop/Infra-DID-Swift/Sources/Infra-DID-Swift/InfraDIDResolver/DIDResolverModel.swift",
+      "line": 450,
+      "symbol": "params",
+      "symbol_kind": "source.lang.swift.decl.var.global",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/ichanghwa/Desktop/Infra-DID-Swift/Sources/Infra-DID-Swift/InfraDIDResolver/DIDResolverModel.swift",
+      "line": 451,
+      "symbol": "path",
+      "symbol_kind": "source.lang.swift.decl.var.global",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/ichanghwa/Desktop/Infra-DID-Swift/Sources/Infra-DID-Swift/InfraDIDResolver/DIDResolverModel.swift",
+      "line": 452,
+      "symbol": "query",
+      "symbol_kind": "source.lang.swift.decl.var.global",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/ichanghwa/Desktop/Infra-DID-Swift/Sources/Infra-DID-Swift/InfraDIDResolver/DIDResolverModel.swift",
+      "line": 453,
+      "symbol": "fragment",
+      "symbol_kind": "source.lang.swift.decl.var.global",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/ichanghwa/Desktop/Infra-DID-Swift/Sources/Infra-DID-Swift/InfraDIDResolver/DIDResolverModel.swift",
+      "line": 456,
+      "symbol": "parse(didUrl:)",
+      "symbol_kind": "source.lang.swift.decl.function.free",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/ichanghwa/Desktop/Infra-DID-Swift/Sources/Infra-DID-Swift/InfraDIDResolver/DIDResolverModel.swift",
+      "line": 480,
+      "symbol": "wrapLegacyResolver(resolve:)",
+      "symbol_kind": "source.lang.swift.decl.function.free",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/ichanghwa/Desktop/Infra-DID-Swift/Sources/Infra-DID-Swift/InfraDIDResolver/InfraDIDResolver.swift",
+      "line": 13,
+      "symbol": "APIError",
+      "symbol_kind": "source.lang.swift.decl.enum",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/ichanghwa/Desktop/Infra-DID-Swift/Sources/Infra-DID-Swift/InfraDIDResolver/InfraDIDResolver.swift",
+      "line": 19,
+      "symbol": "verificationMethodTypes",
+      "symbol_kind": "source.lang.swift.decl.enum",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/ichanghwa/Desktop/Infra-DID-Swift/Sources/Infra-DID-Swift/InfraDIDResolver/InfraDIDResolver.swift",
+      "line": 27,
+      "symbol": "ResolvedDIDDocument",
+      "symbol_kind": "source.lang.swift.decl.struct",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/ichanghwa/Desktop/Infra-DID-Swift/Sources/Infra-DID-Swift/InfraDIDResolver/InfraDIDResolver.swift",
+      "line": 37,
+      "symbol": "InfraDIDResolvable",
+      "symbol_kind": "source.lang.swift.decl.protocol",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/ichanghwa/Desktop/Infra-DID-Swift/Sources/Infra-DID-Swift/InfraDIDResolver/InfraDIDResolver.swift",
+      "line": 41,
+      "symbol": "getResolver(options:)",
+      "symbol_kind": "source.lang.swift.decl.function.free",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/ichanghwa/Desktop/Infra-DID-Swift/Sources/Infra-DID-Swift/InfraDIDResolver/InfraDIDResolver.swift",
+      "line": 52,
+      "symbol": "InfraDIDResolver.networks",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/ichanghwa/Desktop/Infra-DID-Swift/Sources/Infra-DID-Swift/InfraDIDResolver/InfraDIDResolver.swift",
+      "line": 53,
+      "symbol": "InfraDIDResolver.noRevocationCheck",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/ichanghwa/Desktop/Infra-DID-Swift/Sources/Infra-DID-Swift/InfraDIDResolver/InfraDIDResolver.swift",
+      "line": 54,
+      "symbol": "InfraDIDResolver.deactivated",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/ichanghwa/Desktop/Infra-DID-Swift/Sources/Infra-DID-Swift/InfraDIDResolver/InfraDIDResolver.swift",
+      "line": 55,
+      "symbol": "InfraDIDResolver.resolveGroup",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/ichanghwa/Desktop/Infra-DID-Swift/Sources/Infra-DID-Swift/InfraDIDResolver/InfraDIDResolver.swift",
+      "line": 57,
+      "symbol": "InfraDIDResolver.init(options:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/ichanghwa/Desktop/Infra-DID-Swift/Sources/Infra-DID-Swift/InfraDIDResolver/InfraDIDResolver.swift",
+      "line": 227,
+      "symbol": "InfraDIDResolver.jsonRpcFetchAccountInfo(jsonRpc:accountName:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/ichanghwa/Desktop/Infra-DID-Swift/Sources/Infra-DID-Swift/InfraDIDResolver/InfraDIDResolver.swift",
+      "line": 246,
+      "symbol": "InfraDIDResolver.wrapDidDocument(did:controllerPubKey:pkdidAttr:deactivated:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/ichanghwa/Desktop/Infra-DID-Swift/Sources/Infra-DID-Swift/InfraDIDResolver/InfraDIDResolver.swift",
+      "line": 286,
+      "symbol": "InfraDIDResolver.deactivatedCheck(row:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/ichanghwa/Desktop/Infra-DID-Swift/Sources/Infra-DID-Swift/InfraDIDResolver/InfraDIDResolver.swift",
+      "line": 300,
+      "symbol": "InfraDIDResolver.pubKeyParsing(keyAttr:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/ichanghwa/Desktop/Infra-DID-Swift/Sources/Infra-DID-Swift/InfraDIDResolver/InfraDIDResolverConfiguration.swift",
+      "line": 11,
+      "symbol": "NetworkConfiguration",
+      "symbol_kind": "source.lang.swift.decl.struct",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/ichanghwa/Desktop/Infra-DID-Swift/Sources/Infra-DID-Swift/InfraDIDResolver/InfraDIDResolverConfiguration.swift",
+      "line": 23,
+      "symbol": "MultiNetworkConfiguration",
+      "symbol_kind": "source.lang.swift.decl.struct",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/ichanghwa/Desktop/Infra-DID-Swift/Sources/Infra-DID-Swift/InfraDIDResolver/InfraDIDResolverConfiguration.swift",
+      "line": 33,
+      "symbol": "ConfigurationOptions",
+      "symbol_kind": "source.lang.swift.decl.typealias",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/ichanghwa/Desktop/Infra-DID-Swift/Sources/Infra-DID-Swift/InfraDIDResolver/InfraDIDResolverConfiguration.swift",
+      "line": 35,
+      "symbol": "ConfiguredNetwork",
+      "symbol_kind": "source.lang.swift.decl.struct",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/ichanghwa/Desktop/Infra-DID-Swift/Sources/Infra-DID-Swift/InfraDIDResolver/InfraDIDResolverConfiguration.swift",
+      "line": 45,
+      "symbol": "ConfiguredNetworks",
+      "symbol_kind": "source.lang.swift.decl.typealias",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/ichanghwa/Desktop/Infra-DID-Swift/Sources/Infra-DID-Swift/InfraDIDResolver/InfraDIDResolverConfiguration.swift",
+      "line": 47,
+      "symbol": "configureNetwork(net:)",
+      "symbol_kind": "source.lang.swift.decl.function.free",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/ichanghwa/Desktop/Infra-DID-Swift/Sources/Infra-DID-Swift/InfraDIDResolver/InfraDIDResolverConfiguration.swift",
+      "line": 54,
+      "symbol": "configureNetworks(conf:)",
+      "symbol_kind": "source.lang.swift.decl.function.free",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/ichanghwa/Desktop/Infra-DID-Swift/Sources/Infra-DID-Swift/InfraDIDResolver/InfraDIDResolverConfiguration.swift",
+      "line": 70,
+      "symbol": "configureResolverWithNetworks(conf:)",
+      "symbol_kind": "source.lang.swift.decl.function.free",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/ichanghwa/Desktop/Infra-DID-Swift/Sources/Infra-DID-Swift/Utils/EosioTransactionExtension.swift",
+      "line": 22,
+      "symbol": "EosioTransaction.signBroadCastWithGetBlock(completion:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/ichanghwa/Desktop/Infra-DID-Swift/Sources/Infra-DID-Swift/Utils/EosioTransactionExtension.swift",
+      "line": 39,
+      "symbol": "EosioTransaction.signWithGetBlock(prompt:completion:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/ichanghwa/Desktop/Infra-DID-Swift/Sources/Infra-DID-Swift/Utils/EosioTransactionExtension.swift",
+      "line": 54,
+      "symbol": "EosioTransaction.signWithGetBlock(availableKeys:prompt:completion:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/ichanghwa/Desktop/Infra-DID-Swift/Sources/Infra-DID-Swift/Utils/EosioTransactionExtension.swift",
+      "line": 69,
+      "symbol": "EosioTransaction.signPreparedTransactionWithGetBlock(availableKeys:prompt:completion:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/ichanghwa/Desktop/Infra-DID-Swift/Sources/Infra-DID-Swift/Utils/EosioTransactionExtension.swift",
+      "line": 85,
+      "symbol": "EosioTransaction.prepareWithGetBlock(completion:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/ichanghwa/Desktop/Infra-DID-Swift/Sources/Infra-DID-Swift/Utils/EosioTransactionExtension.swift",
+      "line": 99,
+      "symbol": "EosioTransaction.getInfoAndSetValuesWithGetBlock(completion:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/ichanghwa/Desktop/Infra-DID-Swift/Sources/Infra-DID-Swift/Utils/EosioTransactionExtension.swift",
+      "line": 150,
+      "symbol": "EosioTransaction.getBlockAndSetTaposWithGetBlock(rpcProvider:blockNum:completion:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/ichanghwa/Desktop/Infra-DID-Swift/Sources/Infra-DID-Swift/Utils/gConstant.swift",
+      "line": 12,
+      "symbol": "emptyResult",
+      "symbol_kind": "source.lang.swift.decl.var.global",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/ichanghwa/Desktop/Infra-DID-Swift/Sources/Infra-DID-Swift/Utils/gConstant.swift",
+      "line": 13,
+      "symbol": "emptyDocument",
+      "symbol_kind": "source.lang.swift.decl.var.global",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/ichanghwa/Desktop/Infra-DID-Swift/Sources/Infra-DID-Swift/Utils/gConstant.swift",
+      "line": 14,
+      "symbol": "emptyResolvedDocument",
+      "symbol_kind": "source.lang.swift.decl.var.global",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/ichanghwa/Desktop/Infra-DID-Swift/Sources/Infra-DID-Swift/Utils/gConstant.swift",
+      "line": 40,
+      "symbol": "iPrint(_:filename:_:_:)",
+      "symbol_kind": "source.lang.swift.decl.function.free",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/ichanghwa/Desktop/Infra-DID-Swift/Sources/Infra-DID-Swift/Utils/gConstant.swift",
+      "line": 53,
+      "symbol": "base64urlEncodedString(data:)",
+      "symbol_kind": "source.lang.swift.decl.function.free",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/ichanghwa/Desktop/Infra-DID-Swift/Sources/Infra-DID-Swift/Utils/gConstant.swift",
+      "line": 60,
+      "symbol": "base64urlDecodedData(base64urlEncoded:)",
+      "symbol_kind": "source.lang.swift.decl.function.free",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/ichanghwa/Desktop/Infra-DID-Swift/Sources/Infra-DID-Swift/Utils/gConstant.swift",
+      "line": 73,
+      "symbol": "jsonRpcFetchRows(rpc:options:)",
+      "symbol_kind": "source.lang.swift.decl.function.free",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/ichanghwa/Desktop/Infra-DID-Swift/Sources/Infra-DID-Swift/Utils/gExtension.swift",
+      "line": 11,
+      "symbol": "String.matchingStrings(regex:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/ichanghwa/Desktop/Infra-DID-Swift/Sources/Infra-DID-Swift/Utils/gExtension.swift",
+      "line": 26,
+      "symbol": "Double.toByteArray()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    }
+  ],
+  "source_directory": "/Users/ichanghwa/Desktop/Infra-DID-Swift"
+}

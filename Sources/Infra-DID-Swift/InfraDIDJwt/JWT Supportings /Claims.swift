@@ -12,15 +12,10 @@ import Foundation
 // MARK: Claims
 /**
  A protocol for representing the claims on a JSON web token.
+ 
  https://tools.ietf.org/html/rfc7519#section-4.1
  
- - Parameter with:
- 
-    - exp
-    - nbf
-    - iat
- 
- */
+*/
 public protocol Claims: Codable {
     
     /**

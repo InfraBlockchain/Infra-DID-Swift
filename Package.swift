@@ -25,6 +25,7 @@ let package = Package(
               url: "https://github.com/GigaBitcoin/secp256k1.swift.git",
               .upToNextMajor(from: "0.3.4")
           )
+      
     ],
     targets: [
         // Targets are the basic building blocks of a package. A target can define a module or a test suite.

@@ -25,8 +25,8 @@ public enum verificationMethodTypes: String {
 }
 
 public struct ResolvedDIDDocument {
-  var didDocument: DIDDocument?
-  var deactivated: Bool
+  public var didDocument: DIDDocument?
+  public var deactivated: Bool
   
   public init(didDocument: DIDDocument? = nil, deactivated: Bool = false) {
     self.didDocument = didDocument
@@ -42,15 +42,9 @@ public func getResolver(options: ConfigurationOptions) -> [String:DIDResolverTyp
   return InfraDIDResolver(options: options).build()
 }
 
-
 // MARK: Resolver
   /**
-   DID Resolver Class bound to the infradidresolver class
-   
-   - Parameter with:
-   
-      - resolverRegistry
-      - cache
+   Main Resolver
    
    */
 public class InfraDIDResolver {
@@ -77,16 +71,14 @@ extension InfraDIDResolver: InfraDIDResolvable {
      
      Create DID ResolutionResult Using ParsedDID
      
-     - Parameter with:
-     
-        - did
-        - ParsedDID
-        - Resolver
-        - DIDResolutionOptions
-     
+     - Parameter did
+     - Parameter ParsedDID
+     - Parameter resolver
+     - Parameter DIDResolutionResult
+  
      - Throws: None
      
-     - Returns: Promise Value DIDResolutionResult
+     - Returns: `Promise Value DIDResolutionResult`
      
      */
   public func resolve(did: String, parsed: ParsedDID, unUsed: Resolver, options: DIDResolutionOptions) -> Promise<DIDResolutionResult> {
@@ -134,14 +126,12 @@ extension InfraDIDResolver: InfraDIDResolvable {
   }
   
   // MARK: build
-    /** Method
+    /**
      Bound with DIDResolver
-     
-     - Parameter with: Void
      
      - Throws: None
      
-     - Returns: Dictionary<String: DIDResolver>
+     - Returns: `Dictionary<String: DIDResolver>`
      
      */
   public func build() -> [String:DIDResolverType] {
@@ -149,18 +139,14 @@ extension InfraDIDResolver: InfraDIDResolvable {
   }
   
   // MARK: resolvePubKeyDID
-    /** Method
+    /**
         Resolved DIDDocument Based On PubKeyDID Using PromiseChain
      
-     - Parameter with:
+     - Parameter did
+     - Parameter pubKey
+     - Parameter ConfigureNetwork
      
-        - did
-        - pubKey
-        - ConfiguredNetwork
-     
-     - Throws: None
-     
-     - Returns: Promise Value ResolvedDIDDocument
+     - Returns: `Promise Value ResolvedDIDDocument`
      
      */
   private func resolvePubKeyDID(did: String, pubKey: String, network: ConfiguredNetwork) -> Promise<ResolvedDIDDocument> {
@@ -209,15 +195,11 @@ extension InfraDIDResolver: InfraDIDResolvable {
     /** Method
         Resolved DIDDocument Based On AccountDID Using PromiseChain
      
-     - Parameter with:
+     - Parameter did
+     - Parameter accountName
+     - Parameter ConfiguredNetwork
      
-        - did
-        - accountName
-        - ConfiguredNetwork
-     
-     - Throws: None
-     
-     - Returns: Promise Value ResolvedDIDDocument
+     - Returns: `Promise Value ResolvedDIDDocument`
      
      */
   private func resolveAccountDID(did: String, accountName: String, network: ConfiguredNetwork) -> Promise<ResolvedDIDDocument> {

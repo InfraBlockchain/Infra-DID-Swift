@@ -11,9 +11,10 @@ import Foundation
 // MARK: Header
 /**
  A representation of a JSON Web Token header.
+ 
  https://tools.ietf.org/html/rfc7515#section-4.1
  
- - Property with:
+ - **Property with**
  
     - typ
     - kid

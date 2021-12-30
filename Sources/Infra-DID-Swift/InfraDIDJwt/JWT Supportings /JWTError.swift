@@ -12,7 +12,7 @@ import Foundation
 /**
  A struct representing the different errors that can be thrown by SwiftJWT
  
- - Property with:
+ - **Property with**
  
     - localizedDescription
     - internalError
