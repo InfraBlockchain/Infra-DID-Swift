@@ -133,6 +133,7 @@ extension InfraDIDConstructor: InfraDIDConfApiDependency {
   private func getNonceForPubKeyDid() -> Promise<Double> {
     guard let pubKey: String = self.didPubKey, let jsonRPC = self.jsonRpc else { return Promise<Double>.value(0.0) }
     let dataPubKey = try! Data(eosioPublicKey: pubKey)
+    iPrint(dataPubKey)
     let pubKeyArray = [UInt8](dataPubKey)
     let sliceKey = pubKeyArray[1...pubKeyArray.count-1]
     
