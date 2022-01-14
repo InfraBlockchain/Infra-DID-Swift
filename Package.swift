@@ -6,7 +6,7 @@ import PackageDescription
 let package = Package(
     name: "Infra-DID-Swift",
     platforms: [
-        .iOS(.v15),
+        .iOS(.v13),
         .macOS(.v12)
     ],
     products: [

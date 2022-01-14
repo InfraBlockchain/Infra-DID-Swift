@@ -1,10 +1,10 @@
 import XCTest
 @testable import Infra_DID_Swift
-import PromiseKit
-import Foundation
-import CryptoKit
-import secp256k1
-import EosioSwift
+//import PromiseKit
+//import Foundation
+//import CryptoKit
+//import secp256k1
+//import EosioSwift
 
 
 #if SWIFT_PACKAGE
