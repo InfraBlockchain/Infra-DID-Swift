@@ -1,10 +1,10 @@
 import XCTest
 @testable import Infra_DID_Swift
-import PromiseKit
-import Foundation
-import CryptoKit
-import secp256k1
-import EosioSwift
+//import PromiseKit
+//import Foundation
+//import CryptoKit
+//import secp256k1
+//import EosioSwift
 
 
 #if SWIFT_PACKAGE
@@ -47,10 +47,10 @@ final class Infra_DID_SwiftTests: XCTestCase {
     let didApi = InfraDIDConstructor(config: idConfig)
     //didApi.actionPubKeyDID(actionName: .clear, key: "", value: "", newKey: "")
     didApi.actionPubKeyDID(actionName: .set, key: "svc/MessagingService", value: "https://infradid.com/pk/3/mysvcr90", newKey: "")
-    didApi.actionPubKeyDID(actionName: .revoke)
-    didApi.actionPubKeyDID(actionName: .clear)
-    didApi.actionPubKeyDID(actionName: .changeOwner, key: "", value: "", newKey: "PUB_K1_584qGNgteYFppoisbDz6vBFArrw3As8qeeRCekLepG4pJVrhJt")
-    didApi.actionPubKeyDID(actionName: .setAccount, key: "svc/MessagingService", value: "https://infradid.com/acc/1/mysvcr7", newKey: "")
+//    didApi.actionPubKeyDID(actionName: .revoke)
+//    didApi.actionPubKeyDID(actionName: .clear)
+//    didApi.actionPubKeyDID(actionName: .changeOwner, key: "", value: "", newKey: "PUB_K1_584qGNgteYFppoisbDz6vBFArrw3As8qeeRCekLepG4pJVrhJt")
+//    didApi.actionPubKeyDID(actionName: .setAccount, key: "svc/MessagingService", value: "https://infradid.com/acc/1/mysvcr7", newKey: "")
   }
   
   
