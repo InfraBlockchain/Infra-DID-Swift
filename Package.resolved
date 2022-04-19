@@ -33,8 +33,8 @@
         "repositoryURL": "https://github.com/mxcl/PromiseKit",
         "state": {
           "branch": null,
-          "revision": "93c8d41ce96ed78f36c3948be396d76f3ca3de1b",
-          "version": "6.16.2"
+          "revision": "3fd8c77ded8a4bbee548e3bd6c987ffe8c1e3574",
+          "version": "6.17.0"
         }
       },
       {
@@ -42,8 +42,8 @@
         "repositoryURL": "https://github.com/GigaBitcoin/secp256k1.swift.git",
         "state": {
           "branch": null,
-          "revision": "1b51af7a33bace2cad119aaf198edf4c421ffdae",
-          "version": "0.3.4"
+          "revision": "c61f15293e1c4617299b8b91efdd06f583de1148",
+          "version": "0.4.0"
         }
       }
     ]

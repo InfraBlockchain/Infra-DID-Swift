@@ -555,7 +555,7 @@ public struct PresentationOptions {
  */
 public func transformPresentationInput(input: PresentationPayload, removeOriginalFields: Bool = true) -> JwtPresentationPayload {
   guard let aud = input.verifier else { return JwtPresentationPayload()}
-  let formatter = ISO8601DateFormatter.init()
+  let formatter = ISO8601DateFormatter()
   
   guard let vcData = try? input.verifiableCredential.toJsonData(),
         let vcType = try? JSONDecoder().decode(VerifiableCredentialType.self, from: vcData),
@@ -567,12 +567,14 @@ public func transformPresentationInput(input: PresentationPayload, removeOrigina
   if input.expirationDate != nil, let expDate = input.expirationDate {
     let exp = floor(formatter.date(from: expDate)!.timeIntervalSinceNow / 1000)
     iPrint(expDate)
-    payload.exp = formatter.date(from: Date(timeIntervalSinceNow: exp).ISO8601Format())
+    
+    
+    payload.exp = formatter.date(from: formatter.string(from: Date(timeIntervalSinceNow: exp)))//formatter.date(from: Date(timeIntervalSinceNow: exp))
   }
   
   if input.issuanceDate != nil, let issDate = input.issuanceDate {
     let iss = floor(formatter.date(from: issDate)!.timeIntervalSinceNow / 1000)
-    payload.nbf = formatter.date(from: Date(timeIntervalSinceNow: iss).ISO8601Format())
+    payload.nbf = formatter.date(from: formatter.string(from: Date(timeIntervalSinceNow: iss)))//formatter.date(from: Date(timeIntervalSinceNow: iss).ISO8601Format())
   }
   
   if input.id != nil, let id = input.id {

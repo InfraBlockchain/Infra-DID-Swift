@@ -95,11 +95,12 @@ private func createJws(payload: JwtPayload, signer: JWTSigner, header: Header?) 
  */
 public func createJwt(payload: JwtPayload, jwtOptions: JwtOptions, header: Header) -> String {
   var fullPayload: JwtPayload = payload
-  fullPayload.iat = Date.now
+  //NSDate.now
+  fullPayload.iat = NSDate.now//Date.now
   
   if jwtOptions.expiresIn != nil {
     
-    let timestamps: Date  = (payload.nbf != nil) ? payload.nbf! : Date.now
+    let timestamps: Date  = (payload.nbf != nil) ? payload.nbf! : NSDate.now//Date.now
     
     fullPayload.exp = Date(timeIntervalSince1970: (floor(Double(timestamps.timeIntervalSinceNow) / 1000) + floor(jwtOptions.expiresIn!)))
   }
@@ -217,7 +218,7 @@ private func resolveVerified(authenticator: DIDAuthenticator, jwt: String, jwtDe
   
   let auth = authenticator.authenticators[0]
   
-  let now = floor(Double(Date.now.timeIntervalSinceNow) / 1000)
+  let now = floor(Double(NSDate.now.timeIntervalSinceNow) / 1000)
   let skewTimes = options.skewTime != nil && options.skewTime! > 0 ? options.skewTime! : nbfSkew
   if auth.id != "" {
     let nowSkewed = now + skewTimes
