@@ -6,7 +6,7 @@ import PackageDescription
 let package = Package(
     name: "Infra-DID-Swift",
     platforms: [
-        .iOS(.v15),
+        .iOS(.v13),
         .macOS(.v12)
     ],
     products: [
@@ -23,7 +23,7 @@ let package = Package(
       .package(
               name: "secp256k1",
               url: "https://github.com/GigaBitcoin/secp256k1.swift.git",
-              .upToNextMajor(from: "0.3.4")
+              .upToNextMajor(from: "0.4.0")
           )
       
     ],

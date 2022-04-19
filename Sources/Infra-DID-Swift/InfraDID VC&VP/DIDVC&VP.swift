@@ -282,7 +282,9 @@ private func validatePresentationPayload(payload: PresentationPayload) -> Bool {
   let formatter = ISO8601DateFormatter()
   let expDate = formatter.date(from: payload.expirationDate ?? "")
   
-  let expCheck = expDate!.timeIntervalSinceNow > formatter.date(from: Date.now.ISO8601Format())!.timeIntervalSinceNow ? true : false
+  let now = NSDate.now.timeIntervalSinceNow
+  //formatter.date(from: formatter.string(from: now))!.timeIntervalSinceNow
+  let expCheck = expDate!.timeIntervalSinceNow > now ? true : false
   
   return expCheck
 }
